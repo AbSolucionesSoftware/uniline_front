@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Hidden, AppBar, Toolbar, InputBase, Badge, MenuItem, Menu } from '@material-ui/core';
+import { Button, Hidden, AppBar, Toolbar, InputBase, Badge, MenuItem, Menu, Drawer } from '@material-ui/core';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
@@ -10,6 +10,19 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import BrightnessMediumIcon from '@material-ui/icons/BrightnessMedium';
 import Brightness5Icon from '@material-ui/icons/Brightness5';
+import HomeIcon from '@material-ui/icons/Home';
+import VideoLibraryIcon from '@material-ui/icons/VideoLibrary';
+import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+
+import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+
+const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
 	grow: {
@@ -61,6 +74,21 @@ const useStyles = makeStyles((theme) => ({
 			width: '20ch'
 		}
 	},
+	drawer: {
+		width: drawerWidth,
+		flexShrink: 0
+	},
+	drawerPaper: {
+		width: drawerWidth
+	},
+	drawerHeader: {
+		display: 'flex',
+		alignItems: 'center',
+		padding: theme.spacing(0, 1),
+		// necessary for content to be below app bar
+		...theme.mixins.toolbar,
+		justifyContent: 'flex-end'
+	},
 	offset: theme.mixins.toolbar
 }));
 
@@ -68,30 +96,28 @@ export default function NavegacionUsuario(props) {
 	const [ darkTheme, setDarkTheme ] = props.tema;
 	const classes = useStyles();
 	const [ anchorEl, setAnchorEl ] = useState(null);
-	const [ mobileMoreAnchorEl, setMobileMoreAnchorEl ] = useState(null);
+	const [ open, setOpen ] = useState(false);
 
 	const isMenuOpen = Boolean(anchorEl);
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-    
-    const darkModeAction = () => {
-        setDarkTheme(!darkTheme);
-    }
+
+	const darkModeAction = () => {
+		setDarkTheme(!darkTheme);
+		localStorage.setItem('tema', !darkTheme);
+	};
 
 	const handleProfileMenuOpen = (event) => {
 		setAnchorEl(event.currentTarget);
 	};
-
-	const handleMobileMenuClose = () => {
-		setMobileMoreAnchorEl(null);
-	};
-
 	const handleMenuClose = () => {
 		setAnchorEl(null);
-		handleMobileMenuClose();
 	};
 
-	const handleMobileMenuOpen = (event) => {
-		setMobileMoreAnchorEl(event.currentTarget);
+	const handleDrawerOpen = () => {
+		setOpen(true);
+	};
+
+	const handleDrawerClose = () => {
+		setOpen(false);
 	};
 
 	const menuId = 'primary-search-account-menu';
@@ -112,47 +138,6 @@ export default function NavegacionUsuario(props) {
 		</Menu>
 	);
 
-	const mobileMenuId = 'primary-search-account-menu-mobile';
-	const renderMobileMenu = (
-		<Menu
-			anchorEl={mobileMoreAnchorEl}
-			anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-			id={mobileMenuId}
-			keepMounted
-			transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-			open={isMobileMenuOpen}
-			onClose={handleMobileMenuClose}
-		>
-			{/* <MenuItem>
-				<IconButton aria-label="show 4 new mails" color="inherit">
-					<Badge badgeContent={4} color="secondary">
-						<MailIcon />
-					</Badge>
-				</IconButton>
-				<p>Messages</p>
-			</MenuItem>
-			<MenuItem>
-				<IconButton aria-label="show 11 new notifications" color="inherit">
-					<Badge badgeContent={11} color="secondary">
-						<NotificationsIcon />
-					</Badge>
-				</IconButton>
-				<p>Notifications</p>
-			</MenuItem>
-			<MenuItem onClick={handleProfileMenuOpen}>
-				<IconButton
-					aria-label="account of current user"
-					aria-controls="primary-search-account-menu"
-					aria-haspopup="true"
-					color="inherit"
-				>
-					<AccountCircle />
-				</IconButton>
-				<p>Profile</p>
-			</MenuItem> */}
-		</Menu>
-	);
-
 	return (
 		<div className={classes.root}>
 			<div className={classes.grow}>
@@ -162,9 +147,8 @@ export default function NavegacionUsuario(props) {
 							<IconButton
 								edge="start"
 								aria-label="show more"
-								aria-controls={mobileMenuId}
 								aria-haspopup="true"
-								onClick={handleMobileMenuOpen}
+								onClick={handleDrawerOpen}
 								color="inherit"
 								className={classes.menuButton}
 							>
@@ -218,11 +202,7 @@ export default function NavegacionUsuario(props) {
 							>
 								<AccountCircle />
 							</IconButton>
-							<IconButton
-								aria-label="show 17 theme config"
-                                color="inherit"
-                                onClick={darkModeAction}
-							>
+							<IconButton aria-label="show 17 theme config" color="inherit" onClick={darkModeAction}>
 								{darkTheme ? <Brightness5Icon /> : <BrightnessMediumIcon />}
 							</IconButton>
 						</Hidden>
@@ -240,8 +220,70 @@ export default function NavegacionUsuario(props) {
 						</Hidden>
 					</Toolbar>
 				</AppBar>
-				{renderMobileMenu}
 				{renderMenu}
+				<Drawer
+					className={classes.drawer}
+					anchor="left"
+					open={open}
+					onClose={handleDrawerClose}
+					classes={{
+						paper: classes.drawerPaper
+					}}
+				>
+					<div className={classes.drawerHeader}>
+						<IconButton onClick={handleDrawerClose}>
+							<ChevronLeftIcon />
+						</IconButton>
+					</div>
+					<Divider />
+					<List>
+						<ListItem button component={Link} to="/" onClick={handleDrawerClose}>
+							<ListItemIcon>
+								<HomeIcon />
+							</ListItemIcon>
+							<ListItemText primary="Inicio" />
+						</ListItem>
+						<ListItem button component={Link} to="/mis_cursos" onClick={handleDrawerClose}>
+							<ListItemIcon>
+								<VideoLibraryIcon />
+							</ListItemIcon>
+							<ListItemText primary="Mis cursos" />
+						</ListItem>
+						<ListItem button component={Link} to="/carrito" onClick={handleDrawerClose}>
+							<ListItemIcon>
+								<Badge badgeContent={17} color="secondary">
+									<ShoppingCartIcon />
+								</Badge>
+							</ListItemIcon>
+							<ListItemText primary="Carrito" />
+						</ListItem>
+					</List>
+					<Divider />
+					<List>
+						<ListItem button component={Link} to="/login" onClick={handleDrawerClose}>
+							<ListItemIcon>
+								<MeetingRoomIcon />
+							</ListItemIcon>
+							<ListItemText primary="Iniciar sesión" />
+						</ListItem>
+						<ListItem button component={Link} to="/perfil" onClick={handleDrawerClose}>
+							<ListItemIcon>
+								<AccountCircle />
+							</ListItemIcon>
+							<ListItemText primary="Mi perfil" />
+						</ListItem>
+						<ListItem button onClick={darkModeAction}>
+							<ListItemIcon>{darkTheme ? <Brightness5Icon /> : <BrightnessMediumIcon />}</ListItemIcon>
+							<ListItemText primary={`tema: ${darkTheme === true ? 'Oscuro' : 'Por defecto'}`} />
+						</ListItem>
+						<ListItem button>
+							<ListItemIcon>
+								<ExitToAppIcon />
+							</ListItemIcon>
+							<ListItemText primary="Cerrar Sesión" />
+						</ListItem>
+					</List>
+				</Drawer>
 			</div>
 			<div className={classes.offset} />
 		</div>
