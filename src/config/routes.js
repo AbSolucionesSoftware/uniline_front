@@ -5,7 +5,8 @@ import LayoutUsers from '../components/Layout_User/layout_usuario';
 //Admin pages
 import DashboardMaestro from '../pages/maestro/Dashboard_maestro/dashboard';
 import SubirCursoMaestro from '../pages/maestro/Subir_curso/subir_curso';
-import CostosCursoMaestro from '../pages/maestro/Promociones_Precios/vista_promo_precio';
+import EstadisticasMaestro from '../pages/maestro/Estadisticas/estadisticas';
+import SubirContenidoCurso from '../pages/maestro/Subir_curso/contenido_curso';
 
 //Users pages
 import Home from '../pages/users/Home/home';
@@ -24,6 +25,16 @@ import Error404 from '../pages/error404';
 
 const routes = [
 	{
+		path: '/instructor/nuevo_curso',
+		component: SubirCursoMaestro,
+		exact: false
+	},
+	{
+		path: '/instructor/contenido_curso',
+		component: SubirContenidoCurso,
+		exact: true,
+	},
+	{
 		path: '/instructor',
 		component: LayoutMaestro,
 		exact: false,
@@ -32,15 +43,10 @@ const routes = [
 				path: '/instructor/dashboard',
 				component: DashboardMaestro,
 				exact: true,
-            },
-            {
-				path: '/instructor/dashboard/costo_curso',
-				component: SubirCursoMaestro,
-				exact: true,
-            },
-            {
-				path: '/instructor/dashboard/contenido_curso',
-				component: CostosCursoMaestro,
+			},
+			{
+				path: '/instructor/estadisticas',
+				component: EstadisticasMaestro,
 				exact: true,
 			},
 			{

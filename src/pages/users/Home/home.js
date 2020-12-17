@@ -41,10 +41,10 @@ export default function Home() {
 			</ul>
 			<ul>
 				{' '}
-				<Link to="/instructor/dashboard/contenido_curso">subiur curso</Link>
+				<Link to="/instructor/nuevo_curso">subiur curso</Link>
 			</ul>
 			<ul>
-				<Link to="/instructor/dashboard/costo_curso">precios y promociones</Link>
+				<Link to="/instructor/contenido_curso">contendio curso</Link>
 			</ul>
 		</div>
 	);
