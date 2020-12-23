@@ -3,11 +3,12 @@ import { createMuiTheme } from '@material-ui/core/styles';
 const darkMode = createMuiTheme({
 	palette: {
 		type: 'dark',
-		primary: {
-			main: '#303030'
-		},
-		secondary: {
-			main: '#424242'
+		navbar: '#424242',
+		/* primary: {
+			main: '#2196f3'
+		}, */
+		/* secondary: {
+			main: '#666666'
 		},
 		error: {
 			main: '#f44336'
@@ -20,24 +21,8 @@ const darkMode = createMuiTheme({
 		},
 		success: {
 			main: '#4caf50'
-		},
-		grey: {
-			50: '#fafafa',
-			100: '#f5f5f5',
-			200: '#eeeeee',
-			300: '#e0e0e0',
-			400: '#bdbdbd',
-			500: '#9e9e9e',
-			600: '#757575',
-			700: '#616161',
-			800: '#424242',
-			900: '#212121',
-			A100: '#d5d5d5',
-			A200: '#aaaaaa',
-			A400: '#303030',
-			A700: '#616161'
-		},
-		text: {
+		}, */
+		/* text: {
 			primary: '#fff',
 			secondary: 'rgba(255, 255, 255, 0.7)',
 			disabled: 'rgba(255, 255, 255, 0.5)',
@@ -63,7 +48,7 @@ const darkMode = createMuiTheme({
 			focus: 'rgba(255, 255, 255, 0.12)',
 			focusOpacity: 0.12,
 			activatedOpacity: 0.24
-		}
+		} */
 	}
 });
 

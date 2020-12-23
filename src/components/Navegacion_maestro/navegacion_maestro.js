@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 		display: 'flex'
 	},
 	appBar: {
+		backgroundColor: theme.palette.navbar,
 		zIndex: theme.zIndex.drawer + 1,
 		transition: theme.transitions.create([ 'width', 'margin' ], {
 			easing: theme.transitions.easing.sharp,
@@ -207,7 +208,7 @@ export default function NavbarMaestro(props) {
 				</div>
 				<Divider />
 				<List>
-					<ListItem button component={Link} to="/instructor/dashboard">
+					<ListItem button component={Link} to="/instructor/cursos">
 						<ListItemIcon>
 							<OndemandVideoIcon />
 						</ListItemIcon>

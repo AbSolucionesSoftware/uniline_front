@@ -31,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
 	grow: {
 		flexGrow: 1
 	},
+	appbar: {
+		backgroundColor: theme.palette.navbar
+	},
 	marginButton: {
 		marginRight: theme.spacing(1),
 		marginLeft: theme.spacing(1)
@@ -165,7 +168,7 @@ export default function NavegacionUsuario(props) {
 	return (
 		<div className={classes.root}>
 			<div className={classes.grow}>
-				<AppBar position="fixed">
+				<AppBar position="fixed" className={classes.appbar}>
 					<Toolbar>
 						<Hidden mdUp>
 							<IconButton
@@ -206,7 +209,7 @@ export default function NavegacionUsuario(props) {
 							<Button
 								color="inherit"
 								component={Link}
-								to="/instructor/dashboard"
+								to="/instructor/cursos"
 								className={classes.marginButton}
 							>
 								Mi dashboard
@@ -281,7 +284,7 @@ export default function NavegacionUsuario(props) {
 							</ListItemIcon>
 							<ListItemText primary="Mis cursos" />
 						</ListItem>
-						<ListItem button component={Link} to="/instructor/dashboard" onClick={handleDrawerClose}>
+						<ListItem button component={Link} to="/instructor/cursos" onClick={handleDrawerClose}>
 							<ListItemIcon>
 								<DashboardIcon />
 							</ListItemIcon>

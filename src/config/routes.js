@@ -1,12 +1,19 @@
 //layout
 import LayoutMaestro from '../components/Layout_Maestro/layout_maestro';
+import LayoutContenidoCurso from '../components/Layout_Maestro/layout_contenido';
 import LayoutUsers from '../components/Layout_User/layout_usuario';
 
 //Admin pages
 import DashboardMaestro from '../pages/maestro/Dashboard_maestro/dashboard';
-import SubirCursoMaestro from '../pages/maestro/Subir_curso/subir_curso';
+import SubirCursoMaestro from '../pages/maestro/Subir_curso/crear_curso';
 import EstadisticasMaestro from '../pages/maestro/Estadisticas/estadisticas';
-import SubirContenidoCurso from '../pages/maestro/Subir_curso/contenido_curso';
+
+//dashboard registro curso pages
+import RegistroInformacionCurso from '../pages/maestro/Subir_curso/Dasboard_curso/informacion_curso';
+import QueAprenderaEstudiante from '../pages/maestro/Subir_curso/Dasboard_curso/learnings';
+import RegistroContenido from '../pages/maestro/Subir_curso/Dasboard_curso/contenido';
+import PrecioCurso from '../pages/maestro/Subir_curso/Dasboard_curso/precio';
+import PromocionCurso from '../pages/maestro/Subir_curso/Dasboard_curso/promocion';
 
 //Users pages
 import Home from '../pages/users/Home/home';
@@ -27,12 +34,42 @@ const routes = [
 	{
 		path: '/instructor/nuevo_curso',
 		component: SubirCursoMaestro,
-		exact: false
+		exact: true
 	},
 	{
 		path: '/instructor/contenido_curso',
-		component: SubirContenidoCurso,
-		exact: true,
+		component: LayoutContenidoCurso,
+		exact: false,
+		routes: [
+			{
+				path: '/instructor/contenido_curso/general',
+				component: RegistroInformacionCurso,
+				exact: true,
+			},
+			{
+				path: '/instructor/contenido_curso/learn',
+				component: QueAprenderaEstudiante,
+				exact: true,
+			},
+			{
+				path: '/instructor/contenido_curso/contenido',
+				component: RegistroContenido,
+				exact: true,
+			},
+			{
+				path: '/instructor/contenido_curso/precio',
+				component: PrecioCurso,
+				exact: true,
+			},
+			{
+				path: '/instructor/contenido_curso/promocion',
+				component: PromocionCurso,
+				exact: true,
+			},
+			{
+				component: Error404
+			}
+		]
 	},
 	{
 		path: '/instructor',
@@ -40,7 +77,7 @@ const routes = [
 		exact: false,
 		routes: [
 			{
-				path: '/instructor/dashboard',
+				path: '/instructor/cursos',
 				component: DashboardMaestro,
 				exact: true,
 			},

@@ -37,7 +37,7 @@ export default function Home() {
 			</ul>
 			##### links maestro ####
 			<ul>
-				<Link to="/instructor/dashboard">dashboard maestro</Link>
+				<Link to="/instructor/cursos">dashboard maestro</Link>
 			</ul>
 			<ul>
 				{' '}
