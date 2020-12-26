@@ -179,7 +179,7 @@ export default function RegistroInformacionCurso() {
 				</Box>
 				<Box mt={2} mb={5}>
 					<Grid container direction="row" justify="space-evenly">
-						<Grid item lg={5}>
+						<Grid item lg={5} md={5} xs={12}>
 							<FormControl
 								variant="outlined"
 								className={classes.select}
@@ -229,7 +229,7 @@ export default function RegistroInformacionCurso() {
 								{validacion && !datos.level ? <FormHelperText>campo requerido</FormHelperText> : null}
 							</FormControl>
 						</Grid>
-						<Grid item lg={5}>
+						<Grid item lg={5} md={5} xs={12}>
 							<FormControl
 								variant="outlined"
 								className={classes.select}
