@@ -41,12 +41,12 @@ export default function LayoutContenidoCurso(props) {
 
 	return (
 		<ThemeProvider theme={tema === true ? darkMode : theme}>
+			<CssBaseline />
 			<div className={classes.root}>
-				<CssBaseline />
 				<SubirContenidoCurso tema={[ darkTheme ,setDarkTheme]} />
 				<main className={classes.content}>
 					<div className={classes.toolbar} />
-					<div className="site-layout-background bg-white" style={{ padding: 24, minHeight: 360 }}>
+					<div style={{ padding: 24, minHeight: 360 }}>
 						<LoadRoutes routes={routes} />
 					</div>
 				</main>

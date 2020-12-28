@@ -41,8 +41,8 @@ export default function LayoutMaestro(props) {
 
 	return (
 		<ThemeProvider theme={tema === true ? darkMode : theme}>
+			<CssBaseline />
 			<div className={classes.root}>
-				<CssBaseline />
 				<NavbarMaestro tema={[ darkTheme ,setDarkTheme]} />
 				<main className={classes.content}>
 					<div className={classes.toolbar} />

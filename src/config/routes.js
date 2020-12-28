@@ -24,7 +24,8 @@ import MisCursos from '../pages/users/Cursos_usuario/mis_cursos';
 import DashboardUsuario from '../pages/users/Dashboard_Usuario/dashboard';
 import PerfilUsuario from '../pages/users/Perfil_usuario/perfil';
 import Politicas from '../pages/users/Politicas/politicas';
-import RegistroLogin from '../pages/users/Registro_Login/vista_registro_login';
+import LoginUsuario from '../pages/users/Login/login';
+import RegistroUsuario from '../pages/users/Registro/registro';
 import VistaCurso from '../pages/users/Vista_curso/vista_curso';
 
 //other
@@ -138,7 +139,12 @@ const routes = [
             },
             {
 				path: '/login',
-				component: RegistroLogin,
+				component: LoginUsuario,
+				exact: true
+			},
+			{
+				path: '/registro',
+				component: RegistroUsuario,
 				exact: true
             },
             {

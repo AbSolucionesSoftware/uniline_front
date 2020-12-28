@@ -11,7 +11,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } 
 
 const useStyles = makeStyles((theme) => ({
 	color: {
-		backgroundColor: theme.backgroundColor
+		backgroundColor: theme.palette.background.paper
 	},
 	margin: {
 		margin: theme.spacing(1)
@@ -193,7 +193,7 @@ export default function RegistroContenido() {
 	);
 
 	return (
-		<Box p={5} boxShadow={5} bgcolor={classes.color}>
+		<Box p={5} boxShadow={5} className={classes.color}>
 			<div>
 				<Scroll showBelow={250} />
 			</div>

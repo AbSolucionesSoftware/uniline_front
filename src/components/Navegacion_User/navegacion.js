@@ -17,6 +17,7 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import Avatar from '@material-ui/core/Avatar';
 import { deepOrange } from '@material-ui/core/colors';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import HowToRegIcon from '@material-ui/icons/HowToReg';
 
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
@@ -24,6 +25,11 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
+/* import jwt_decode from 'jwt-decode'; */
 
 const drawerWidth = 240;
 
@@ -111,6 +117,16 @@ export default function NavegacionUsuario(props) {
 	const classes = useStyles();
 	const [ anchorEl, setAnchorEl ] = useState(null);
 	const [ open, setOpen ] = useState(false);
+	/* const token = localStorage.getItem('token'); */
+	/* var decoded = Jwt(token);
+
+	function Jwt(token) {
+		try {
+			return jwt_decode(token);
+		} catch (e) {
+			return null;
+		}
+	} */
 
 	const isMenuOpen = Boolean(anchorEl);
 
@@ -152,13 +168,19 @@ export default function NavegacionUsuario(props) {
 		>
 			<MenuItem onClick={handleMenuClose} component={Link} to="/perfil">
 				<ListItemIcon>
-					<AccountCircleIcon fontSize="middle" />
+					<AccountCircleIcon />
 				</ListItemIcon>
 				<ListItemText primary="Mi perfil" />
 			</MenuItem>
-			<MenuItem onClick={handleMenuClose}>
+			<MenuItem onClick={() => {
+				firebase.auth().signOut();
+				localStorage.removeItem('token');
+				setTimeout(() => {
+					window.location.reload();
+				}, 500);
+			}}>
 				<ListItemIcon>
-					<ExitToAppIcon fontSize="middle" />
+					<ExitToAppIcon/>
 				</ListItemIcon>
 				<ListItemText primary="Cerrar sesión" />
 			</MenuItem>
@@ -216,6 +238,9 @@ export default function NavegacionUsuario(props) {
 							</Button>
 							<Button color="inherit" component={Link} to="/login" className={classes.marginButton}>
 								Iniciar sesión
+							</Button>
+							<Button color="inherit" component={Link} to="/registro" className={classes.marginButton}>
+								Registrarse
 							</Button>
 							<IconButton
 								aria-label="show 17 new notifications"
@@ -306,6 +331,12 @@ export default function NavegacionUsuario(props) {
 								<MeetingRoomIcon />
 							</ListItemIcon>
 							<ListItemText primary="Iniciar sesión" />
+						</ListItem>
+						<ListItem button component={Link} to="/registro" onClick={handleDrawerClose}>
+							<ListItemIcon>
+								<HowToRegIcon />
+							</ListItemIcon>
+							<ListItemText primary="Registrate" />
 						</ListItem>
 						<ListItem button component={Link} to="/perfil" onClick={handleDrawerClose}>
 							<ListItemIcon>

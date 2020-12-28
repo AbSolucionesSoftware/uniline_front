@@ -4,6 +4,7 @@ import NavegacionUsuario from '../Navegacion_User/navegacion';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from '../../config/themeConfig';
 import darkMode from '../../config/darkMode';
+import { CssBaseline } from '@material-ui/core';
 
 export default function LayoutUsers(props) {
 	let thema = localStorage.getItem('tema');
@@ -20,9 +21,10 @@ export default function LayoutUsers(props) {
 
 	return (
 		<ThemeProvider theme={tema === true ? darkMode : theme}>
-			<div className="body">
+			<CssBaseline />
+			<div>
 				<NavegacionUsuario tema={[ darkTheme ,setDarkTheme]} />
-				<div className="site-layout-content flex" style={{minHeight: '90vh'}}>
+				<div style={{minHeight: '90vh'}}>
 					<LoadRoutes routes={routes} />
 				</div>
 				<div>

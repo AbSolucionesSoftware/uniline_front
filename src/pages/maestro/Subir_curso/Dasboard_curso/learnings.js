@@ -15,7 +15,7 @@ import MessageSnackbar from '../../../../components/Snackbar/snackbar';
 
 const useStyles = makeStyles((theme) => ({
 	color: {
-		backgroundColor: theme.backgroundColor
+		backgroundColor: theme.palette.background.paper
 	},
 	margin: {
 		margin: theme.spacing(1)
@@ -190,7 +190,7 @@ export default function QueAprenderaEstudiante() {
 	});
 
 	return (
-		<Box p={5} boxShadow={5} bgcolor={classes.color}>
+		<Box p={5} boxShadow={5} className={classes.color}>
             <Spin loading={loading} />
             <MessageSnackbar open={snackbar.open} mensaje={snackbar.mensaje} status={snackbar.status} setSnackbar={setSnackbar} />
 			<div>
