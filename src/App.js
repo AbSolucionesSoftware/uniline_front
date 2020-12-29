@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import routes from './config/routes';
 import { Helmet } from 'react-helmet';
+import './styles.scss';
 
 function App() {
 	return (

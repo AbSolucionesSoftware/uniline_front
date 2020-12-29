@@ -29,7 +29,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
-/* import jwt_decode from 'jwt-decode'; */
+import Sesion from '../Verificacion_sesion/verificacion_sesion';
 
 const drawerWidth = 240;
 
@@ -117,16 +117,7 @@ export default function NavegacionUsuario(props) {
 	const classes = useStyles();
 	const [ anchorEl, setAnchorEl ] = useState(null);
 	const [ open, setOpen ] = useState(false);
-	/* const token = localStorage.getItem('token'); */
-	/* var decoded = Jwt(token);
-
-	function Jwt(token) {
-		try {
-			return jwt_decode(token);
-		} catch (e) {
-			return null;
-		}
-	} */
+	const sesion = Sesion(props, false);
 
 	const isMenuOpen = Boolean(anchorEl);
 
@@ -172,15 +163,21 @@ export default function NavegacionUsuario(props) {
 				</ListItemIcon>
 				<ListItemText primary="Mi perfil" />
 			</MenuItem>
-			<MenuItem onClick={() => {
-				firebase.auth().signOut();
-				localStorage.removeItem('token');
-				setTimeout(() => {
-					window.location.reload();
-				}, 500);
-			}}>
+			<ListItem button onClick={darkModeAction}>
+				<ListItemIcon>{darkTheme ? <Brightness5Icon /> : <BrightnessMediumIcon />}</ListItemIcon>
+				<ListItemText primary={`tema: ${darkTheme === true ? 'Oscuro' : 'Por defecto'}`} />
+			</ListItem>
+			<MenuItem
+				onClick={() => {
+					firebase.auth().signOut();
+					localStorage.removeItem('token');
+					setTimeout(() => {
+						window.location.reload();
+					}, 500);
+				}}
+			>
 				<ListItemIcon>
-					<ExitToAppIcon/>
+					<ExitToAppIcon />
 				</ListItemIcon>
 				<ListItemText primary="Cerrar sesión" />
 			</MenuItem>
@@ -225,46 +222,84 @@ export default function NavegacionUsuario(props) {
 							<Button color="inherit" component={Link} to="/" className={classes.marginButton}>
 								Inicio
 							</Button>
-							<Button color="inherit" component={Link} to="/mis_cursos" className={classes.marginButton}>
-								Mis cursos
-							</Button>
-							<Button
-								color="inherit"
-								component={Link}
-								to="/instructor/cursos"
-								className={classes.marginButton}
-							>
-								Mi dashboard
-							</Button>
-							<Button color="inherit" component={Link} to="/login" className={classes.marginButton}>
-								Iniciar sesión
-							</Button>
-							<Button color="inherit" component={Link} to="/registro" className={classes.marginButton}>
-								Registrarse
-							</Button>
-							<IconButton
-								aria-label="show 17 new notifications"
-								color="inherit"
-								component={Link}
-								to="/carrito"
-							>
-								<Badge badgeContent={17} color="secondary">
-									<ShoppingCartIcon />
-								</Badge>
-							</IconButton>
-							<IconButton
-								edge="end"
-								aria-label="account of current user"
-								aria-controls={menuId}
-								aria-haspopup="true"
-								onClick={handleProfileMenuOpen}
-								color="inherit"
-							>
-								<Avatar className={classes.orange}>N</Avatar>
-							</IconButton>
-							<IconButton aria-label="show 17 theme config" color="inherit" onClick={darkModeAction}>
-								{darkTheme ? <Brightness5Icon /> : <BrightnessMediumIcon />}
-							</IconButton>
+							{sesion ? (
+								<Button
+									color="inherit"
+									component={Link}
+									to="/mis_cursos"
+									className={classes.marginButton}
+								>
+									Mis cursos
+								</Button>
+							) : (
+								<div />
+							)}
+							{sesion && sesion.rol === 'Maestro' ? (
+								<Button
+									color="inherit"
+									component={Link}
+									to="/instructor/cursos"
+									className={classes.marginButton}
+								>
+									Mi dashboard
+								</Button>
+							) : (
+								<div />
+							)}
+							{!sesion ? (
+								<Button color="inherit" component={Link} to="/login" className={classes.marginButton}>
+									Iniciar sesión
+								</Button>
+							) : (
+								<div />
+							)}
+							{!sesion ? (
+								<Button
+									color="inherit"
+									component={Link}
+									to="/registro"
+									className={classes.marginButton}
+								>
+									Registrate
+								</Button>
+							) : (
+								<div />
+							)}
+							{sesion ? (
+								<IconButton
+									aria-label="show 17 new notifications"
+									color="inherit"
+									component={Link}
+									to="/carrito"
+								>
+									<Badge badgeContent={17} color="secondary">
+										<ShoppingCartIcon />
+									</Badge>
+								</IconButton>
+							) : (
+								<div />
+							)}
+							{sesion ? (
+								<IconButton
+									edge="end"
+									aria-label="account of current user"
+									aria-controls={menuId}
+									aria-haspopup="true"
+									onClick={handleProfileMenuOpen}
+									color="inherit"
+								>
+									<Avatar className={classes.orange}>N</Avatar>
+								</IconButton>
+							) : (
+								<div />
+							)}
+							{!sesion ? (
+								<IconButton aria-label="show 17 theme config" color="inherit" onClick={darkModeAction}>
+									{darkTheme ? <Brightness5Icon /> : <BrightnessMediumIcon />}
+								</IconButton>
+							) : (
+								<div />
+							)}
 						</Hidden>
 						<Hidden mdUp>
 							<IconButton
@@ -303,57 +338,94 @@ export default function NavegacionUsuario(props) {
 							</ListItemIcon>
 							<ListItemText primary="Inicio" />
 						</ListItem>
-						<ListItem button component={Link} to="/mis_cursos" onClick={handleDrawerClose}>
-							<ListItemIcon>
-								<VideoLibraryIcon />
-							</ListItemIcon>
-							<ListItemText primary="Mis cursos" />
-						</ListItem>
-						<ListItem button component={Link} to="/instructor/cursos" onClick={handleDrawerClose}>
-							<ListItemIcon>
-								<DashboardIcon />
-							</ListItemIcon>
-							<ListItemText primary="Mi dashboard" />
-						</ListItem>
-						<ListItem button component={Link} to="/carrito" onClick={handleDrawerClose}>
-							<ListItemIcon>
-								<Badge badgeContent={17} color="secondary">
-									<ShoppingCartIcon />
-								</Badge>
-							</ListItemIcon>
-							<ListItemText primary="Carrito" />
-						</ListItem>
+						{sesion ? (
+							<ListItem button component={Link} to="/mis_cursos" onClick={handleDrawerClose}>
+								<ListItemIcon>
+									<VideoLibraryIcon />
+								</ListItemIcon>
+								<ListItemText primary="Mis cursos" />
+							</ListItem>
+						) : (
+							<div />
+						)}
+						{sesion && sesion.rol === 'Maestro' ? (
+							<ListItem button component={Link} to="/instructor/cursos" onClick={handleDrawerClose}>
+								<ListItemIcon>
+									<DashboardIcon />
+								</ListItemIcon>
+								<ListItemText primary="Mi dashboard" />
+							</ListItem>
+						) : (
+							<div />
+						)}
+						{sesion ? (
+							<ListItem button component={Link} to="/carrito" onClick={handleDrawerClose}>
+								<ListItemIcon>
+									<Badge badgeContent={17} color="secondary">
+										<ShoppingCartIcon />
+									</Badge>
+								</ListItemIcon>
+								<ListItemText primary="Carrito" />
+							</ListItem>
+						) : (
+							<div />
+						)}
 					</List>
 					<Divider />
 					<List>
-						<ListItem button component={Link} to="/login" onClick={handleDrawerClose}>
-							<ListItemIcon>
-								<MeetingRoomIcon />
-							</ListItemIcon>
-							<ListItemText primary="Iniciar sesión" />
-						</ListItem>
-						<ListItem button component={Link} to="/registro" onClick={handleDrawerClose}>
-							<ListItemIcon>
-								<HowToRegIcon />
-							</ListItemIcon>
-							<ListItemText primary="Registrate" />
-						</ListItem>
-						<ListItem button component={Link} to="/perfil" onClick={handleDrawerClose}>
-							<ListItemIcon>
-								<Avatar className={classes.orange}>N</Avatar>
-							</ListItemIcon>
-							<ListItemText primary="Mi perfil" />
-						</ListItem>
+						{!sesion ? (
+							<ListItem button component={Link} to="/login" onClick={handleDrawerClose}>
+								<ListItemIcon>
+									<MeetingRoomIcon />
+								</ListItemIcon>
+								<ListItemText primary="Iniciar sesión" />
+							</ListItem>
+						) : (
+							<div />
+						)}
+						{!sesion ? (
+							<ListItem button component={Link} to="/registro" onClick={handleDrawerClose}>
+								<ListItemIcon>
+									<HowToRegIcon />
+								</ListItemIcon>
+								<ListItemText primary="Registrate" />
+							</ListItem>
+						) : (
+							<div />
+						)}
+						{sesion ? (
+							<ListItem button component={Link} to="/perfil" onClick={handleDrawerClose}>
+								<ListItemIcon>
+									<Avatar className={classes.orange}>N</Avatar>
+								</ListItemIcon>
+								<ListItemText primary="Mi perfil" />
+							</ListItem>
+						) : (
+							<div />
+						)}
 						<ListItem button onClick={darkModeAction}>
 							<ListItemIcon>{darkTheme ? <Brightness5Icon /> : <BrightnessMediumIcon />}</ListItemIcon>
 							<ListItemText primary={`tema: ${darkTheme === true ? 'Oscuro' : 'Por defecto'}`} />
 						</ListItem>
-						<ListItem button>
-							<ListItemIcon>
-								<ExitToAppIcon />
-							</ListItemIcon>
-							<ListItemText primary="Cerrar Sesión" />
-						</ListItem>
+						{sesion ? (
+							<ListItem
+								button
+								onClick={() => {
+									firebase.auth().signOut();
+									localStorage.removeItem('token');
+									setTimeout(() => {
+										window.location.reload();
+									}, 500);
+								}}
+							>
+								<ListItemIcon>
+									<ExitToAppIcon />
+								</ListItemIcon>
+								<ListItemText primary="Cerrar Sesión" />
+							</ListItem>
+						) : (
+							<div />
+						)}
 					</List>
 				</Drawer>
 			</div>

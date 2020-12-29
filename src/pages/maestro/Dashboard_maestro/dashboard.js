@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function DashboardMaestro() {
+export default function DashboardMaestro(props) {
 	const classes = useStyles();
 
 	return (

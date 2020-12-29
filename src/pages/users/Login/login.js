@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function LoginUsuario(props) {
+	const token = localStorage.getItem('token')
 	const classes = useStyles();
 	const [ datos, setDatos ] = useState([]);
 	const [ validate, setValidate ] = useState(false);
@@ -31,6 +32,10 @@ export default function LoginUsuario(props) {
 		mensaje: '',
 		status: ''
 	});
+
+	if(token){
+		props.history.push('/')
+	}
 
 	const obtenerCampos = (e) => {
 		setDatos({
@@ -59,7 +64,7 @@ export default function LoginUsuario(props) {
 				localStorage.setItem('token', token);
 				setTimeout(() => {
 					window.location.href = '/';
-				}, 1500);
+				}, 1000);
 			})
 			.catch((err) => {
 				setLoading(false);

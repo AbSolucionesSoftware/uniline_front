@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function RegistroUsuario(props) {
+	const token = localStorage.getItem('token')
 	const classes = useStyles();
 	const [ datos, setDatos ] = useState([]);
 	const [ checked, setChecked ] = useState(false);
@@ -46,6 +47,10 @@ export default function RegistroUsuario(props) {
 		mensaje: '',
 		status: ''
 	});
+
+	if(token){
+		props.history.push('/')
+	}
 
 	const obtenerCampos = (e) => {
 		if (e.target.name === 'acceptPolicies') {
@@ -81,7 +86,7 @@ export default function RegistroUsuario(props) {
 				localStorage.setItem('token', token);
 				setTimeout(() => {
 					props.history.push('/');
-				}, 1500);
+				}, 1000);
 			})
 			.catch((err) => {
 				setLoading(false);

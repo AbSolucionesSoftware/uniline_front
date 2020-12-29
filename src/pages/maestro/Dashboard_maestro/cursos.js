@@ -1,5 +1,4 @@
 import React, { useState, Fragment } from 'react';
-/* import { Link } from 'react-router-dom'; */
 import { makeStyles , Button, Grid, Box, Hidden, Chip } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
 import Card from '@material-ui/core/Card';
@@ -64,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function CursosProfesor() {
+export default function CursosProfesor(props) {
     const classes = useStyles();
 	const [ publicado, setPublicado ] = useState(true);
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -20,6 +20,7 @@ import UndoIcon from '@material-ui/icons/Undo';
 import { Link } from 'react-router-dom';
 import Spin from '../../../components/Spin/spin';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
+import Sesion from '../../../components/Verificacion_sesion/verificacion_sesion';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -81,7 +82,11 @@ export default function SubirCursoMaestro(props) {
         open: false,
         mensaje: '',
         status: ''
-    })
+	})
+	
+	useEffect(() => {
+		Sesion(props);
+	}, [props])
 
 	const handleNext = () => {
 		if (!datos.title) {
