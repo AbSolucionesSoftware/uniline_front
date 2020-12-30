@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 import CursosProfesor from './cursos';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import Scroll from '../../../components/ScrolltoTop/scroll';
 
 const useStyles = makeStyles((theme) => ({
 	flex: {
@@ -54,6 +55,7 @@ export default function DashboardMaestro(props) {
 
 	return (
 		<div>
+			<Scroll showBelow={250} />
 			<Grid container>
 				<Grid item xs={12} md={5}>
 					<Paper component="form" className={classes.root}>

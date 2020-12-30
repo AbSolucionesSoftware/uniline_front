@@ -125,6 +125,7 @@ export default function SubirCursoMaestro(props) {
 			setValidate(false);
 			console.log('curso creado');
 			console.log(datos);
+			props.history.push('/instructor/contenido_curso/general');
         }, 3000);
 	};
 

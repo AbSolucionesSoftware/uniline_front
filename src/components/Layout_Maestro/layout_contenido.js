@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import SubirContenidoCurso from '../../pages/maestro/Subir_curso/contenido_curso';
+import NavegacionContenidoCurso from '../../pages/maestro/Subir_curso/navegacion_contenido_curso';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -48,7 +48,7 @@ export default function LayoutContenidoCurso(props) {
 		<ThemeProvider theme={tema === true ? darkMode : theme}>
 			<CssBaseline />
 			<div className={classes.root}>
-				<SubirContenidoCurso tema={[ darkTheme ,setDarkTheme]} />
+				<NavegacionContenidoCurso tema={[ darkTheme ,setDarkTheme]} />
 				<main className={classes.content}>
 					<div className={classes.toolbar} />
 					<div style={{ padding: 24, minHeight: 360 }}>

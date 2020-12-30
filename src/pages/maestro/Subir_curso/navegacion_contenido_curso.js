@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function SubirContenidoCurso(props) {
+export default function NavegacionContenidoCurso(props) {
 	const classes = useStyles();
 	const theme = useTheme();
 	const { window } = props;
