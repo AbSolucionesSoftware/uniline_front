@@ -5,6 +5,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import theme from '../../config/themeConfig';
 import darkMode from '../../config/darkMode';
 import { CssBaseline } from '@material-ui/core';
+import Footer from '../Footer/footer';
 
 export default function LayoutUsers(props) {
 	let thema = localStorage.getItem('tema');
@@ -28,7 +29,7 @@ export default function LayoutUsers(props) {
 					<LoadRoutes routes={routes} />
 				</div>
 				<div>
-					footer
+					<Footer />
 				</div>
 			</div>
 		</ThemeProvider>
