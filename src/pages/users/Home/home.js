@@ -30,7 +30,13 @@ export default function Home() {
 				<Link to="/politicas">politicas</Link>
 			</ul>
 			<ul>
+				<Link to="/imagen_corporativa">imagen corporativa</Link>
+			</ul>
+			<ul>
 				<Link to="/login">login</Link>
+			</ul>
+			<ul>
+				<Link to="/registro">registro</Link>
 			</ul>
 			<ul>
 				<Link to="/curso/algo">curso</Link>

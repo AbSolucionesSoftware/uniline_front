@@ -24,6 +24,7 @@ import MisCursos from '../pages/users/Cursos_usuario/mis_cursos';
 import DashboardUsuario from '../pages/users/Dashboard_Usuario/dashboard';
 import PerfilUsuario from '../pages/users/Perfil_usuario/perfil';
 import Politicas from '../pages/users/Politicas/politicas';
+import ImagenCorporativa from '../pages/users/Imagen_corporativa/imagen_corporativa';
 import LoginUsuario from '../pages/users/Login/login';
 import RegistroUsuario from '../pages/users/Registro/registro';
 import VistaCurso from '../pages/users/Vista_curso/vista_curso';
@@ -135,6 +136,11 @@ const routes = [
             {
 				path: '/politicas',
 				component: Politicas,
+				exact: true
+			},
+			{
+				path: '/imagen_corporativa',
+				component: ImagenCorporativa,
 				exact: true
             },
             {
