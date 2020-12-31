@@ -45,9 +45,8 @@ export default function Footer() {
 
     return (
         <div >
-            <Grid container className={classes.appSupFoot}>
+            <Grid container >
                
-
                 <Grid sm={4} xs={12} >
                      <Typography className={classes.marginText} align="center" variant="subtitle1">
                         <HomeIcon style={{ fontSize: 45}}/><br/>
@@ -56,6 +55,7 @@ export default function Footer() {
                         Autlan de Navarro, Jalisco, Mex. <br />
                     </Typography>
                 </Grid>
+
                 <Grid justify-sm-center sm={4} >
                     <Hidden xsDown>
                         <Box    
@@ -82,7 +82,8 @@ export default function Footer() {
                 </Grid>
 
             </Grid>
-            <Grid sm={12} className={classes.appfoot}>
+            <Grid sm={12} >
+
                 <Typography style={{ fontSize: 13}} align="center">
                         © AB Soluciones Empresariales 2020 All rights reserved. <br />
                         <Button style={{ fontSize: 12}} component={Link} to="/politicas">
@@ -92,6 +93,7 @@ export default function Footer() {
                             Misión
                         </Button>
                 </Typography>
+                
             </Grid>
         </div>
 		
