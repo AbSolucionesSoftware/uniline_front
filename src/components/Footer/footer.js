@@ -1,4 +1,6 @@
 import React from 'react'
+import './footer.scss';
+
 import { makeStyles } from '@material-ui/core/styles';
 import{ Grid, Box, Hidden, Typography, Button} from '@material-ui/core';
 
@@ -61,7 +63,7 @@ export default function Footer() {
                         <Box    
                             className={classes.imgContainer}
                         >
-                            <img alt="Uniline" src={Imagen} className={classes.cover} />
+                            <img id="is" alt="Uniline" src={Imagen} className={classes.cover} />
                         </Box>
                     </Hidden>
                 </Grid>
@@ -75,9 +77,10 @@ export default function Footer() {
                         <CallIcon /> 3171035768 <br/>
                     </Typography>
                     <Box className={classes.marginText}>
-                        <FacebookIcon  style={{ fontSize: 40}}/>
-                        <InstagramIcon style={{ fontSize: 40}}/>
-                        <TwitterIcon style={{ fontSize: 40}}/>
+                        {/* <a href="https://www.facebook.com/cafi.tutiendaenlinea" target="_blank" rel="noreferrer"> </a> */}
+                        <FacebookIcon id="is" style={{ fontSize: 40}}/>
+                        <InstagramIcon id="is" style={{ fontSize: 40}}/>
+                        <TwitterIcon id="is"style={{ fontSize: 40}}/>
                     </Box>
                 </Grid>
 
@@ -86,10 +89,10 @@ export default function Footer() {
 
                 <Typography style={{ fontSize: 13}} align="center">
                         © AB Soluciones Empresariales 2020 All rights reserved. <br />
-                        <Button style={{ fontSize: 12}} component={Link} to="/politicas">
+                        <Button id="is" style={{ fontSize: 12}} component={Link} to="/politicas">
                             Políticas de Privacidad
                         </Button>
-                        <Button style={{ fontSize: 12}} component={Link} to="/politicas">
+                        <Button id="is" style={{ fontSize: 12}} component={Link} to="/politicas">
                             Misión
                         </Button>
                 </Typography>
