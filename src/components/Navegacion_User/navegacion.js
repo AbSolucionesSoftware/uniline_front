@@ -1,7 +1,17 @@
-import React, { useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Hidden, AppBar, Toolbar, InputBase, Badge, MenuItem, Popover, Drawer } from '@material-ui/core';
-import { fade, makeStyles } from '@material-ui/core/styles';
+import {
+	Button,
+	Hidden,
+	AppBar,
+	Toolbar,
+	InputBase,
+	Badge,
+	MenuItem,
+	Popover,
+	Drawer,
+	CircularProgress
+} from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -15,7 +25,6 @@ import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import Avatar from '@material-ui/core/Avatar';
-import { deepOrange } from '@material-ui/core/colors';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import HowToRegIcon from '@material-ui/icons/HowToReg';
 
@@ -30,94 +39,23 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import Sesion from '../Verificacion_sesion/verificacion_sesion';
-
-const drawerWidth = 240;
-
-const useStyles = makeStyles((theme) => ({
-	grow: {
-		flexGrow: 1
-	},
-	appbar: {
-		backgroundColor: theme.palette.navbar
-	},
-	marginButton: {
-		marginRight: theme.spacing(1),
-		marginLeft: theme.spacing(1)
-	},
-	menuButton: {
-		marginRight: theme.spacing(2)
-	},
-	title: {
-		display: 'none',
-		[theme.breakpoints.up('sm')]: {
-			display: 'block'
-		}
-	},
-	search: {
-		position: 'relative',
-		borderRadius: theme.shape.borderRadius,
-		backgroundColor: fade(theme.palette.common.white, 0.15),
-		'&:hover': {
-			backgroundColor: fade(theme.palette.common.white, 0.25)
-		},
-		marginRight: theme.spacing(2),
-		marginLeft: 0,
-		width: '100%',
-		[theme.breakpoints.up('sm')]: {
-			marginLeft: theme.spacing(3),
-			width: 'auto'
-		}
-	},
-	searchIcon: {
-		padding: theme.spacing(0, 2),
-		height: '100%',
-		position: 'absolute',
-		pointerEvents: 'none',
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'center'
-	},
-	inputRoot: {
-		color: 'inherit'
-	},
-	inputInput: {
-		padding: theme.spacing(1, 1, 1, 0),
-		// vertical padding + font size from searchIcon
-		paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-		transition: theme.transitions.create('width'),
-		width: '100%',
-		[theme.breakpoints.up('md')]: {
-			width: '20ch'
-		}
-	},
-	drawer: {
-		width: drawerWidth,
-		flexShrink: 0
-	},
-	drawerPaper: {
-		width: drawerWidth
-	},
-	drawerHeader: {
-		display: 'flex',
-		alignItems: 'center',
-		padding: theme.spacing(0, 1),
-		// necessary for content to be below app bar
-		...theme.mixins.toolbar,
-		justifyContent: 'flex-end'
-	},
-	offset: theme.mixins.toolbar,
-	orange: {
-		color: theme.palette.getContrastText(deepOrange[500]),
-		backgroundColor: deepOrange[500]
-	}
-}));
+import useStyles from './styles';
+import clienteAxios from '../../config/axios';
+import { NavContext } from '../../context/context_nav';
 
 export default function NavegacionUsuario(props) {
 	const [ darkTheme, setDarkTheme ] = props.tema;
+	const token = localStorage.getItem('token');
 	const classes = useStyles();
 	const [ anchorEl, setAnchorEl ] = useState(null);
 	const [ open, setOpen ] = useState(false);
 	const sesion = Sesion(props, false);
+	const [ datos, setDatos ] = useState([]);
+	const { update } = useContext(NavContext);
+	let user = { _id: '' };
+
+	if (!token) props.history.push('/');
+	if (token !== null) user = JSON.parse(localStorage.getItem('student'));
 
 	const isMenuOpen = Boolean(anchorEl);
 
@@ -140,6 +78,32 @@ export default function NavegacionUsuario(props) {
 	const handleDrawerClose = () => {
 		setOpen(false);
 	};
+
+	const obtenerDatosBD = useCallback(
+		async () => {
+			if (!user._id) return;
+			await clienteAxios
+				.get(`/user/${user._id}`, {
+					headers: {
+						Authorization: `bearer ${token}`
+					}
+				})
+				.then((res) => {
+					setDatos(res.data);
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		},
+		[ token, user._id ]
+	);
+
+	useEffect(
+		() => {
+			obtenerDatosBD();
+		},
+		[ obtenerDatosBD, update ]
+	);
 
 	const menuId = 'primary-search-account-menu';
 	const renderMenu = (
@@ -202,9 +166,11 @@ export default function NavegacionUsuario(props) {
 								<MenuIcon />
 							</IconButton>
 						</Hidden>
-						<Typography className={classes.title} variant="h6" noWrap>
-							UNILINE
-						</Typography>
+						<Button color="inherit" component={Link} to="/">
+							<Typography className={classes.title} variant="h6" noWrap>
+								UNILINE
+							</Typography>
+						</Button>
 						<div className={classes.search}>
 							<div className={classes.searchIcon}>
 								<SearchIcon />
@@ -289,7 +255,17 @@ export default function NavegacionUsuario(props) {
 									onClick={handleProfileMenuOpen}
 									color="inherit"
 								>
-									<Avatar className={classes.orange}>N</Avatar>
+									{!datos.urlImage ? (
+										<Avatar className={classes.orange}>
+											{datos.name ? (
+												datos.name.charAt(0)
+											) : (
+												<CircularProgress style={{ color: '#FFFFFF' }} />
+											)}
+										</Avatar>
+									) : (
+										<Avatar alt="foto de perfil" src={datos.urlImage} />
+									)}
 								</IconButton>
 							) : (
 								<div />
@@ -397,7 +373,17 @@ export default function NavegacionUsuario(props) {
 						{sesion ? (
 							<ListItem button component={Link} to="/perfil" onClick={handleDrawerClose}>
 								<ListItemIcon>
-									<Avatar className={classes.orange}>N</Avatar>
+									{!datos.urlImage ? (
+										<Avatar className={classes.orange}>
+											{datos.name ? (
+												datos.name.charAt(0)
+											) : (
+												<CircularProgress style={{ color: '#FFFFFF' }} />
+											)}
+										</Avatar>
+									) : (
+										<Avatar alt="foto de perfil" src={datos.urlImage} />
+									)}
 								</ListItemIcon>
 								<ListItemText primary="Mi perfil" />
 							</ListItem>

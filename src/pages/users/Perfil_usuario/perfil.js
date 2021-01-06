@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useContext } from 'react';
 import useStyles from './styles';
 import { Box, TextField, Button, Typography, Container, ButtonBase, Grid, Hidden } from '@material-ui/core';
 import clienteAxios from '../../../config/axios';
@@ -16,6 +16,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import Zoom from '@material-ui/core/Zoom';
 import CambiarPassword from './password';
 import Notebook from '../../../images/Notebook.png';
+import { NavContext } from '../../../context/context_nav';
 import './inputs.css';
 
 import FaceIcon from '@material-ui/icons/Face';
@@ -38,6 +39,7 @@ export default function PerfilUsuario(props) {
 		mensaje: '',
 		status: ''
 	});
+	const { update, setUpdate } = useContext(NavContext);
 	let user = { _id: '' };
 
 	if (!token) props.history.push('/');
@@ -131,6 +133,7 @@ export default function PerfilUsuario(props) {
 					mensaje: 'Guardado correctamente',
 					status: 'success'
 				});
+				setUpdate(!update);
 			})
 			.catch((err) => {
 				setLoading(false);

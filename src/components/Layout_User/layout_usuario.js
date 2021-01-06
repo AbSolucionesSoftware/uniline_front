@@ -6,28 +6,35 @@ import theme from '../../config/themeConfig';
 import darkMode from '../../config/darkMode';
 import { CssBaseline } from '@material-ui/core';
 import Footer from '../Footer/footer';
+import { NavProvider } from '../../context/context_nav';
 
 export default function LayoutUsers(props) {
 	let thema = localStorage.getItem('tema');
-	let tema = JSON.parse(thema)
+	let tema = JSON.parse(thema);
 	const { routes } = props;
 	const [ darkTheme, setDarkTheme ] = useState(tema);
 
-	useEffect(() => {
-		if(tema === null){
-			localStorage.setItem('tema', false);
-			return;
-		}
-	}, [tema]);
+	useEffect(
+		() => {
+			if (tema === null) {
+				localStorage.setItem('tema', false);
+				return;
+			}
+		},
+		[ tema ]
+	);
 
 	return (
 		<ThemeProvider theme={tema === true ? darkMode : theme}>
 			<CssBaseline />
 			<div>
-				<NavegacionUsuario tema={[ darkTheme ,setDarkTheme]} />
-				<div style={{minHeight: '90vh'}}>
-					<LoadRoutes routes={routes} />
-				</div>
+				<NavProvider>
+					<NavegacionUsuario tema={[ darkTheme, setDarkTheme ]} />
+					<div style={{ minHeight: '90vh' }}>
+						<LoadRoutes routes={routes} />
+					</div>
+				</NavProvider>
+
 				<div>
 					<Footer />
 				</div>

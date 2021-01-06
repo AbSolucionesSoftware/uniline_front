@@ -1,8 +1,8 @@
-import React from 'react'
+import React from 'react';
 import './footer.scss';
 
 import { makeStyles } from '@material-ui/core/styles';
-import{ Grid, Box, Hidden, Typography, Button} from '@material-ui/core';
+import { Grid, Box, Hidden, Typography, Button } from '@material-ui/core';
 
 import FacebookIcon from '@material-ui/icons/Facebook';
 import InstagramIcon from '@material-ui/icons/Instagram';
@@ -15,90 +15,81 @@ import { Link } from 'react-router-dom';
 
 import Imagen from '../../images/uniline2.png';
 
-
-
 const useStyles = makeStyles((theme) => ({
-    root: {
-      flexGrow: 1,
-    },
-    appfoot: {
+	root: {
+		flexGrow: 1
+	},
+	appfoot: {
 		backgroundColor: theme.palette.info.main
-    },
-    marginText: {
+	},
+	marginText: {
 		marginTop: theme.spacing(1)
 	},
-    appSupFoot: {
+	appSupFoot: {
 		backgroundColor: theme.palette.info.light
 	},
-    imgContainer: {
-        height: 70,
-        display: 'flex',
-        justifyContent: 'center',
-        marginTop: theme.spacing(5)
-    },
-    cover: {
+	imgContainer: {
+		height: 70,
+		display: 'flex',
+		justifyContent: 'center',
+		marginTop: theme.spacing(5)
+	},
+	cover: {
 		maxWidth: '100%',
-        maxHeight: '100%'
-    }
-  }));
+		maxHeight: '100%'
+	}
+}));
 
 export default function Footer() {
-    const classes = useStyles();
+	const classes = useStyles();
 
-    return (
-        <div >
-            <Grid container >
-               
-                <Grid sm={4} xs={12} >
-                     <Typography className={classes.marginText} align="center" variant="subtitle1">
-                        <HomeIcon style={{ fontSize: 45}}/><br/>
-                        Javier Mina 450, Interior 22, 
-                        Privada San Javier <br />
-                        Autlan de Navarro, Jalisco, Mex. <br />
-                    </Typography>
-                </Grid>
+	return (
+		<div>
+			<Grid container>
+				<Grid item sm={4} xs={12}>
+					<Typography className={classes.marginText} align="center" variant="subtitle1">
+						<HomeIcon style={{ fontSize: 45 }} />
+						<br />
+						Javier Mina 450, Interior 22, Privada San Javier <br />
+						Autlan de Navarro, Jalisco, Mex. <br />
+					</Typography>
+				</Grid>
 
-                <Grid justify-sm-center sm={4} >
-                    <Hidden xsDown>
-                        <Box    
-                            className={classes.imgContainer}
-                        >
-                            <img id="is" alt="Uniline" src={Imagen} className={classes.cover} />
-                        </Box>
-                    </Hidden>
-                </Grid>
+				<Grid item sm={4}>
+					<Hidden xsDown>
+						<Box className={classes.imgContainer}>
+							<img id="is" alt="Uniline" src={Imagen} className={classes.cover} />
+						</Box>
+					</Hidden>
+				</Grid>
 
-                <Grid sm={4}  xs={12} align="center"> 
-                    <Typography className={classes.marginText} variant="h6" > 
-                        Contactanos: <br/>
-                    </Typography>
-                    <Typography >
-                        <MailOutlineIcon/> atencionaclientes@escuelaalreves.com <br />
-                        <CallIcon /> 3171035768 <br/>
-                    </Typography>
-                    <Box className={classes.marginText}>
-                        {/* <a href="https://www.facebook.com/cafi.tutiendaenlinea" target="_blank" rel="noreferrer"> </a> */}
-                        <FacebookIcon id="is" style={{ fontSize: 40}}/>
-                        <InstagramIcon id="is" style={{ fontSize: 40}}/>
-                        <TwitterIcon id="is"style={{ fontSize: 40}}/>
-                    </Box>
-                </Grid>
-
-            </Grid>
-            <Grid sm={12} >
-
-                <Typography style={{ fontSize: 13}} align="center">
-                        © AB Soluciones Empresariales 2020 All rights reserved. <br />
-                        <Button id="is" style={{ fontSize: 12}} component={Link} to="/politicas">
-                            Políticas de Privacidad
-                        </Button>
-                        <Button id="is" style={{ fontSize: 12}} component={Link} to="/politicas">
-                            Misión
-                        </Button>
-                </Typography>
-                
-            </Grid>
-        </div>
-		
-    )
+				<Grid item sm={4} xs={12} align="center">
+					<Typography className={classes.marginText} variant="h6">
+						Contactanos: <br />
+					</Typography>
+					<Typography>
+						<MailOutlineIcon /> atencionaclientes@escuelaalreves.com <br />
+						<CallIcon /> 3171035768 <br />
+					</Typography>
+					<Box className={classes.marginText}>
+						{/* <a href="https://www.facebook.com/cafi.tutiendaenlinea" target="_blank" rel="noreferrer"> </a> */}
+						<FacebookIcon id="is" style={{ fontSize: 40 }} />
+						<InstagramIcon id="is" style={{ fontSize: 40 }} />
+						<TwitterIcon id="is" style={{ fontSize: 40 }} />
+					</Box>
+				</Grid>
+				<Grid item sm={12}>
+					<Typography style={{ fontSize: 13 }} align="center">
+						© AB Soluciones Empresariales 2020 All rights reserved. <br />
+						<Button id="is" style={{ fontSize: 12 }} component={Link} to="/politicas">
+							Políticas de Privacidad
+						</Button>
+						<Button id="is" style={{ fontSize: 12 }} component={Link} to="/politicas">
+							Misión
+						</Button>
+					</Typography>
+				</Grid>
+			</Grid>
+		</div>
+	);
 }

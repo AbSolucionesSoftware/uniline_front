@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
 	iconSave: {
 		zIndex: 10,
 		position: 'fixed',
-		bottom: theme.spacing(2),
+		top: theme.spacing(10),
 		right: theme.spacing(2)
     },
     imagen: {
