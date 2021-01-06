@@ -171,6 +171,7 @@ export default function NavegacionUsuario(props) {
 				onClick={() => {
 					firebase.auth().signOut();
 					localStorage.removeItem('token');
+					localStorage.removeItem('student');
 					setTimeout(() => {
 						window.location.reload();
 					}, 500);
@@ -413,6 +414,7 @@ export default function NavegacionUsuario(props) {
 								onClick={() => {
 									firebase.auth().signOut();
 									localStorage.removeItem('token');
+									localStorage.removeItem('student');
 									setTimeout(() => {
 										window.location.reload();
 									}, 500);

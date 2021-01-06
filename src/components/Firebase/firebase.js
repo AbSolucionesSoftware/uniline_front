@@ -7,6 +7,8 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import './firebase.scss';
 import MessageSnackbar from '../Snackbar/snackbar';
+import Spin from '../Spin/spin';
+import jwt_decode from 'jwt-decode';
 /* import * as firebaseui from 'firebaseui'; */
 
 /* var ui = new firebaseui.auth.AuthUI(firebase.auth());
@@ -18,6 +20,7 @@ if (!firebase.apps.length) {
 
 function Firebase(props) {
 	const [ user, setUser ] = useState(false);
+	const [ loading, setLoading ] = useState(false);
 	const [ snackbar, setSnackbar ] = useState({
 		open: false,
 		mensaje: '',
@@ -37,6 +40,7 @@ function Firebase(props) {
 		function onAuthStateChange() {
 			return firebase.auth().onAuthStateChanged(async (user) => {
 				if (user) {
+					setLoading(true);
 					await clienteAxios
 						.post('/user/firebase', {
 							email: user.email,
@@ -44,19 +48,16 @@ function Firebase(props) {
 						})
 						.then((res) => {
 							//Usuario creado correctamente
+							setLoading(false);
 							setUser(true);
-							setSnackbar({
-								open: true,
-								mensaje: 'bienvenido ' + user.displayName,
-								status: 'success'
-							});
 							const token = res.data.token;
+							const decoded = jwt_decode(token);
 							localStorage.setItem('token', token);
-							setTimeout(() => {
-								window.location.href = '/';
-							}, 1500);
+							localStorage.setItem('student', JSON.stringify(decoded));
+							window.location.href = '/';
 						})
 						.catch((err) => {
+							setLoading(false);
 							if (err.response) {
 								setSnackbar({
 									open: true,
@@ -81,6 +82,7 @@ function Firebase(props) {
 
 	return (
 		<div className="App">
+			<Spin loading={loading} />
 			<MessageSnackbar
 				open={snackbar.open}
 				mensaje={snackbar.mensaje}

@@ -55,16 +55,10 @@ export default function LoginUsuario(props) {
 			.then((res) => {
 				const decoded = jwt_decode(res.data.token);
 				setLoading(false);
-				setSnackbar({
-					open: true,
-					mensaje: decoded.name ? `Bienvenido ${decoded.name}` : 'Bienvenido',
-					status: 'success'
-				});
 				const token = res.data.token;
 				localStorage.setItem('token', token);
-				setTimeout(() => {
-					window.location.href = '/';
-				}, 1000);
+				localStorage.setItem('student', JSON.stringify(decoded));
+				window.location.href = '/';
 			})
 			.catch((err) => {
 				setLoading(false);
