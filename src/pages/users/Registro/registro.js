@@ -19,6 +19,7 @@ import MessageSnackbar from '../../../components/Snackbar/snackbar';
 import Spin from '../../../components/Spin/spin';
 import { Link } from 'react-router-dom';
 import LinkMaterial from '@material-ui/core/Link';
+import jwt_decode from 'jwt-decode';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -77,16 +78,11 @@ export default function RegistroUsuario(props) {
 			.post('/user', datos)
 			.then((res) => {
 				setLoading(false);
-				setSnackbar({
-					open: true,
-					mensaje: 'Cuenta creada con éxito',
-					status: 'success'
-				});
 				const token = res.data.token;
+				const decoded = jwt_decode(token);
 				localStorage.setItem('token', token);
-				setTimeout(() => {
-					props.history.push('/');
-				}, 1000);
+				localStorage.setItem('student', JSON.stringify(decoded));
+				props.history.push('/');
 			})
 			.catch((err) => {
 				setLoading(false);

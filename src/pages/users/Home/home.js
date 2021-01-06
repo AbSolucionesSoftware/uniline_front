@@ -6,11 +6,6 @@ import CardCurso from './Card_cursos/cardCurso';
 import Banner from './Banner/banner';
 
 
-const useStyles = makeStyles((theme) => ({
-	titulos:{
-		
-	}
-}))
 
 
 export default function Home() {
