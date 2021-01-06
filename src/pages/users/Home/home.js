@@ -1,11 +1,36 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+
+import { Container, Grid, Box, Typography } from '@material-ui/core';
+
+import CardCurso from './Card_cursos/cardCurso';
+import Banner from './Banner/banner';
+
+
+const useStyles = makeStyles((theme) => ({
+	titulos:{
+		
+	}
+}))
+
 
 export default function Home() {
+
 	return (
-		<div>
-			Home
-			<ul>
+		<Grid>
+			<Banner />
+			<Container maxWidth="xl">
+				<Box mt={4}>
+					<Box mt={5}>
+						<Typography align="center">
+							Los mejores cursos, al alcance de un click
+						</Typography>
+					</Box>
+					
+					<CardCurso />
+				</Box>
+			</Container>
+				
+			{/* <ul>
 				<Link to="/">Home user</Link>
 			</ul>
 			<ul>
@@ -51,7 +76,7 @@ export default function Home() {
 			</ul>
 			<ul>
 				<Link to="/instructor/contenido_curso">contendio curso</Link>
-			</ul>
-		</div>
+			</ul> */}
+		</Grid>
 	);
 }
