@@ -1,5 +1,5 @@
 import React, {Fragment }  from 'react';
-import { makeStyles , Button, Grid, Box, Tooltip, Avatar} from '@material-ui/core';
+import { makeStyles , Button, Grid, Box, Tooltip, Avatar, Container} from '@material-ui/core';
 import { withStyles} from '@material-ui/core/styles';
     
 import Rating from '@material-ui/lab/Rating';
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     imgContainer: {
-        height: 140,
+        height: 130,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -104,8 +104,9 @@ export default function CardCurso() {
 
     return (
             <Fragment >
-            <Grid container >
-                <Grid items sm={2} xs={6} >
+            <Container maxWidth="xl">
+                <Grid item sm={2} xs={6} >
+                    
                     <HtmlTooltip title={descriptionCurso} placement="right" interactive>
                         <Card className={classes.cardContent} variant="outlined">
 					    <Box flexDirection="column">
@@ -131,7 +132,7 @@ export default function CardCurso() {
                                         </Typography>
                                         <Box display="flex" m={1}>
                                             <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-                                            <Typography  className={classes.espaciado} variant="caption text" color="textSecondary">
+                                            <Typography  className={classes.espaciado} variant="caption" color="textSecondary">
                                                 Maestro: Brayan Antonio
                                             </Typography>
                                         </Box>
@@ -154,7 +155,7 @@ export default function CardCurso() {
                         </Card>
                     </HtmlTooltip>
                 </Grid>
-            </Grid>
+            </Container>
             </Fragment>
     )
 }

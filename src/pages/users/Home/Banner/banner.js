@@ -6,7 +6,7 @@ import Carousel from 'react-material-ui-carousel'
 
 import Imagen from '../../../../images/Escritorio.gif';
 import Celular from '../../../../images/Celular.gif';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     bannerOne:{
@@ -52,10 +52,10 @@ export default function Banner() {
 
     return (
         <Fragment>
-            <Grid flexDirection="column" >
+            <Grid>
             <Carousel interval={4000} indicators={false} >
                 <Box className={classes.bannerOne} display="flex" >
-                    <Grid sm={12} md={6} columns>
+                    <Grid item sm={12} md={6}>
                         <QueueAnim delay={700} className="queue-simple">
                             <Box key="a" mt={13} sm={3} align="center">
                                 <Texty className={classes.tipografia}> UNILINE</Texty>
@@ -66,14 +66,14 @@ export default function Banner() {
                                 </Box>
                             </Box>
                             <Box key="b" mt={2} align='center'>
-                                <Button variant="contained" component={Link} className={classes.buttonOne}>
+                                <Button variant="contained" className={classes.buttonOne}>
                                     Ver mas...
                                 </Button>
                             </Box>
                         </QueueAnim>
                     </Grid>
                     <Hidden smDown>
-                        <Grid  sm={6} >
+                        <Grid item sm={6} >
                             <QueueAnim delay={800} className="queue-simple">
                                 <img key="a" alt="Escritorio animado" src={Imagen} className={classes.imagen} />
                             </QueueAnim>
@@ -84,7 +84,7 @@ export default function Banner() {
                 <Box className={classes.bannerTwo} display="flex">
                     
                     <Hidden smDown>
-                        <Grid sm={6}>
+                        <Grid item sm={6}>
                             <Box >
                                 <QueueAnim delay={900} className="queue-simple">
                                     <img key="a" alt="Celualar Animado" src={Celular} className={classes.imagen} />
@@ -93,7 +93,7 @@ export default function Banner() {
                         </Grid>
                     </Hidden>
 
-                    <Grid sm={12} md={7} >
+                    <Grid item sm={12} md={7} >
                         <QueueAnim delay={700} className="queue-simple">
                             <Box key="a" mt={13} align="center">
                                 <Typography variant='h6' className={classes.tipografiaTwo}>
@@ -104,7 +104,7 @@ export default function Banner() {
                                 </Typography>
                             </Box>
                             <Box key="b" mt={4} align='center'>
-                                <Button variant="contained" component={Link} className={classes.buttonTwo}>
+                                <Button variant="contained" className={classes.buttonTwo}>
                                     Comenzar ahora...
                                 </Button>
                             </Box>

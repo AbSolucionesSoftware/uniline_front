@@ -1,9 +1,9 @@
 import React from 'react';
-
-import { Container, Grid, Box, Typography } from '@material-ui/core';
+import { Container, Grid, Box} from '@material-ui/core';
 
 import CardCurso from './Card_cursos/cardCurso';
 import Banner from './Banner/banner';
+import BannerInformartivo from './Banner_Informativo/banner_informativo';
 
 
 
@@ -13,17 +13,14 @@ export default function Home() {
 	return (
 		<Grid>
 			<Banner />
-			<Container maxWidth="xl">
-				<Box mt={4}>
-					<Box mt={5}>
-						<Typography align="center">
-							Los mejores cursos, al alcance de un click
-						</Typography>
+			<Container maxWidth="xl">				
+					<Box mt={3}>
+						<CardCurso />
 					</Box>
-					
-					<CardCurso />
-				</Box>
 			</Container>
+			<Grid>
+				<BannerInformartivo />
+			</Grid>
 				
 			{/* <ul>
 				<Link to="/">Home user</Link>
