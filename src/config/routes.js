@@ -2,6 +2,7 @@
 import LayoutMaestro from '../components/Layout_Maestro/layout_maestro';
 import LayoutContenidoCurso from '../components/Layout_Maestro/layout_contenido';
 import LayoutUsers from '../components/Layout_User/layout_usuario';
+import LayoutDashboardUser from '../components/Layout_User/layout_dashboar';
 
 //Admin pages
 import DashboardMaestro from '../pages/maestro/Dashboard_maestro/dashboard';
@@ -21,7 +22,7 @@ import ResultadoBusqueda from '../pages/users/Busqueda/resultados_busqueda';
 import Carrito from '../pages/users/Carrito/carrito';
 import PagarCurso from '../pages/users/Compra_curso/pagar_curso';
 import MisCursos from '../pages/users/Cursos_usuario/mis_cursos';
-import DashboardUsuario from '../pages/users/Dashboard_Usuario/dashboard';
+/* import DashboardUsuario from '../pages/users/Dashboard_Usuario/dashboard'; */
 import PerfilUsuario from '../pages/users/Perfil_usuario/perfil';
 import Politicas from '../pages/users/Politicas/politicas';
 import ImagenCorporativa from '../pages/users/Imagen_corporativa/imagen_corporativa';
@@ -36,6 +37,11 @@ const routes = [
 	{
 		path: '/instructor/nuevo_curso',
 		component: SubirCursoMaestro,
+		exact: true
+	},
+	{
+		path: '/dashboard/:url',
+		component: LayoutDashboardUser,
 		exact: true
 	},
 	{
@@ -124,11 +130,6 @@ const routes = [
 				exact: true
             },
             {
-				path: '/dashboard/:url',
-				component: DashboardUsuario,
-				exact: true
-            },
-            {
 				path: '/perfil',
 				component: PerfilUsuario,
 				exact: true
@@ -163,6 +164,7 @@ const routes = [
 			}
 		]
 	}
+	
 ];
 
 export default routes;

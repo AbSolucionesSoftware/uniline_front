@@ -3,7 +3,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 const darkMode = createMuiTheme({
 	palette: {
 		type: 'dark',
-		navbar: '#424242',
+		navbar: '#424242!important',
 		/* primary: {
 			main: '#2196f3'
 		}, */

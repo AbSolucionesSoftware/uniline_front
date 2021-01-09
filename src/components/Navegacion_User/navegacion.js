@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { /* useCallback, useContext, useEffect, */ useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
 	Button,
@@ -40,8 +40,8 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import Sesion from '../Verificacion_sesion/verificacion_sesion';
 import useStyles from './styles';
-import clienteAxios from '../../config/axios';
-import { NavContext } from '../../context/context_nav';
+/* import clienteAxios from '../../config/axios';
+import { NavContext } from '../../context/context_nav'; */
 
 export default function NavegacionUsuario(props) {
 	const [ darkTheme, setDarkTheme ] = props.tema;
@@ -50,14 +50,12 @@ export default function NavegacionUsuario(props) {
 	const [ anchorEl, setAnchorEl ] = useState(null);
 	const [ open, setOpen ] = useState(false);
 	const sesion = Sesion(props, false);
-	const [ datos, setDatos ] = useState([]);
-	const { update } = useContext(NavContext);
+	/* const [ datos, setDatos ] = useState([]); */
+	/* const { update } = useContext(NavContext); */
+	const isMenuOpen = Boolean(anchorEl);
 	let user = { _id: '' };
 
-	if (!token) props.history.push('/');
 	if (token !== null) user = JSON.parse(localStorage.getItem('student'));
-
-	const isMenuOpen = Boolean(anchorEl);
 
 	const darkModeAction = () => {
 		setDarkTheme(!darkTheme);
@@ -79,7 +77,7 @@ export default function NavegacionUsuario(props) {
 		setOpen(false);
 	};
 
-	const obtenerDatosBD = useCallback(
+	/* const obtenerDatosBD = useCallback(
 		async () => {
 			if (!user._id) return;
 			await clienteAxios
@@ -96,14 +94,14 @@ export default function NavegacionUsuario(props) {
 				});
 		},
 		[ token, user._id ]
-	);
+	); */
 
-	useEffect(
+	/* useEffect(
 		() => {
 			obtenerDatosBD();
 		},
 		[ obtenerDatosBD, update ]
-	);
+	); */
 
 	const menuId = 'primary-search-account-menu';
 	const renderMenu = (
@@ -255,16 +253,16 @@ export default function NavegacionUsuario(props) {
 									onClick={handleProfileMenuOpen}
 									color="inherit"
 								>
-									{!datos.urlImage ? (
+									{!user.imagen ? (
 										<Avatar className={classes.orange}>
-											{datos.name ? (
-												datos.name.charAt(0)
+											{user.name ? (
+												user.name.charAt(0)
 											) : (
 												<CircularProgress style={{ color: '#FFFFFF' }} />
 											)}
 										</Avatar>
 									) : (
-										<Avatar alt="foto de perfil" src={datos.urlImage} />
+										<Avatar alt="foto de perfil" src={user.imagen} />
 									)}
 								</IconButton>
 							) : (
@@ -373,16 +371,16 @@ export default function NavegacionUsuario(props) {
 						{sesion ? (
 							<ListItem button component={Link} to="/perfil" onClick={handleDrawerClose}>
 								<ListItemIcon>
-									{!datos.urlImage ? (
+									{!user.imagen ? (
 										<Avatar className={classes.orange}>
-											{datos.name ? (
-												datos.name.charAt(0)
+											{user.name ? (
+												user.name.charAt(0)
 											) : (
 												<CircularProgress style={{ color: '#FFFFFF' }} />
 											)}
 										</Avatar>
 									) : (
-										<Avatar alt="foto de perfil" src={datos.urlImage} />
+										<Avatar alt="foto de perfil" src={user.imagen} />
 									)}
 								</ListItemIcon>
 								<ListItemText primary="Mi perfil" />

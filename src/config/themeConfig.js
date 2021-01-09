@@ -3,7 +3,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 const theme = createMuiTheme({
 	palette: {
 		type: 'light',
-		navbar: '#3f51b5',
+		navbar: '#3f51b5!important',
 		primary: {
 			main: '#2196f3'
 		},

@@ -17,6 +17,7 @@ import Zoom from '@material-ui/core/Zoom';
 import CambiarPassword from './password';
 import Notebook from '../../../images/Notebook.png';
 import { NavContext } from '../../../context/context_nav';
+import jwt_decode from 'jwt-decode';
 import './inputs.css';
 
 import FaceIcon from '@material-ui/icons/Face';
@@ -133,6 +134,10 @@ export default function PerfilUsuario(props) {
 					mensaje: 'Guardado correctamente',
 					status: 'success'
 				});
+				localStorage.removeItem('token');
+				localStorage.removeItem('student');
+				localStorage.setItem('token', res.data.token);
+				localStorage.setItem('student', JSON.stringify(jwt_decode(res.data.token)));
 				setUpdate(!update);
 			})
 			.catch((err) => {
