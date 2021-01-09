@@ -41,7 +41,7 @@ export default function LayoutContenidoCurso(props) {
 	}, [tema]);
 
 	useEffect(() => {
-		Sesion(props);
+		//Sesion(props);
 	}, [props])
 
 	return (
