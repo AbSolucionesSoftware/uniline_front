@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Editor } from '@tinymce/tinymce-react';
 import { Box, Grid, Select, TextField, IconButton, InputBase, Divider, Typography, Button } from '@material-ui/core';
@@ -13,8 +13,14 @@ import CropOriginalIcon from '@material-ui/icons/CropOriginal';
 import SaveIcon from '@material-ui/icons/Save';
 import Alert from '@material-ui/lab/Alert';
 import Scroll from '../../../../components/ScrolltoTop/scroll';
+import VimeoReproductor from '../../../../components/Vimeo_Reproductor/Vimeo';
 import Spin from '../../../../components/Spin/spin';
 import MessageSnackbar from '../../../../components/Snackbar/snackbar';
+import LinearProgress from '@material-ui/core/LinearProgress';
+
+
+var  Vimeo  =  require ( 'vimeo' ) . Vimeo ; 
+let client = new Vimeo("b2af4468710c93e79707cfdbd36e8090a22ba023","NERzVNSwQkIfxL7T4QvpEpwlOf5u+cjzQq0u71G4jE7BzATZRudjfbAQAPzBZT3kgJFyXtyg7bC9B0XeA6hylQyk7RvbSupNfjv49ZuasGvvv9D40zSEbg5yoc9yJ7q4","b5397e1eef8a02fe5c3e0041e703af59");
 
 const useStyles = makeStyles((theme) => ({
 	color: {
@@ -46,12 +52,25 @@ export default function RegistroInformacionCurso() {
 	const classes = useStyles();
 	const [ datos, setDatos ] = useState([]);
     const [ validacion, setValidacion ] = useState(false);
-    const [ loading, setLoading ] = useState(false);
+	const [ loading, setLoading ] = useState(false);
+	const [video, setVideo] = useState()
     const [ snackbar, setSnackbar ] = useState({
         open: false,
         mensaje: '',
         status: ''
-    })
+	})
+	const [idVideo, setIdVideo] = useState("498098745");
+	const [fileVideo, setFileVideo] = useState([]);
+	const [progress, setProgress] = useState(10);
+	  
+	useEffect(() => {
+		const timer = setInterval(() => {
+		  setProgress((prevProgress) => (prevProgress >= 100 ? 10 : prevProgress + 10));
+		}, 800);
+		return () => {
+		  clearInterval(timer);
+		};
+	  }, []);
 
 	const obtenerCampos = (e) => {
 		setValidacion(false);
@@ -71,6 +90,95 @@ export default function RegistroInformacionCurso() {
 				[e.target.name]: e.target.value
 			});
 		}
+	};
+
+	const getFile = (e) => {
+		try {
+			setFileVideo(e.target.files);
+			console.log(e.target.files);
+		} catch (error) {
+			console.log(error);
+		}
+	}
+	
+	const enviarVideo = (e) => {
+		console.log(e.target.files);
+		client.upload(
+			e.target.files[0],
+			{
+				name: "pruena de uno",
+				embed: {
+					buttons: {
+						fullscreen: true,
+						embed: false,
+						hd: true,
+						like: true,
+						scaling:true,
+						share: false,
+						watchlater: false
+					},
+					volume: true,
+					logos:{
+						custom:{
+							active: true,
+							sticky: false
+						},
+						vimeo: false
+					},
+					playbar: true,
+					title:{
+						name: "show",
+						owner: "show",
+						portrait: "show"
+					},
+					color: "black"
+				},
+				privacy: {
+					view: "anybody",
+					download: false,
+					comments: "nobody"
+				},
+				review_page:{
+					vimeo_logo: true,
+					active: true,
+					notes: false
+				}
+
+			},
+			function (uri) {
+			  console.log('File upload completed. Your Vimeo URI is:', uri)
+			  const spleter = uri.split('/');
+			  console.log(spleter)
+			  setIdVideo(spleter[2]);
+
+			  /* client.request({
+				method: 'PUT',
+				path: uri + '/privacy/domains/http://localhost:3000'
+			  }, function (error, body, status_code, headers) {
+				console.log(uri + ' will only be embeddable on "http://localhost:3000".')
+				client.request({
+				  method: 'PATCH',
+				  path: uri,
+				  query: {
+					'privacy': {
+					  'embed': 'whitelist'
+					}
+				  }
+				}, function (error, body, status_code, headers) {
+				  console.log(uri + ' will only be embeddable on "http://localhost:3000".')
+				})
+			  }) */
+
+
+			},
+			function (bytesUploaded, bytesTotal) {
+			  var percentage = (bytesUploaded / bytesTotal * 100).toFixed(2)
+			  console.log(bytesUploaded, bytesTotal, percentage + '%')
+			},
+			function (error) {
+			  console.log('Failed because: ' + error)
+			}
+		  )
 	};
 
 	const guardarDatos = () => {
@@ -125,7 +233,7 @@ export default function RegistroInformacionCurso() {
 			<form>
 				<Typography variant="h6">Información básica</Typography>
 				<Box my={2}>
-					<TextField
+					<TextField 
 						fullWidth
 						required
 						name="title"
@@ -340,7 +448,8 @@ export default function RegistroInformacionCurso() {
                                 <img alt="imagen del curso" src="" className={classes.imagen} />
                             </Box> */}
 							<Box height={300} display="flex" justifyContent="center" alignItems="center">
-								<VideocamIcon style={{ fontSize: 200, color: '#696969' }} />
+								<VimeoReproductor idVideo={idVideo} width={"600"} height={"300"} />
+								{/* style={{ fontSize: 200, color: '#696969' }} */} 
 							</Box>
 						</Grid>
 						<Grid item lg={6}>
@@ -354,12 +463,12 @@ export default function RegistroInformacionCurso() {
 							<Box boxShadow={1}>
 								<input
 									name="promotionalVideo"
-									accept="image/*"
 									className={classes.input}
 									id="icon-button-video"
 									type="file"
-									onChange={obtenerCampos}
+									onChange={getFile}
 								/>
+
 								<label htmlFor="icon-button-video">
 									<IconButton color="primary" aria-label="upload picture" component="span">
 										<VideoCallIcon style={{ fontSize: 40 }} />
@@ -371,6 +480,20 @@ export default function RegistroInformacionCurso() {
 									}
 									inputProps={{ 'aria-label': 'naked', readOnly: true }}
 								/>
+								<div className={classes.root}>
+									<LinearProgressWithLabel value={progress} />
+								</div>
+								<Box boxShadow={1}>
+									<Button variant="contained" color="primary" >
+										Subir
+									</Button>	
+									<Button variant="contained" color="secondary" >
+										Cancelar
+									</Button>
+								</Box>
+								
+								<Box boxShadow={1}></Box>
+								
 							</Box>
 						</Grid>
 					</Grid>
@@ -379,3 +502,19 @@ export default function RegistroInformacionCurso() {
 		</Box>
 	);
 }
+
+
+function LinearProgressWithLabel(props) {
+	return (
+	  <Box display="flex" alignItems="center">
+		<Box width="100%" mr={2}>
+		  <LinearProgress variant="determinate" {...props} />
+		</Box>
+		<Box minWidth={35}>
+		  <Typography variant="body2" color="textSecondary">{`${Math.round(
+			props.value,
+		  )}%`}</Typography>
+		</Box>
+	  </Box>
+	);
+  }

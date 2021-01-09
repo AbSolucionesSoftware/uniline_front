@@ -41,7 +41,7 @@ export default function LayoutMaestro(props) {
 	}, [tema]);
 
 	useEffect(() => {
-		Sesion(props);
+		//Sesion(props);
 	}, [props])
 
 	return (
