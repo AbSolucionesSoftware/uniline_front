@@ -163,7 +163,7 @@ export default function QueAprenderaEstudiante() {
 				</IconButton>
 				<IconButton
 					className={classes.iconButton}
-					aria-label="directions"OutlinedIcon
+					aria-label="directions"
 				>
 					<DragIndicatorOutlinedIcon />
 				</IconButton>
