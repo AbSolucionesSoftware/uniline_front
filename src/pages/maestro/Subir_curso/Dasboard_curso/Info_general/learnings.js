@@ -3,15 +3,16 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Box, TextField, Divider, Typography, Button } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import Alert from '@material-ui/lab/Alert';
-import Scroll from '../../../../components/ScrolltoTop/scroll';
+import Scroll from '../../../../../components/ScrolltoTop/scroll';
 
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
+import DragIndicatorOutlinedIcon from '@material-ui/icons/DragIndicatorOutlined';
 import AddIcon from '@material-ui/icons/Add';
-import Spin from '../../../../components/Spin/spin';
-import MessageSnackbar from '../../../../components/Snackbar/snackbar';
+import Spin from '../../../../../components/Spin/spin';
+import MessageSnackbar from '../../../../../components/Snackbar/snackbar';
 
 const useStyles = makeStyles((theme) => ({
 	color: {
@@ -52,7 +53,10 @@ export default function QueAprenderaEstudiante() {
 	const [ respuestaRequeriments, setRespuestaRequeriments ] = useState('');
 	const [ respuestaWhoStudents, setRespuestaWhoStudents ] = useState('');
 
-	const [ datosLearnings, setDatosLearnings ] = useState([]);
+	const [ datosLearnings, setDatosLearnings ] = useState([
+		{learning: 'respuesta 1'},
+		{learning: 'respuesta 2'}
+	]);
 	const [ datosRequeriments, setDatosRequeriments ] = useState([]);
     const [ datosWhoStudents, setDatosWhoStudents ] = useState([]);
     
@@ -61,7 +65,9 @@ export default function QueAprenderaEstudiante() {
         open: false,
         mensaje: '',
         status: ''
-    })
+	})
+	
+	console.log(datosLearnings)
 
 	const obtenerRespuesta = (e) => {
 		switch (e.target.name) {
@@ -150,10 +156,16 @@ export default function QueAprenderaEstudiante() {
 				<Divider className={classes.divider} orientation="vertical" />
 				<IconButton
 					className={classes.iconButton}
-					aria-label="directions"
+					aria-label="delete"
 					onClick={() => eliminarRespuesta(index, 'learnings')}
 				>
-					<DeleteIcon />
+					<DeleteOutlinedIcon />
+				</IconButton>
+				<IconButton
+					className={classes.iconButton}
+					aria-label="directions"OutlinedIcon
+				>
+					<DragIndicatorOutlinedIcon />
 				</IconButton>
 			</Paper>
 		);
@@ -168,7 +180,7 @@ export default function QueAprenderaEstudiante() {
 					aria-label="directions"
 					onClick={() => eliminarRespuesta(index, 'requeriments')}
 				>
-					<DeleteIcon />
+					<DeleteOutlinedIcon />
 				</IconButton>
 			</Paper>
 		);
@@ -183,7 +195,7 @@ export default function QueAprenderaEstudiante() {
 					aria-label="directions"
 					onClick={() => eliminarRespuesta(index, 'whoStudents')}
 				>
-					<DeleteIcon />
+					<DeleteOutlinedIcon />
 				</IconButton>
 			</Paper>
 		);

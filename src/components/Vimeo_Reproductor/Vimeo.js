@@ -1,9 +1,18 @@
-import React from 'react'
+import React, { Fragment } from 'react';
 
-export default function Vimeo({idVideo,width,height}) {
-    return (
-        <div>
-            <iframe class="iframe-responsivo" src={`https://player.vimeo.com/video/${idVideo}`} width="600" height="300" frameborder="0" allow="autoplay; fullscreen" allowfullscreen=""></iframe>
-        </div>
-    )
+export default function Vimeo({ idVideo, width, height }) {
+	return (
+		<Fragment>
+			<iframe
+				title="reproductorVimeo"
+				className="iframe-responsivo"
+				src={`https://player.vimeo.com/video/${idVideo}`}
+				width={width}
+				height={height}
+				frameBorder="0"
+				allow="autoplay; fullscreen"
+				allowFullScreen=""
+			/>
+		</Fragment>
+	);
 }

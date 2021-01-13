@@ -1,5 +1,5 @@
-import React, { useState, Fragment } from 'react';
-import { makeStyles , Button, Grid, Box, Hidden, Chip } from '@material-ui/core';
+import React, { Fragment } from 'react';
+import { makeStyles, Button, Grid, Box, Chip } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -7,10 +7,11 @@ import Typography from '@material-ui/core/Typography';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import EditIcon from '@material-ui/icons/Edit';
 import OndemandVideoIcon from '@material-ui/icons/OndemandVideo';
+import ImageSearchOutlinedIcon from '@material-ui/icons/ImageSearchOutlined';
 import DoneIcon from '@material-ui/icons/Done';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import { Link } from 'react-router-dom';
-
+import { formatoFecha } from '../../../config/reuserFunction';
 
 const useStyles = makeStyles((theme) => ({
 	cardContent: {
@@ -18,19 +19,19 @@ const useStyles = makeStyles((theme) => ({
 		[theme.breakpoints.down('md')]: {
 			height: 'auto'
 		}
-    },
-    imgContainer: {
-        height: 200,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        [theme.breakpoints.down('md')]: {
-            height: 'auto',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
+	},
+	imgContainer: {
+		height: 200,
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		[theme.breakpoints.down('md')]: {
+			height: 'auto',
+			display: 'flex',
+			justifyContent: 'center',
+			alignItems: 'center'
 		}
-    },
+	},
 	chips: {
 		marginLeft: 5,
 		[theme.breakpoints.down('md')]: {
@@ -40,14 +41,9 @@ const useStyles = makeStyles((theme) => ({
 		}
 	},
 	actions: {
+		height: '100%',
 		display: 'flex',
-		justifyContent: 'space-evenly',
-		[theme.breakpoints.up('md')]: {
-			height: '100%',
-			display: 'flex',
-			flexDirection: 'column',
-			justifyContent: 'space-evenly'
-		}
+		justifyContent: 'space-evenly'
 	},
 	content: {
 		padding: '10px 10px 0px 10px'
@@ -55,22 +51,11 @@ const useStyles = makeStyles((theme) => ({
 	cover: {
 		maxWidth: '100%',
 		maxHeight: '100%'
-	},
-	controls: {
-		display: 'flex',
-		alignItems: 'center',
-		paddingLeft: theme.spacing(1),
-		paddingBottom: theme.spacing(1)
 	}
 }));
 
-export default function CursosProfesor(props) {
-    const classes = useStyles();
-	const [ publicado, setPublicado ] = useState(true);
-
-	const publicacionCurso = () => {
-		setPublicado(!publicado);
-	};
+export default function CursosProfesor({ curso }) {
+	const classes = useStyles();
 
 	return (
 		<Fragment>
@@ -85,180 +70,116 @@ export default function CursosProfesor(props) {
 									justifyContent="center"
 									alignItems="center"
 								>
-									<img
-										className={classes.cover}
-										src="https://miro.medium.com/max/875/0*oZLL-N4dGNlBe4Oh.png"
-										alt="Live from space album cover"
-									/>
+									{!curso.urlPromotionalImage ? (
+										<Box textAlign="center">
+											<Box display="flex" justifyContent="center" alignItems="center">
+												<ImageSearchOutlinedIcon style={{ fontSize: 40 }} />
+											</Box>
+											<Typography>Este curso aun no tiene imagen</Typography>
+										</Box>
+									) : (
+										<img
+											className={classes.cover}
+											src={curso.urlPromotionalImage}
+											alt="imagen promocional del curso"
+										/>
+									)}
 								</Box>
 							</Grid>
 							<Grid item sm={12} md={7}>
 								<Box display="flex" flexDirection="column">
 									<CardContent className={classes.content}>
 										<Typography component="h5" variant="h5">
-											React Hooks principiante a experto
+											{curso.title}
 										</Typography>
-                                        <Typography variant="subtitle1" color="textSecondary">
-                                            December 10, 2020
-                                        </Typography>
+										<Typography variant="subtitle1" color="textSecondary">
+											{formatoFecha(curso.createdAt)}
+										</Typography>
 									</CardContent>
-									<div className={classes.controls}>
-										<Box component="fieldset" borderColor="transparent">
-											<Typography component="legend">Ventas</Typography>
-											<Typography>$200</Typography>
-										</Box>
-										<Box component="fieldset" borderColor="transparent">
-											<Typography component="legend">Alumnos inscritos</Typography>
-											<Typography>150</Typography>
-										</Box>
-										<Box component="fieldset" borderColor="transparent">
-											<Typography component="legend">Calificación del curso</Typography>
-											<Rating name="read-only" value={4.5} readOnly precision={0.5} />
-										</Box>
-									</div>
+									<Grid container>
+										<Grid item>
+											<Box component="fieldset" borderColor="transparent">
+												<Typography component="legend">Ventas</Typography>
+												<Typography>$0</Typography>
+											</Box>
+										</Grid>
+										<Grid item>
+											<Box component="fieldset" borderColor="transparent">
+												<Typography component="legend">Alumnos inscritos</Typography>
+												<Typography>0</Typography>
+											</Box>
+										</Grid>
+										<Grid item>
+											{!curso.qualification ? (
+												<Box component="fieldset" borderColor="transparent">
+													<Typography component="legend">Sin calificaciones</Typography>
+												</Box>
+											) : (
+												<Box component="fieldset" borderColor="transparent">
+													<Typography component="legend">1 calificaciones</Typography>
+													<Rating
+														name="read-only"
+														value={curso.qualification}
+														readOnly
+														precision={0.5}
+													/>
+												</Box>
+											)}
+										</Grid>
+									</Grid>
 								</Box>
 								<Box className={classes.chips}>
 									<Chip
-										color={publicado ? "primary" : "secondary"}
-										label={publicado ? "Publicado" : "No publicado"}
-										icon={publicado ? <DoneIcon /> : <VisibilityOffIcon />}
+										color={curso.publication ? 'primary' : 'secondary'}
+										label={curso.publication ? 'Publicado' : 'No publicado'}
+										icon={curso.publication ? <DoneIcon /> : <VisibilityOffIcon />}
 										style={{ marginRight: 5 }}
 									/>
-									<Chip variant="outlined" label="$144" icon={<AttachMoneyIcon />} />
+									<Chip
+										variant="outlined"
+										label={!curso.price ? 'Sin precio' : curso.price === 0 ? 'Gratis' : curso.price}
+										icon={<AttachMoneyIcon />}
+									/>
 								</Box>
 							</Grid>
 							<Grid item xs={12} sm={12} md={2}>
-								<Hidden xsDown>
-									<Box mx={1} className={classes.actions}>
-										<Button
-											size="small"
-											color="secondary"
-											variant="outlined"
-											startIcon={publicado ? <DoneIcon /> : <VisibilityOffIcon />}
-											onClick={publicacionCurso}
-										>
-											{publicado ? 'Publicado' : 'Sin publicar'}
-										</Button>
-										<Button color="secondary" variant="outlined" startIcon={<EditIcon />} component={Link} to="/instructor/contenido_curso/general">
-											Editar
-										</Button>
-										<Button color="secondary" variant="outlined" startIcon={<OndemandVideoIcon />}>
-											Ver curso
-										</Button>
-									</Box>
-								</Hidden>
-								<Hidden smUp>
-									<Box mx={1} className={classes.actions}>
-										<Button
-											size="small"
-											color="secondary"
-											variant="outlined"
-											onClick={publicacionCurso}
-										>
-											{publicado ? 'Publicado' : 'Sin publicar'}
-										</Button>
-										<Button color="secondary" variant="outlined">
-											Editar
-										</Button>
-										<Button color="secondary" variant="outlined">
-											Ver curso
-										</Button>
-									</Box>
-								</Hidden>
-							</Grid>
-						</Grid>
-					</Card>
-				</Box>
-                
-                <Box mt={2} boxShadow={3}>
-					<Card className={classes.cardContent} variant="outlined">
-						<Grid container>
-							<Grid item sm={12} md={3}>
-								<Box
-									className={classes.imgContainer}
-									display="flex"
-									justifyContent="center"
-									alignItems="center"
-								>
-									<img
-										className={classes.cover}
-										src="https://upload.wikimedia.org/wikipedia/commons/9/99/Unofficial_JavaScript_logo_2.svg"
-										alt="curso de javascript"
-									/>
+								<Box p={1} className={classes.actions}>
+									<Grid container spacing={1}>
+										<Grid item xs={12} md={12} sm={4}>
+											<Button
+												fullWidth
+												color="secondary"
+												variant="outlined"
+												startIcon={curso.publication ? <DoneIcon /> : <VisibilityOffIcon />}
+												/* onClick={publicacionCurso} */
+											>
+												{curso.publication ? 'No publicado' : 'Publicar'}
+											</Button>
+										</Grid>
+										<Grid item xs={12} md={12} sm={4}>
+											<Button
+												fullWidth
+												color="secondary"
+												variant="outlined"
+												startIcon={<EditIcon />}
+												component={Link}
+												to={`/instructor/contenido_curso/${curso._id}/general`}
+											>
+												Editar
+											</Button>
+										</Grid>
+										<Grid item xs={12} md={12} sm={4}>
+											<Button
+												fullWidth
+												color="secondary"
+												variant="outlined"
+												startIcon={<OndemandVideoIcon />}
+											>
+												Ver curso
+											</Button>
+										</Grid>
+									</Grid>
 								</Box>
-							</Grid>
-							<Grid item sm={12} md={7}>
-								<Box display="flex" flexDirection="column">
-									<CardContent className={classes.content}>
-										<Typography component="h5" variant="h5">
-											JavaScript, TypeScript moderno
-										</Typography>
-                                        <Typography variant="subtitle1" color="textSecondary">
-                                            September 14, 2020
-                                        </Typography>
-									</CardContent>
-									<div className={classes.controls}>
-										<Box component="fieldset" borderColor="transparent">
-											<Typography component="legend">Ventas</Typography>
-											<Typography>$0</Typography>
-										</Box>
-										<Box component="fieldset" borderColor="transparent">
-											<Typography component="legend">Alumnos inscritos</Typography>
-											<Typography>0</Typography>
-										</Box>
-										<Box component="fieldset" borderColor="transparent">
-											<Typography component="legend">Calificación del curso</Typography>
-											<Rating name="read-only" value={0} readOnly precision={0.5} />
-										</Box>
-									</div>
-								</Box>
-								<Box className={classes.chips}>
-                                    <Chip
-										color="secondary"
-										label="No publicado"
-										icon={<VisibilityOffIcon />}
-										style={{ marginRight: 5 }}
-									/>
-									<Chip variant="outlined" label="Gratis" icon={<AttachMoneyIcon />} />
-								</Box>
-							</Grid>
-							<Grid item xs={12} sm={12} md={2}>
-								<Hidden xsDown>
-									<Box mx={1} className={classes.actions}>
-										<Button
-											size="small"
-											color="secondary"
-											variant="outlined"
-											startIcon={<VisibilityOffIcon />}
-										>
-											Sin publicar
-										</Button>
-										<Button color="secondary" variant="outlined" startIcon={<EditIcon />}>
-											Editar
-										</Button>
-										<Button color="secondary" variant="outlined" startIcon={<OndemandVideoIcon />}>
-											Ver curso
-										</Button>
-									</Box>
-								</Hidden>
-								<Hidden smUp>
-									<Box mx={1} className={classes.actions}>
-										<Button
-											size="small"
-											color="secondary"
-											variant="outlined"
-											onClick={publicacionCurso}
-										>
-											{publicado ? 'Publicado' : 'Sin publicar'}
-										</Button>
-										<Button color="secondary" variant="outlined">
-											Editar
-										</Button>
-										<Button color="secondary" variant="outlined">
-											Ver curso
-										</Button>
-									</Box>
-								</Hidden>
 							</Grid>
 						</Grid>
 					</Card>

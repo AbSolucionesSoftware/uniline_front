@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { Drawer, AppBar, Toolbar, List, Typography, IconButton, Button, Box, Hidden, Divider } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -16,6 +16,10 @@ import ListIcon from '@material-ui/icons/List';
 import SchoolIcon from '@material-ui/icons/School';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
+import clienteAxios from '../../../config/axios';
+import Spin from '../../../components/Spin/spin';
+import MessageSnackbar from '../../../components/Snackbar/snackbar';
+import { CursoContext } from '../../../context/curso_context';
 
 const drawerWidth = 300;
 
@@ -27,19 +31,19 @@ const useStyles = makeStyles((theme) => ({
 	},
 	appBar: {
 		backgroundColor: theme.palette.navbar,
-		[theme.breakpoints.up('sm')]: {
+		[theme.breakpoints.up('md')]: {
 			width: `calc(100% - ${drawerWidth}px)`,
 			marginLeft: drawerWidth
 		}
 	},
 	menuButton: {
 		marginRight: theme.spacing(2),
-		[theme.breakpoints.up('sm')]: {
+		[theme.breakpoints.up('md')]: {
 			display: 'none'
 		}
 	},
 	drawer: {
-		[theme.breakpoints.up('sm')]: {
+		[theme.breakpoints.up('md')]: {
 			width: drawerWidth,
 			flexShrink: 0
 		}
@@ -61,16 +65,36 @@ const useStyles = makeStyles((theme) => ({
 	orange: {
 		color: theme.palette.getContrastText(deepOrange[500]),
 		backgroundColor: deepOrange[500]
-	}
+	},
+	divider: {
+		backgroundColor: theme.palette.background.paper,
+		height: 28,
+		margin: 10
+	},
+	drawHeight: {
+		marginTop: theme.spacing(5),
+		[theme.breakpoints.down('sm')]: {
+			marginTop: 0
+		}
+	},
 }));
 
 export default function NavegacionContenidoCurso(props) {
 	const classes = useStyles();
 	const theme = useTheme();
+	const token = localStorage.getItem('token');
 	const { window } = props;
 	const [ darkTheme, setDarkTheme ] = props.tema;
-	const [ mobileOpen, setMobileOpen ] = React.useState(false);
+	const [ mobileOpen, setMobileOpen ] = useState(false);
 	const [ title, setTitle ] = useState('Información del curso');
+	const { datos, setDatos, update, setPreview } = useContext(CursoContext);
+	const idcurso = props.props.match.params.curso;
+	const [ loading, setLoading ] = useState(false);
+	const [ snackbar, setSnackbar ] = useState({
+		open: false,
+		mensaje: '',
+		status: ''
+	});
 
 	const darkModeAction = () => {
 		setDarkTheme(!darkTheme);
@@ -81,26 +105,76 @@ export default function NavegacionContenidoCurso(props) {
 		setMobileOpen(!mobileOpen);
 	};
 
+	const obtenerCursoBD = useCallback(
+		async () => {
+			setLoading(true);
+			await clienteAxios
+				.get(`/course/${idcurso}`, {
+					headers: {
+						Authorization: `bearer ${token}`
+					}
+				})
+				.then((res) => {
+					setLoading(false);
+					setDatos(res.data);
+					if(res.data.urlPromotionalImage){
+						setPreview(res.data.urlPromotionalImage);
+					}
+				})
+				.catch((err) => {
+					setLoading(false);
+					if (err.response) {
+						setSnackbar({
+							open: true,
+							mensaje: err.response.data.message,
+							status: 'error'
+						});
+					} else {
+						setSnackbar({
+							open: true,
+							mensaje: 'Al parecer no se a podido conectar al servidor.',
+							status: 'error'
+						});
+					}
+				});
+		},
+		[ idcurso, token, setDatos, setPreview ]
+	);
+
+	useEffect(
+		() => {
+			obtenerCursoBD();
+		},
+		[ obtenerCursoBD, update ]
+	);
+
 	const drawer = (
 		<div>
-			<Hidden smUp>
+			<Spin loading={loading} />
+			<MessageSnackbar
+				open={snackbar.open}
+				mensaje={snackbar.mensaje}
+				status={snackbar.status}
+				setSnackbar={setSnackbar}
+			/>
+			<Hidden mdUp>
 				<div className={classes.toolbar}>
 					<IconButton onClick={handleDrawerToggle}>
 						{theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
 					</IconButton>
 				</div>
 			</Hidden>
-			<Box mt={10} ml={3}>
+			<Box ml={3} className={classes.drawHeight}>
 				<Typography variant="button">Información general</Typography>
 				<Divider />
 				<List className={classes.root}>
-					<ListItem button component={Link} to="/instructor/contenido_curso/general" onClick={() => setTitle('Información del curso')}>
+					<ListItem button component={Link} to={`/instructor/contenido_curso/${idcurso}/general`} onClick={() => setTitle('Información del curso')}>
 						<ListItemIcon>
 							<EditIcon />
 						</ListItemIcon>
 						<ListItemText primary="Información del curso" />
 					</ListItem>
-					<ListItem button component={Link} to="/instructor/contenido_curso/learn" onClick={() => setTitle('Que enseñarás')}>
+					<ListItem button component={Link} to={`/instructor/contenido_curso/${idcurso}/learn`} onClick={() => setTitle('Que enseñarás')}>
 						<ListItemIcon>
 							<SchoolIcon />
 						</ListItemIcon>
@@ -112,7 +186,7 @@ export default function NavegacionContenidoCurso(props) {
 				<Typography variant="button">Contenido del curso</Typography>
 				<Divider />
 				<List className={classes.root}>
-					<ListItem button component={Link} to="/instructor/contenido_curso/contenido" onClick={() => setTitle('Bloques y temas del curso')}>
+					<ListItem button component={Link} to={`/instructor/contenido_curso/${idcurso}/contenido`} onClick={() => setTitle('Bloques y temas del curso')}>
 						<ListItemIcon>
 							<ListIcon />
 						</ListItemIcon>
@@ -125,7 +199,7 @@ export default function NavegacionContenidoCurso(props) {
 				<Divider />
 				<List className={classes.root}>
 					<List className={classes.root}>
-						<ListItem button component={Link} to="/instructor/contenido_curso/precio" onClick={() => setTitle('Precio del curso')}>
+						<ListItem button component={Link} to={`/instructor/contenido_curso/${idcurso}/precio`} onClick={() => setTitle('Precio del curso')}>
 							<ListItemIcon>
 								<AttachMoneyIcon />
 							</ListItemIcon>
@@ -133,7 +207,7 @@ export default function NavegacionContenidoCurso(props) {
 						</ListItem>
 					</List>
 					<List className={classes.root}>
-						<ListItem button component={Link} to="/instructor/contenido_curso/promocion" onClick={() => setTitle('Promociones del curso')}>
+						<ListItem button component={Link} to={`/instructor/contenido_curso/${idcurso}/promocion`} onClick={() => setTitle('Promociones del curso')}>
 							<ListItemIcon>
 								<LocalOfferIcon />
 							</ListItemIcon>
@@ -167,8 +241,12 @@ export default function NavegacionContenidoCurso(props) {
 					>
 						<MenuIcon />
 					</IconButton>
-					<Typography variant="h6" noWrap className={classes.title}>
+					<Typography variant="h6" noWrap>
 						{title}
+					</Typography> 
+					<Divider orientation="vertical" className={classes.divider} />
+					<Typography variant="h6" noWrap className={classes.title}>
+						{datos.title ? datos.title : ''}
 					</Typography>
 					<Button color="inherit" variant="outlined" component={Link} to="/instructor/cursos">
 						Regresar a cursos
@@ -197,7 +275,7 @@ export default function NavegacionContenidoCurso(props) {
 						{drawer}
 					</Drawer>
 				</Hidden>
-				<Hidden xsDown implementation="css">
+				<Hidden smDown implementation="css">
 					<Drawer
 						classes={{
 							paper: classes.drawerPaper

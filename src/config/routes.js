@@ -10,11 +10,11 @@ import SubirCursoMaestro from '../pages/maestro/Subir_curso/crear_curso';
 import EstadisticasMaestro from '../pages/maestro/Estadisticas/estadisticas';
 
 //dashboard registro curso pages
-import RegistroInformacionCurso from '../pages/maestro/Subir_curso/Dasboard_curso/informacion_curso';
-import QueAprenderaEstudiante from '../pages/maestro/Subir_curso/Dasboard_curso/learnings';
-import RegistroContenido from '../pages/maestro/Subir_curso/Dasboard_curso/contenido';
-import PrecioCurso from '../pages/maestro/Subir_curso/Dasboard_curso/precio';
-import PromocionCurso from '../pages/maestro/Subir_curso/Dasboard_curso/promocion';
+import RegistroInformacionCurso from '../pages/maestro/Subir_curso/Dasboard_curso/Info_general/informacion_curso';
+import QueAprenderaEstudiante from '../pages/maestro/Subir_curso/Dasboard_curso/Info_general/learnings';
+import RegistroContenido from '../pages/maestro/Subir_curso/Dasboard_curso/Contenido_curso/contenido';
+import PrecioCurso from '../pages/maestro/Subir_curso/Dasboard_curso/Publicacion_curso/precio';
+import PromocionCurso from '../pages/maestro/Subir_curso/Dasboard_curso/Publicacion_curso/promocion';
 
 //Users pages
 import Home from '../pages/users/Home/home';
@@ -45,32 +45,32 @@ const routes = [
 		exact: true
 	},
 	{
-		path: '/instructor/contenido_curso',
+		path: '/instructor/contenido_curso/:curso',
 		component: LayoutContenidoCurso,
 		exact: false,
 		routes: [
 			{
-				path: '/instructor/contenido_curso/general',
+				path: '/instructor/contenido_curso/:curso/general',
 				component: RegistroInformacionCurso,
 				exact: true,
 			},
 			{
-				path: '/instructor/contenido_curso/learn',
+				path: '/instructor/contenido_curso/:curso/learn',
 				component: QueAprenderaEstudiante,
 				exact: true,
 			},
 			{
-				path: '/instructor/contenido_curso/contenido',
+				path: '/instructor/contenido_curso/:curso/contenido',
 				component: RegistroContenido,
 				exact: true,
 			},
 			{
-				path: '/instructor/contenido_curso/precio',
+				path: '/instructor/contenido_curso/:curso/precio',
 				component: PrecioCurso,
 				exact: true,
 			},
 			{
-				path: '/instructor/contenido_curso/promocion',
+				path: '/instructor/contenido_curso/:curso/promocion',
 				component: PromocionCurso,
 				exact: true,
 			},

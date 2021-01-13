@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles, Button, Grid, Box, Typography } from '@material-ui/core';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
@@ -10,6 +10,9 @@ import SearchIcon from '@material-ui/icons/Search';
 import CursosProfesor from './cursos';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import Scroll from '../../../components/ScrolltoTop/scroll';
+import clienteAxios from '../../../config/axios';
+import MessageSnackbar from '../../../components/Snackbar/snackbar';
+import Spin from '../../../components/Spin/spin';
 
 const useStyles = makeStyles((theme) => ({
 	flex: {
@@ -18,16 +21,16 @@ const useStyles = makeStyles((theme) => ({
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center'
-    },
-    iconflex: {
+	},
+	iconflex: {
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center'
 	},
 	icon: {
 		fontSize: 60,
-        marginRight: 10,
-        color: '#6666'
+		marginRight: 10,
+		color: '#6666'
 	},
 	root: {
 		padding: '2px 4px',
@@ -52,9 +55,82 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DashboardMaestro(props) {
 	const classes = useStyles();
+	const token = localStorage.getItem('token');
+	const [ datos, setDatos ] = useState([]);
+	const [ loading, setLoading ] = useState(false);
+	const [ snackbar, setSnackbar ] = useState({
+		open: false,
+		mensaje: '',
+		status: ''
+	});
+	let user = { _id: '' };
+
+	if (token !== null) user = JSON.parse(localStorage.getItem('student'));
+
+	const obtenerCursosBD = useCallback(
+		async () => {
+			if (!user._id) return;
+			setLoading(true);
+			await clienteAxios
+			.get(`/course/teacher/${user._id}`, {
+				headers: {
+					Authorization: `bearer ${token}`
+				}
+			})
+			.then((res) => {
+				setLoading(false);
+				setDatos(res.data);
+			})
+			.catch((err) => {
+				setLoading(false);
+				if (err.response) {
+					setSnackbar({
+						open: true,
+						mensaje: err.response.data.message,
+						status: 'error'
+					});
+				} else {
+					setSnackbar({
+						open: true,
+						mensaje: 'Al parecer no se a podido conectar al servidor.',
+						status: 'error'
+					});
+				}
+			});
+		},
+		[ token, user._id ],
+	)
+
+	useEffect(() => {
+		obtenerCursosBD();
+	}, [ obtenerCursosBD ]);
+
+	const render_cursos = datos.map((curso) => (<CursosProfesor key={curso._id} curso={curso} />))
+
+	if (!datos) {
+		return (
+			<div className={classes.flex}>
+				<Box>
+					<div className={classes.iconflex}>
+						<CloudUploadIcon className={classes.icon} />
+					</div>
+					<Typography style={{ color: '#666666' }} variant="h5">
+						Aun no tienes cursos registrados, ¡Comienza ahora!
+					</Typography>
+				</Box>
+			</div>
+		);
+	}
 
 	return (
 		<div>
+			<Spin loading={loading} />
+			<MessageSnackbar
+				open={snackbar.open}
+				mensaje={snackbar.mensaje}
+				status={snackbar.status}
+				setSnackbar={setSnackbar}
+			/>
 			<Scroll showBelow={250} />
 			<Grid container>
 				<Grid item xs={12} md={5}>
@@ -80,15 +156,7 @@ export default function DashboardMaestro(props) {
 						</Button>
 					</Box>
 				</Grid>
-				<div className={classes.flex}>
-					<Box>
-						<div className={classes.iconflex}>
-							<CloudUploadIcon className={classes.icon} />
-						</div>
-						<Typography style={{color: '#666666'}} variant="h5">Aun no tienes cursos registrados, ¡Comienza ahora!</Typography>
-					</Box>
-				</div>
-				<CursosProfesor />
+				{render_cursos}
 			</Grid>
 		</div>
 	);

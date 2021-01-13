@@ -21,6 +21,7 @@ import { Link } from 'react-router-dom';
 import Spin from '../../../components/Spin/spin';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
 import Sesion from '../../../components/Verificacion_sesion/verificacion_sesion';
+import clienteAxios from '../../../config/axios';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -41,8 +42,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 	floatButton: {
 		position: 'absolute',
-    	bottom: theme.spacing(3),
-    	right: theme.spacing(3),
+		bottom: theme.spacing(3),
+		right: theme.spacing(3)
 	}
 }));
 
@@ -67,26 +68,31 @@ const FormStyles = makeStyles((theme) => ({
 
 export default function SubirCursoMaestro(props) {
 	const classes = useStyles();
+	const token = localStorage.getItem('token');
 	const [ activeStep, setActiveStep ] = React.useState(0);
 	const steps = getSteps();
 	const [ validate, setValidate ] = useState(false);
 	const [ loading, setLoading ] = useState(false);
-	const [ datos, setDatos ] = useState([
+	const [ datos, setDatos ] = useState(
 		{
 			title: '',
 			category: '',
-			subMategory: ''
+			subCategory: '',
+			idProfessor: JSON.parse(localStorage.getItem('student'))._id
 		}
-	]);
+	);
 	const [ snackbar, setSnackbar ] = useState({
-        open: false,
-        mensaje: '',
-        status: ''
-	})
-	
-	useEffect(() => {
-		Sesion(props);
-	}, [props])
+		open: false,
+		mensaje: '',
+		status: ''
+	});
+
+	useEffect(
+		() => {
+			Sesion(props);
+		},
+		[ props ]
+	);
 
 	const handleNext = () => {
 		if (!datos.title) {
@@ -109,24 +115,50 @@ export default function SubirCursoMaestro(props) {
 		});
 	};
 
-	const crearCurso = () => {
-		if (!datos.category || !datos.subMategory) {
+	const crearCurso = async () => {
+		if (!datos.category || !datos.subCategory) {
 			setValidate(true);
 			setSnackbar({
-                open: true,
-                mensaje: "Hubo un error al guardar",
-                status: 'error'
-            })
+				open: true,
+				mensaje: 'Hubo un error al crear curso',
+				status: 'error'
+			});
 			return;
 		}
 		setLoading(true);
-        setTimeout(() => {
-			setLoading(false);
-			setValidate(false);
-			console.log('curso creado');
-			console.log(datos);
-			props.history.push('/instructor/contenido_curso/general');
-        }, 3000);
+		await clienteAxios
+			.post('/course/', datos, {
+				headers: {
+					Authorization: `bearer ${token}`
+				}
+			})
+			.then((res) => {
+				setLoading(false);
+				setSnackbar({
+					open: true,
+					mensaje: res.data.message,
+					status: 'success'
+				});
+				setLoading(false);
+				setValidate(false);
+				props.history.push(`/instructor/contenido_curso/${res.data.userStored._id}/general`);
+			})
+			.catch((err) => {
+				setLoading(false);
+				if (err.response) {
+					setSnackbar({
+						open: true,
+						mensaje: err.response.data.message,
+						status: 'error'
+					});
+				} else {
+					setSnackbar({
+						open: true,
+						mensaje: 'Al parecer no se a podido conectar al servidor.',
+						status: 'error'
+					});
+				}
+			});
 	};
 
 	function getSteps() {
@@ -194,14 +226,14 @@ export default function SubirCursoMaestro(props) {
 							<Box display="flex" justifyContent="center">
 								<FormControl
 									className={classes.formControl}
-									error={validate && !datos.subMategory ? true : false}
+									error={validate && !datos.subCategory ? true : false}
 								>
 									<InputLabel id="subcategoria-select-label">Subcategoria</InputLabel>
 									<Select
-										name="subMategory"
+										name="subCategory"
 										labelId="subcategoria-select-label"
 										id="subcategoria-select"
-										value={!datos.subMategory ? '' : datos.subMategory}
+										value={!datos.subCategory ? '' : datos.subCategory}
 										onChange={obtenerCampos}
 									>
 										<MenuItem value="Desarrollo">Desarrollo</MenuItem>
@@ -222,7 +254,12 @@ export default function SubirCursoMaestro(props) {
 	return (
 		<div>
 			<Spin loading={loading} />
-			<MessageSnackbar open={snackbar.open} mensaje={snackbar.mensaje} status={snackbar.status} setSnackbar={setSnackbar} />
+			<MessageSnackbar
+				open={snackbar.open}
+				mensaje={snackbar.mensaje}
+				status={snackbar.status}
+				setSnackbar={setSnackbar}
+			/>
 			<div className={classes.floatButton}>
 				<Fab variant="extended" color="primary" aria-label="add" component={Link} to="/instructor/cursos">
 					<UndoIcon />Dashboard

@@ -6,7 +6,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from '../../config/themeConfig';
 import darkMode from '../../config/darkMode';
-import Sesion from '../Verificacion_sesion/verificacion_sesion';
+import { CursoProvider } from '../../context/curso_context';
+/* import Sesion from '../Verificacion_sesion/verificacion_sesion'; */
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -30,34 +31,41 @@ export default function LayoutContenidoCurso(props) {
 	const { routes } = props;
 	const classes = useStyles();
 	let thema = localStorage.getItem('tema');
-	let tema = JSON.parse(thema)
+	let tema = JSON.parse(thema);
 	const [ darkTheme, setDarkTheme ] = useState(tema);
 
-	useEffect(() => {
-		if(tema === null){
-			localStorage.setItem('tema', false);
-			return;
-		}
-	}, [tema]);
+	useEffect(
+		() => {
+			if (tema === null) {
+				localStorage.setItem('tema', false);
+				return;
+			}
+		},
+		[ tema ]
+	);
 
-	useEffect(() => {
-		//Sesion(props);
-	}, [props])
+	useEffect(
+		() => {
+			//Sesion(props);
+		},
+		[ props ]
+	);
 
 	return (
 		<ThemeProvider theme={tema === true ? darkMode : theme}>
 			<CssBaseline />
 			<div className={classes.root}>
-				<NavegacionContenidoCurso tema={[ darkTheme ,setDarkTheme]} />
-				<main className={classes.content}>
-					<div className={classes.toolbar} />
-					<div style={{ padding: 24, minHeight: 360 }}>
-						<LoadRoutes routes={routes} />
-					</div>
-				</main>
+				<CursoProvider>
+					<NavegacionContenidoCurso tema={[ darkTheme, setDarkTheme ]} props={props} />
+					<main className={classes.content}>
+						<div className={classes.toolbar} />
+						<div style={{ padding: 24, minHeight: 360 }}>
+							<LoadRoutes routes={routes} />
+						</div>
+					</main>
+				</CursoProvider>
 			</div>
 		</ThemeProvider>
-		
 	);
 }
 
