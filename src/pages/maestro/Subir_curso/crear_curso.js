@@ -73,19 +73,18 @@ export default function SubirCursoMaestro(props) {
 	const steps = getSteps();
 	const [ validate, setValidate ] = useState(false);
 	const [ loading, setLoading ] = useState(false);
-	const [ datos, setDatos ] = useState(
-		{
-			title: '',
-			category: '',
-			subCategory: '',
-			idProfessor: JSON.parse(localStorage.getItem('student'))._id
-		}
-	);
+	const [ datos, setDatos ] = useState({
+		title: '',
+		category: '',
+		subCategory: '',
+		idProfessor: JSON.parse(localStorage.getItem('student'))._id
+	});
 	const [ snackbar, setSnackbar ] = useState({
 		open: false,
 		mensaje: '',
 		status: ''
 	});
+	const [ categories, setCategories ] = useState([ { categorie: '', subCategories: [ { subcategorie: '' } ] } ]);
 
 	useEffect(
 		() => {
@@ -113,6 +112,30 @@ export default function SubirCursoMaestro(props) {
 			...datos,
 			[e.target.name]: e.target.value
 		});
+	};
+
+	const obtenerCategorias = async () => {
+		await clienteAxios
+			.get('/categories/')
+			.then((res) => {
+				setCategories(res.data);
+			})
+			.catch((err) => {
+				setLoading(false);
+				if (err.response) {
+					setSnackbar({
+						open: true,
+						mensaje: err.response.data.message,
+						status: 'error'
+					});
+				} else {
+					setSnackbar({
+						open: true,
+						mensaje: 'Al parecer no se a podido conectar al servidor.',
+						status: 'error'
+					});
+				}
+			});
 	};
 
 	const crearCurso = async () => {
@@ -160,6 +183,10 @@ export default function SubirCursoMaestro(props) {
 				}
 			});
 	};
+
+	useEffect(() => {
+		obtenerCategorias();
+	}, []);
 
 	function getSteps() {
 		return [ 'Titulo', 'Categoria' ];
@@ -216,9 +243,13 @@ export default function SubirCursoMaestro(props) {
 										value={!datos.category ? '' : datos.category}
 										onChange={obtenerCampos}
 									>
-										<MenuItem value="Tegnologia">Tegnologia</MenuItem>
-										<MenuItem value="Diseño">Diseño</MenuItem>
-										<MenuItem value="Finanzas">Finanzas</MenuItem>
+										{categories.map((res) => {
+											return (
+												<MenuItem key={res.categorie} value={res.categorie}>
+													{res.categorie}
+												</MenuItem>
+											);
+										})}
 									</Select>
 									{validate ? <FormHelperText>Campo obligatorio</FormHelperText> : null}
 								</FormControl>
@@ -236,9 +267,31 @@ export default function SubirCursoMaestro(props) {
 										value={!datos.subCategory ? '' : datos.subCategory}
 										onChange={obtenerCampos}
 									>
-										<MenuItem value="Desarrollo">Desarrollo</MenuItem>
-										<MenuItem value="Informatica">Informatica</MenuItem>
-										<MenuItem value="Desarrollo personal">Desarrollo personal</MenuItem>
+										{datos.category ? (
+											categories.map((categorias) => {
+												if (datos.category === categorias.categorie) {
+													return categorias.subCategories.map((subCategorias) => {
+														return (
+															<MenuItem
+																key={subCategorias._id}
+																value={subCategorias.subCategorie}
+															>
+																{subCategorias.subCategorie}
+															</MenuItem>
+														);
+													});
+												}
+												return (
+													<MenuItem key="otros" value="Otro">
+														<em>Otro</em>
+													</MenuItem>
+												)
+											})
+										) : (
+											<MenuItem value="">
+												<em>Selecciona una categoria</em>
+											</MenuItem>
+										)}
 									</Select>
 									{validate ? <FormHelperText>Campo obligatorio</FormHelperText> : null}
 								</FormControl>

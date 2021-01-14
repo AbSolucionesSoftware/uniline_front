@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Editor } from '@tinymce/tinymce-react';
 import { Box, Grid, Select, TextField, Divider, Typography, Button } from '@material-ui/core';
@@ -45,6 +45,7 @@ export default function RegistroInformacionCurso() {
 		mensaje: '',
 		status: ''
 	});
+	const [ categories, setCategories ] = useState([ { categorie: '', subCategories: [ { subcategorie: '' } ] } ]);
 
 	const obtenerEditor = (e) => {
 		setValidacion(false);
@@ -56,10 +57,41 @@ export default function RegistroInformacionCurso() {
 
 	const obtenerCampos = (e) => {
 		setValidacion(false);
+		if(e.target.name === 'category'){
+			setDatos({
+				...datos,
+				subCategory: '',
+			});
+			return
+		}
 		setDatos({
 			...datos,
 			[e.target.name]: e.target.value
 		});
+	};
+
+	const obtenerCategorias = async () => {
+		await clienteAxios
+			.get('/categories/')
+			.then((res) => {
+				setCategories(res.data);
+			})
+			.catch((err) => {
+				setLoading(false);
+				if (err.response) {
+					setSnackbar({
+						open: true,
+						mensaje: err.response.data.message,
+						status: 'error'
+					});
+				} else {
+					setSnackbar({
+						open: true,
+						mensaje: 'Al parecer no se a podido conectar al servidor.',
+						status: 'error'
+					});
+				}
+			});
 	};
 
 	const guardarDatos = async () => {
@@ -127,6 +159,10 @@ export default function RegistroInformacionCurso() {
 				}
 			});
 	};
+
+	useEffect(() => {
+		obtenerCategorias();
+	}, []);
 
 	return (
 		<Box p={5} boxShadow={5} className={classes.color}>
@@ -228,8 +264,7 @@ export default function RegistroInformacionCurso() {
 										<em>None</em>
 									</MenuItem>
 									<MenuItem value="Español">Español</MenuItem>
-									<MenuItem value={20}>Twenty</MenuItem>
-									<MenuItem value={30}>Thirty</MenuItem>
+									<MenuItem value="Ingles">Ingles</MenuItem>
 								</Select>
 								{validacion && !datos.language ? (
 									<FormHelperText>campo requerido</FormHelperText>
@@ -254,8 +289,8 @@ export default function RegistroInformacionCurso() {
 										<em>None</em>
 									</MenuItem>
 									<MenuItem value="básico">Básico</MenuItem>
-									<MenuItem value={20}>Twenty</MenuItem>
-									<MenuItem value={30}>Thirty</MenuItem>
+									<MenuItem value="Intermedio">Intermedio</MenuItem>
+									<MenuItem value="Avanzado">Avanzado</MenuItem>
 								</Select>
 								{validacion && !datos.level ? <FormHelperText>campo requerido</FormHelperText> : null}
 							</FormControl>
@@ -276,12 +311,16 @@ export default function RegistroInformacionCurso() {
 									label="categoria"
 									renderValue={(value) => value}
 								>
-									<MenuItem value="">
-										<em>None</em>
+									{categories.map((res) => {
+										return (
+											<MenuItem key={res.categorie} value={res.categorie}>
+												{res.categorie}
+											</MenuItem>
+										);
+									})}
+									<MenuItem value="Otro">
+										<em>Otro</em>
 									</MenuItem>
-									<MenuItem value={'Tecnologia'}>Tegnologia</MenuItem>
-									<MenuItem value={20}>Twenty</MenuItem>
-									<MenuItem value={30}>Thirty</MenuItem>
 								</Select>
 								{validacion && !datos.category ? (
 									<FormHelperText>campo requerido</FormHelperText>
@@ -302,12 +341,31 @@ export default function RegistroInformacionCurso() {
 									renderValue={(value) => value}
 									label="Subcategoria"
 								>
-									<MenuItem value="">
-										<em>None</em>
-									</MenuItem>
-									<MenuItem value="Desarrollo">Desarrollo</MenuItem>
-									<MenuItem value={20}>Twenty</MenuItem>
-									<MenuItem value={30}>Thirty</MenuItem>
+									{datos.category ? (
+										categories.map((categorias) => {
+											if (datos.category === categorias.categorie) {
+												return categorias.subCategories.map((subCategorias) => {
+													return (
+														<MenuItem
+															key={subCategorias._id}
+															value={subCategorias.subCategorie}
+														>
+															{subCategorias.subCategorie}
+														</MenuItem>
+													);
+												});
+											}
+											return (
+												<MenuItem key="otros" value="">
+													<em>Ninguna</em>
+												</MenuItem>
+											);
+										})
+									) : (
+										<MenuItem value="">
+											<em>Selecciona una categoria</em>
+										</MenuItem>
+									)}
 								</Select>
 								{validacion && !datos.subCategory ? (
 									<FormHelperText>campo requerido</FormHelperText>
