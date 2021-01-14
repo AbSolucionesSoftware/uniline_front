@@ -6,6 +6,7 @@ import Scroll from '../../../../../components/ScrolltoTop/scroll';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import SaveIcon from '@material-ui/icons/Save';
 
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
 
@@ -73,6 +74,8 @@ export default function RegistroContenido() {
 		}
 		handleClose();
 	};
+
+	console.log(datosBloque);
 
 	const eliminarBloque = (index) => {
 		bloque.splice(index, 1);
@@ -195,6 +198,16 @@ export default function RegistroContenido() {
 	return (
 		<Box p={5} boxShadow={5} className={classes.color}>
 			<div>
+				<Button
+					variant="contained"
+					color="primary"
+					aria-label="Guardar"
+					className={classes.iconSave}
+					/* onClick={() => guardarDatos()} */
+				>
+					<SaveIcon className={classes.margin} />
+					Guardar
+				</Button>
 				<Scroll showBelow={250} />
 			</div>
 			<Box mb={2}>
