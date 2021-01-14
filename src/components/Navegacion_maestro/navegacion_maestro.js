@@ -8,6 +8,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import { deepOrange } from '@material-ui/core/colors';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -19,6 +20,7 @@ import OndemandVideoIcon from '@material-ui/icons/OndemandVideo';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { Link } from 'react-router-dom';
+const token = localStorage.getItem('token');
 
 const drawerWidth = 240;
 
@@ -99,6 +101,9 @@ export default function NavbarMaestro(props) {
 	const [ anchorEl, setAnchorEl ] = useState(null);
 	const [ open, setOpen ] = React.useState(true);
 	const isMenuOpen = Boolean(anchorEl);
+	let user = { _id: '' };
+
+	if (token !== null) user = JSON.parse(localStorage.getItem('student'));
 
 	const darkModeAction = () => {
 		setDarkTheme(!darkTheme);
@@ -138,16 +143,16 @@ export default function NavbarMaestro(props) {
 		>
 			<MenuItem onClick={handleMenuClose} component={Link} to="/intructor/perfil">
 				<ListItemIcon>
-					<AccountCircleIcon fontSize="middle" />
+					<AccountCircleIcon />
 				</ListItemIcon>
 				<ListItemText primary="Mi perfil" />
 			</MenuItem>
 			<MenuItem onClick={handleMenuClose}>
-                <ListItemIcon>
-					<ExitToAppIcon fontSize="middle" />
+				<ListItemIcon>
+					<ExitToAppIcon />
 				</ListItemIcon>
 				<ListItemText primary="Cerrar sesión" />
-            </MenuItem>
+			</MenuItem>
 		</Popover>
 	);
 
@@ -183,7 +188,13 @@ export default function NavbarMaestro(props) {
 						onClick={handleProfileMenuOpen}
 						color="inherit"
 					>
-						<Avatar className={classes.orange}>N</Avatar>
+						{!user.imagen ? (
+							<Avatar className={classes.orange}>
+								{user.name ? user.name.charAt(0) : <CircularProgress style={{ color: '#FFFFFF' }} />}
+							</Avatar>
+						) : (
+							<Avatar alt="foto de perfil" src={user.imagen} />
+						)}
 					</IconButton>
 				</Toolbar>
 			</AppBar>
@@ -221,9 +232,7 @@ export default function NavbarMaestro(props) {
 						<ListItemText primary="Estadsticas" />
 					</ListItem>
 					<ListItem button onClick={darkModeAction}>
-						<ListItemIcon>
-                            {darkTheme ? <Brightness5Icon /> : <BrightnessMediumIcon />}
-						</ListItemIcon>
+						<ListItemIcon>{darkTheme ? <Brightness5Icon /> : <BrightnessMediumIcon />}</ListItemIcon>
 						<ListItemText primary={`tema: ${darkTheme === true ? 'Oscuro' : 'Por defecto'}`} />
 					</ListItem>
 					<ListItem button component={Link} to="/">

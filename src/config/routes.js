@@ -11,7 +11,7 @@ import EstadisticasMaestro from '../pages/maestro/Estadisticas/estadisticas';
 
 //dashboard registro curso pages
 import RegistroInformacionCurso from '../pages/maestro/Subir_curso/Dasboard_curso/Info_general/informacion_curso';
-import QueAprenderaEstudiante from '../pages/maestro/Subir_curso/Dasboard_curso/Info_general/learnings';
+import QueAprenderaEstudiante from '../pages/maestro/Subir_curso/Dasboard_curso/Info_general/Learnings/vista_learnings';
 import RegistroContenido from '../pages/maestro/Subir_curso/Dasboard_curso/Contenido_curso/contenido';
 import PrecioCurso from '../pages/maestro/Subir_curso/Dasboard_curso/Publicacion_curso/precio';
 import PromocionCurso from '../pages/maestro/Subir_curso/Dasboard_curso/Publicacion_curso/promocion';
