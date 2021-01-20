@@ -6,7 +6,7 @@ import Alert from '@material-ui/lab/Alert';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import VideocamOutlinedIcon from '@material-ui/icons/VideocamOutlined';
 import { CursoContext } from '../../../../../context/curso_context';
-import { configVimeo /*  ClientRequestVimeo */ } from './config_vimeo';
+import { configVimeo /*  ClientRequestVimeo */ } from '../../../../../config/config_vimeo';
 
 import VimeoReproductor from '../../../../../components/Vimeo_Reproductor/Vimeo';
 import MessageSnackbar from '../../../../../components/Snackbar/snackbar';
@@ -99,7 +99,7 @@ export default function SubirVideo() {
 		setLoading(true);
 		client.upload(
 			fileVideo,
-			configVimeo(datos),
+			configVimeo(datos.title),
 			function(uri) {
 				const spleter = uri.split('/');
 				/* ClientRequestVimeo(client, uri) */

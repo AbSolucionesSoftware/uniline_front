@@ -23,7 +23,17 @@ const useStyles = makeStyles((theme) => ({
 	},
 	content: {
 		flexGrow: 1,
-		padding: theme.spacing(3)
+		padding: theme.spacing(3),
+		[theme.breakpoints.down('sm')]: {
+			padding: 0,
+		}
+	},
+	contentRoutes: {
+		padding: 24,
+		 minHeight: 360,
+		 [theme.breakpoints.down('sm')]: {
+			padding: 0,
+		}
 	}
 }));
 
@@ -59,7 +69,7 @@ export default function LayoutContenidoCurso(props) {
 					<NavegacionContenidoCurso tema={[ darkTheme, setDarkTheme ]} props={props} />
 					<main className={classes.content}>
 						<div className={classes.toolbar} />
-						<div style={{ padding: 24, minHeight: 360 }}>
+						<div className={classes.contentRoutes}>
 							<LoadRoutes routes={routes} />
 						</div>
 					</main>

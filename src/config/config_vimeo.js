@@ -1,6 +1,15 @@
-export const configVimeo = (datos) => {
+const Vimeo = require('vimeo').Vimeo;
+const client = new Vimeo(
+	'b2af4468710c93e79707cfdbd36e8090a22ba023',
+	'NERzVNSwQkIfxL7T4QvpEpwlOf5u+cjzQq0u71G4jE7BzATZRudjfbAQAPzBZT3kgJFyXtyg7bC9B0XeA6hylQyk7RvbSupNfjv49ZuasGvvv9D40zSEbg5yoc9yJ7q4',
+	'b5397e1eef8a02fe5c3e0041e703af59'
+);
+export {client}
+
+
+export const configVimeo = (title) => {
 	return {
-		name: datos.title,
+		name: title,
 		embed: {
 			buttons: {
 				fullscreen: true,
