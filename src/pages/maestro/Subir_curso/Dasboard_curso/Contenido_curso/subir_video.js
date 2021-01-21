@@ -1,6 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Button, InputBase, Grid, LinearProgress, Typography, Backdrop } from '@material-ui/core';
+import {
+	Box,
+	Button,
+	InputBase,
+	Grid,
+	LinearProgress,
+} from '@material-ui/core';
 import VideoCallIcon from '@material-ui/icons/VideoCall';
 import ImagenVideo from '../../../../../images/Video-tutorial-bro.png';
 import VimeoReproductor from '../../../../../components/Vimeo_Reproductor/Vimeo';
@@ -8,6 +14,7 @@ import { client, configVimeo /*  ClientRequestVimeo */ } from '../../../../../co
 import clienteAxios from '../../../../../config/axios';
 import { CursoContext } from '../../../../../context/curso_context';
 import MessageSnackbar from '../../../../../components/Snackbar/snackbar';
+import BackDropVideo from '../../../../../components/Spin/backdropVideo';
 
 const useStyles = makeStyles((theme) => ({
 	input: {
@@ -33,6 +40,7 @@ export default function SubirVideoTema({ tema }) {
 	const [ progress, setProgress ] = useState(0);
 	const [ fileVideo, setFileVideo ] = useState(null);
 	const [ loading, setLoading ] = useState(false);
+	const [ backdrop, setBackdrop ] = useState(false);
 	const [ snackbar, setSnackbar ] = useState({
 		open: false,
 		mensaje: '',
@@ -52,6 +60,7 @@ export default function SubirVideoTema({ tema }) {
 			return;
 		}
 		setLoading(true);
+		setBackdrop(true);
 		client.upload(
 			fileVideo,
 			configVimeo(tema.topicTitle),
@@ -78,11 +87,13 @@ export default function SubirVideoTema({ tema }) {
 						});
 						setUpdate(!update);
 						setLoading(false);
+						setBackdrop(false);
 						setProgress(0);
 						setFileVideo(null);
 					})
 					.catch((err) => {
 						setLoading(false);
+						setBackdrop(false);
 						if (err.response) {
 							setSnackbar({
 								open: true,
@@ -106,6 +117,7 @@ export default function SubirVideoTema({ tema }) {
 			},
 			function(error) {
 				setLoading(false);
+				setBackdrop(false);
 				setSnackbar({
 					open: true,
 					mensaje: 'Hubo un error: ' + error,
@@ -147,7 +159,7 @@ export default function SubirVideoTema({ tema }) {
 					.then((res) => {
 						setSnackbar({
 							open: true,
-							mensaje: res.data.message,
+							mensaje: 'Video eliminado',
 							status: 'success'
 						});
 						setUpdate(!update);
@@ -174,30 +186,6 @@ export default function SubirVideoTema({ tema }) {
 			}
 		);
 	};
-	const cancelarSubida = () => {
-		console.log('cancelar');
-		client.request(
-			{
-				method: 'DELETE',
-				path: `/videos/${tema.keyTopicVideo}`
-			},
-			function(error, body, status_code) {
-				if (error) {
-					setLoading(false);
-					setSnackbar({
-						open: true,
-						mensaje: 'Hubo un error: ' + error,
-						status: 'error'
-					});
-					return;
-				}
-			}
-		);
-	};
-	/* const [open, setOpen] = useState(false);
-	const handleToggle = () => {
-		setOpen(!open);
-	  }; */
 
 	return (
 		<Box>
@@ -207,9 +195,7 @@ export default function SubirVideoTema({ tema }) {
 				status={snackbar.status}
 				setSnackbar={setSnackbar}
 			/>
-			<Backdrop className={classes.backdrop} open={false}>
-				{/* <CircularProgress color="inherit" /> */}
-			</Backdrop>
+			<BackDropVideo backdrop={backdrop} loading={loading} progress={progress} />
 			<Grid container spacing={1}>
 				<Grid item lg={4}>
 					<Box height={150} display="flex" justifyContent="center" alignItems="center">
@@ -256,28 +242,12 @@ export default function SubirVideoTema({ tema }) {
 									<LinearProgress />
 								</Box>
 							) : null}
-							{progress ? (
-								<Box>
-									<LinearProgressWithLabel value={progress} className={classes.progressbar} />
-								</Box>
-							) : null}
 							<Grid container spacing={1}>
 								<Grid item>
-									{!tema.keyTopicVideo && !progress ? (
+									{!tema.keyTopicVideo ? (
 										<Box mt={1}>
 											<Button variant="contained" color="primary" onClick={() => enviarVideo()}>
 												Subir
-											</Button>
-										</Box>
-									) : progress ? (
-										<Box mt={1}>
-											<Button
-												variant="contained"
-												color="secondary"
-												onClick={() => cancelarSubida()}
-												className={classes.progressbar}
-											>
-												Cancelar
 											</Button>
 										</Box>
 									) : null}
@@ -308,7 +278,7 @@ export default function SubirVideoTema({ tema }) {
 	);
 }
 
-function LinearProgressWithLabel(props) {
+/* function LinearProgressWithLabel(props) {
 	return (
 		<Box display="flex" alignItems="center">
 			<Box width="100%" mr={2}>
@@ -319,4 +289,6 @@ function LinearProgressWithLabel(props) {
 			</Box>
 		</Box>
 	);
-}
+} */
+
+

@@ -2,21 +2,8 @@ import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {
-	Box,
-	Button,
-	TextField,
-	Typography,
-	IconButton,
-	Tabs,
-	Tab,
-	Grid,
-	Hidden,
-	Card,
-	CardActions,
-	Collapse,
-	CardContent
-} from '@material-ui/core';
+import { Box, Button, TextField, Typography, IconButton, Tabs, Tab } from '@material-ui/core';
+import { Grid, Hidden, Card, CardActions, Collapse, CardContent } from '@material-ui/core';
 import VideoCallIcon from '@material-ui/icons/VideoCall';
 import InsertDriveFileOutlinedIcon from '@material-ui/icons/InsertDriveFileOutlined';
 import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
@@ -32,6 +19,7 @@ import MessageSnackbar from '../../../../../components/Snackbar/snackbar';
 import clienteAxios from '../../../../../config/axios';
 import { CursoContext } from '../../../../../context/curso_context';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { client } from '../../../../../config/config_vimeo';
 
 const useStyles = makeStyles((theme) => ({
 	background: {
@@ -158,7 +146,7 @@ export default function Temas({ openNewTheme, setOpenNewTheme, bloque, bloques, 
 				})
 				.catch((err) => {
 					setLoading(false);
-					messages('success', err);
+					messages('error', err);
 				});
 		} else {
 			await clienteAxios
@@ -174,9 +162,45 @@ export default function Temas({ openNewTheme, setOpenNewTheme, bloque, bloques, 
 				})
 				.catch((err) => {
 					setLoading(false);
-					messages('success', err);
+					messages('error', err);
 				});
 		}
+	};
+
+	const eliminarTemaBD = (idTema, video) => {
+		setLoading(true);
+		client.request(
+			{
+				method: 'DELETE',
+				path: `/videos/${video}`
+			},
+			function(error, body, status_code) {
+				if (error) {
+					setLoading(false);
+					setSnackbar({
+						open: true,
+						mensaje: 'Hubo un error: ' + error,
+						status: 'error'
+					});
+					return;
+				}
+				clienteAxios
+				.delete(`/course/topic/delete/${idTema}`,{
+					headers: {
+						Authorization: `bearer ${token}`
+					}
+				})
+				.then((res) => {
+					setLoading(false);
+					messages('success', res.data.message);
+					setUpdate(!update);
+				})
+				.catch((err) => {
+					setLoading(false);
+					messages('error', err);
+				});
+			}
+		);
 	};
 
 	const onDragEnd = (result) => {
@@ -196,7 +220,15 @@ export default function Temas({ openNewTheme, setOpenNewTheme, bloque, bloques, 
 	};
 
 	const render_temas = bloque.topics.map((tema, index) => {
-		return <RenderTemas key={index} index={index} tema={tema} handleClickOpen={handleClickOpen} />;
+		return (
+			<RenderTemas
+				key={index}
+				index={index}
+				tema={tema}
+				handleClickOpen={handleClickOpen}
+				eliminarTemaBD={eliminarTemaBD}
+			/>
+		);
 	});
 
 	return (
@@ -247,10 +279,11 @@ export default function Temas({ openNewTheme, setOpenNewTheme, bloque, bloques, 
 	);
 }
 
-const RenderTemas = ({ index, tema, handleClickOpen }) => {
+const RenderTemas = ({ index, tema, handleClickOpen, eliminarTemaBD }) => {
 	const classes = useStyles();
 	const [ value, setValue ] = React.useState(0);
 	const [ expanded, setExpanded ] = React.useState(false);
+	const [ deleteConfimation, setDeleteConfimation ] = useState({ open: false, id: '', video: '' });
 
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
@@ -258,6 +291,10 @@ const RenderTemas = ({ index, tema, handleClickOpen }) => {
 
 	const handleExpandClick = () => {
 		setExpanded(!expanded);
+	};
+
+	const handleDeleteConfimation = (idBlock, video) => {
+		setDeleteConfimation({ open: !deleteConfimation.open, id: idBlock, video: video });
 	};
 
 	return (
@@ -269,6 +306,11 @@ const RenderTemas = ({ index, tema, handleClickOpen }) => {
 					ref={provided.innerRef}
 					{...provided.draggableProps} /* {...provided.dragHandleProps} */
 				>
+					<AlertConfimationDelete
+						deleteConfimation={deleteConfimation}
+						handleDeleteConfimation={handleDeleteConfimation}
+						eliminarTemaBD={eliminarTemaBD}
+					/>
 					<Card className={classes.background}>
 						<CardActions disableSpacing>
 							<Grid container spacing={2}>
@@ -278,7 +320,7 @@ const RenderTemas = ({ index, tema, handleClickOpen }) => {
 											<IconButton onClick={() => handleClickOpen('edit', tema)}>
 												<EditOutlinedIcon />
 											</IconButton>
-											<IconButton>
+											<IconButton onClick={() => handleDeleteConfimation(tema._id, tema.keyTopicVideo)}>
 												<DeleteOutlinedIcon />
 											</IconButton>
 											<IconButton {...provided.dragHandleProps}>
@@ -306,7 +348,7 @@ const RenderTemas = ({ index, tema, handleClickOpen }) => {
 											<IconButton onClick={() => handleClickOpen('edit', tema)}>
 												<EditOutlinedIcon />
 											</IconButton>
-											<IconButton>
+											<IconButton onClick={() => handleDeleteConfimation(tema._id, tema.keyTopicVideo)}>
 												<DeleteOutlinedIcon />
 											</IconButton>
 											<IconButton {...provided.dragHandleProps}>
@@ -396,4 +438,34 @@ function a11yProps(index) {
 		id: `simple-tab-${index}`,
 		'aria-controls': `simple-tabpanel-${index}`
 	};
+}
+
+function AlertConfimationDelete({ deleteConfimation, handleDeleteConfimation, eliminarTemaBD }) {
+	return (
+		<div>
+			<Dialog
+				open={deleteConfimation.open}
+				onClose={handleDeleteConfimation}
+				aria-labelledby="alert-dialog-title"
+				aria-describedby="alert-dialog-description"
+			>
+				<DialogTitle id="alert-dialog-title">{'¿Estás seguro de eliminar este tema?'}</DialogTitle>
+				<DialogActions>
+					<Button onClick={handleDeleteConfimation} color="primary">
+						Cancelar
+					</Button>
+					<Button
+						onClick={() => {
+							handleDeleteConfimation();
+							eliminarTemaBD(deleteConfimation.id, deleteConfimation.video);
+						}}
+						color="secondary"
+						autoFocus
+					>
+						Eliminar
+					</Button>
+				</DialogActions>
+			</Dialog>
+		</div>
+	);
 }

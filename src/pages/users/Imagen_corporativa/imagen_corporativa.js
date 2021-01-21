@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Container, Typography } from '@material-ui/core';
+import { Box, Container, Hidden, Typography } from '@material-ui/core';
 import Imagen from '../../../images/imagenCorporativa.png';
 import ExtensionIcon from '@material-ui/icons/Extension';
 import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
@@ -37,11 +37,20 @@ export default function ImagenCorporativa() {
 	return (
 		<div>
             <Scroll showBelow={250} />
-			<Parallax
-				animation={{ x: 0, playScale: [ 1, 1.8 ] }}
-				style={{ transform: 'translateX(-1540px)' }}
-				className={classes.fondo}
-			/>
+			<Hidden xlUp>
+				<Parallax
+					animation={{ x: 0, playScale: [ 1, 1.8 ] }}
+					style={{ transform: 'translateX(-1940px)' }}
+					className={classes.fondo}
+				/>
+			</Hidden>
+			<Hidden lgDown>
+				<Parallax
+					animation={{ x: 0, playScale: [ 1, 1.8 ] }}
+					style={{ transform: 'translateX(-2600px)' }}
+					className={classes.fondo}
+				/>
+			</Hidden>
 			<Box>
 				<Box height="90vh">
 					<img alt="imagen corporativa" width="100%" height="100%" src={Imagen} />

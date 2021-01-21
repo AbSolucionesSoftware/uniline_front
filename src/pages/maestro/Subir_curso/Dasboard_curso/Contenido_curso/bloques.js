@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core';
 import clsx from 'clsx';
 import AddIcon from '@material-ui/icons/Add';
-import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
+/* import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined'; */
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import DragIndicatorOutlinedIcon from '@material-ui/icons/DragIndicatorOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -152,7 +152,7 @@ export default function Bloques({ bloques, setBloques, open, setOpen }) {
 				})
 				.catch((err) => {
 					setLoading(false);
-					messages('success', err);
+					messages('error', err);
 				});
 		} else {
 			await clienteAxios
@@ -168,7 +168,7 @@ export default function Bloques({ bloques, setBloques, open, setOpen }) {
 				})
 				.catch((err) => {
 					setLoading(false);
-					messages('success', err);
+					messages('error', err);
 				});
 		}
 	};
@@ -266,12 +266,12 @@ function RenderBlock({
 	const classes = useStyles();
 	const [ expanded, setExpanded ] = useState(false);
 	const block = bloque.block;
-	const [ deleteConfimation, setDeleteConfimation ] = useState({ open: false, id: '' });
+	/* const [ deleteConfimation, setDeleteConfimation ] = useState({ open: false, id: '' }); */
 	const [ temas, setTemas ] = useState(bloque.topics);
 
-	const handleDeleteConfimation = (idBlock) => {
+	/* const handleDeleteConfimation = (idBlock) => {
 		setDeleteConfimation({ open: !deleteConfimation.open, id: idBlock });
-	};
+	}; */
 
 	const handleExpandClick = () => {
 		setExpanded(!expanded);
@@ -286,11 +286,11 @@ function RenderBlock({
 					ref={provided.innerRef}
 					{...provided.draggableProps} /* {...provided.dragHandleProps} */
 				>
-					<AlertConfimationDelete
+					{/* <AlertConfimationDelete
 						deleteConfimation={deleteConfimation}
 						handleDeleteConfimation={handleDeleteConfimation}
 						eliminarBloqueBD={eliminarBloqueBD}
-					/>
+					/> */}
 					<Card variant="outlined">
 						<CardActions disableSpacing>
 							<Grid container spacing={3}>
@@ -300,9 +300,9 @@ function RenderBlock({
 											<IconButton onClick={() => handleClickOpen('edit', block)}>
 												<EditOutlinedIcon />
 											</IconButton>
-											<IconButton onClick={() => handleDeleteConfimation(block._id)}>
+											{/* <IconButton onClick={() => handleDeleteConfimation(block._id)}>
 												<DeleteOutlinedIcon />
-											</IconButton>
+											</IconButton> */}
 											<IconButton {...provided.dragHandleProps}>
 												<DragIndicatorOutlinedIcon />
 											</IconButton>
@@ -328,9 +328,9 @@ function RenderBlock({
 											<IconButton onClick={() => handleClickOpen('edit', block)}>
 												<EditOutlinedIcon />
 											</IconButton>
-											<IconButton onClick={() => handleDeleteConfimation(block._id)}>
+											{/* <IconButton onClick={() => handleDeleteConfimation(block._id)}>
 												<DeleteOutlinedIcon />
-											</IconButton>
+											</IconButton> */}
 											<IconButton {...provided.dragHandleProps}>
 												<DragIndicatorOutlinedIcon />
 											</IconButton>
@@ -388,7 +388,7 @@ function RenderBlock({
 	);
 }
 
-function AlertConfimationDelete({ deleteConfimation, handleDeleteConfimation, eliminarBloqueBD }) {
+/* function AlertConfimationDelete({ deleteConfimation, handleDeleteConfimation, eliminarBloqueBD }) {
 	return (
 		<div>
 			<Dialog
@@ -416,4 +416,4 @@ function AlertConfimationDelete({ deleteConfimation, handleDeleteConfimation, el
 			</Dialog>
 		</div>
 	);
-}
+} */

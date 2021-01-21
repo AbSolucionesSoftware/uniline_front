@@ -11,6 +11,7 @@ import { configVimeo /*  ClientRequestVimeo */ } from '../../../../../config/con
 import VimeoReproductor from '../../../../../components/Vimeo_Reproductor/Vimeo';
 import MessageSnackbar from '../../../../../components/Snackbar/snackbar';
 import clienteAxios from '../../../../../config/axios';
+import BackDropVideo from '../../../../../components/Spin/backdropVideo';
 
 var Vimeo = require('vimeo').Vimeo;
 let client = new Vimeo(
@@ -57,6 +58,7 @@ export default function SubirVideo() {
 	const [ fileVideo, setFileVideo ] = useState(null);
 	const [ progress, setProgress ] = useState(0);
 	const [ loading, setLoading ] = useState(false);
+	const [ backdrop, setBackdrop ] = useState(false);
 
 	const getFile = (e) => {
 		try {
@@ -74,12 +76,14 @@ export default function SubirVideo() {
 		});
 		setUpdate(!update);
 		setLoading(false);
+		setBackdrop(false);
 		setProgress(0);
 		setFileVideo(null);
 	};
 
 	const errorAPI = (err) => {
 		setLoading(false);
+		setBackdrop(false);
 		if (err.response) {
 			setSnackbar({
 				open: true,
@@ -97,6 +101,7 @@ export default function SubirVideo() {
 
 	const enviarVideo = () => {
 		setLoading(true);
+		setBackdrop(true);
 		client.upload(
 			fileVideo,
 			configVimeo(datos.title),
@@ -130,6 +135,7 @@ export default function SubirVideo() {
 			},
 			function(error) {
 				setLoading(false);
+				setBackdrop(false);
 				setSnackbar({
 					open: true,
 					mensaje: 'Hubo un error: ' + error,
@@ -186,6 +192,7 @@ export default function SubirVideo() {
 				status={snackbar.status}
 				setSnackbar={setSnackbar}
 			/>
+			<BackDropVideo backdrop={backdrop} loading={loading} progress={progress} />
 			<Grid container direction="row" spacing={1}>
 				<Grid item lg={6} sm={12}>
 					{datos.urlCourseVideo ? (
@@ -209,8 +216,7 @@ export default function SubirVideo() {
 					<Box>
 						<Alert severity="info">
 							<Typography variant="body1">
-								Este video aparecera en la descripción cuando los
-								estudiantes den click en tu curso.
+								Este video aparecera en la descripción cuando los estudiantes den click en tu curso.
 							</Typography>
 							<br />
 							<Typography variant="body2">
@@ -248,11 +254,6 @@ export default function SubirVideo() {
 							<Box mt={1}>
 								<LinearProgress />
 							</Box>
-						) : null}
-						{progress ? (
-							<div >
-								<LinearProgressWithLabel value={progress} />
-							</div>
 						) : null}
 						<Grid container spacing={1}>
 							<Grid item>
@@ -295,7 +296,7 @@ export default function SubirVideo() {
 	);
 }
 
-function LinearProgressWithLabel(props) {
+/* function LinearProgressWithLabel(props) {
 	return (
 		<Box display="flex" alignItems="center">
 			<Box width="100%" mr={2}>
@@ -306,4 +307,4 @@ function LinearProgressWithLabel(props) {
 			</Box>
 		</Box>
 	);
-}
+} */
