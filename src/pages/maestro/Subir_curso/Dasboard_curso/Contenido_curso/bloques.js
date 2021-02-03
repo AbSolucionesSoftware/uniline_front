@@ -135,7 +135,6 @@ export default function Bloques({ bloques, setBloques, open, setOpen }) {
 		if (!datosBloque.blockTitle) {
 			return;
 		}
-		console.log(datosBloque);
 		handleClickOpen();
 		setLoading(true);
 		if (action) {
@@ -173,9 +172,9 @@ export default function Bloques({ bloques, setBloques, open, setOpen }) {
 		}
 	};
 
-	const eliminarBloqueBD = (idBloque) => {
+	/* const eliminarBloqueBD = (idBloque) => {
 		console.log(idBloque);
-	};
+	}; */
 
 	const onDragEnd = (result) => {
 		const { destination, source } = result;
@@ -184,7 +183,6 @@ export default function Bloques({ bloques, setBloques, open, setOpen }) {
 		if (destination.droppableId === source.droppableId && destination.index === source.index) return;
 
 		const new_elements = reorder(bloques, source.index, destination.index);
-		console.log(new_elements)
 		setBloques(new_elements);
 	};
 
@@ -200,7 +198,7 @@ export default function Bloques({ bloques, setBloques, open, setOpen }) {
 				handleClickOpenTema={handleClickOpenTema}
 				openNewTheme={openNewTheme}
 				setOpenNewTheme={setOpenNewTheme}
-				eliminarBloqueBD={eliminarBloqueBD}
+				/* eliminarBloqueBD={eliminarBloqueBD} */
 
 			/>
 		);

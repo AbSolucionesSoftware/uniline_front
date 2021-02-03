@@ -185,20 +185,20 @@ export default function Temas({ openNewTheme, setOpenNewTheme, bloque, bloques, 
 					return;
 				}
 				clienteAxios
-				.delete(`/course/topic/delete/${idTema}`,{
-					headers: {
-						Authorization: `bearer ${token}`
-					}
-				})
-				.then((res) => {
-					setLoading(false);
-					messages('success', res.data.message);
-					setUpdate(!update);
-				})
-				.catch((err) => {
-					setLoading(false);
-					messages('error', err);
-				});
+					.delete(`/course/topic/delete/${idTema}`, {
+						headers: {
+							Authorization: `bearer ${token}`
+						}
+					})
+					.then((res) => {
+						setLoading(false);
+						messages('success', res.data.message);
+						setUpdate(!update);
+					})
+					.catch((err) => {
+						setLoading(false);
+						messages('error', err);
+					});
 			}
 		);
 	};
@@ -210,13 +210,17 @@ export default function Temas({ openNewTheme, setOpenNewTheme, bloque, bloques, 
 		if (destination.droppableId === source.droppableId && destination.index === source.index) return;
 
 		const new_topics = reorder(bloque.topics, source.index, destination.index);
-		console.log(new_topics);
+		const nuevo_bloque = { block: bloque.block, topics: new_topics }
+		let nuevos_bloques = [];
 
-		/* console.log(bloques)
-		const nuevo_bloque = { block: bloque.block, topics: new_topics } */
-
-		/* console.log(nuevo_bloque); */
-		/* setBloque(new_topics); */
+		bloques.forEach((res) => {
+			if(res.block._id === bloque.block._id){
+				nuevos_bloques.push({block: nuevo_bloque.block, topics: nuevo_bloque.topics})
+			}else{
+				nuevos_bloques.push({block: res.block, topics: res.topics})
+			}
+		})
+		setBloques(nuevos_bloques);
 	};
 
 	const render_temas = bloque.topics.map((tema, index) => {
@@ -320,7 +324,9 @@ const RenderTemas = ({ index, tema, handleClickOpen, eliminarTemaBD }) => {
 											<IconButton onClick={() => handleClickOpen('edit', tema)}>
 												<EditOutlinedIcon />
 											</IconButton>
-											<IconButton onClick={() => handleDeleteConfimation(tema._id, tema.keyTopicVideo)}>
+											<IconButton
+												onClick={() => handleDeleteConfimation(tema._id, tema.keyTopicVideo)}
+											>
 												<DeleteOutlinedIcon />
 											</IconButton>
 											<IconButton {...provided.dragHandleProps}>
@@ -348,7 +354,9 @@ const RenderTemas = ({ index, tema, handleClickOpen, eliminarTemaBD }) => {
 											<IconButton onClick={() => handleClickOpen('edit', tema)}>
 												<EditOutlinedIcon />
 											</IconButton>
-											<IconButton onClick={() => handleDeleteConfimation(tema._id, tema.keyTopicVideo)}>
+											<IconButton
+												onClick={() => handleDeleteConfimation(tema._id, tema.keyTopicVideo)}
+											>
 												<DeleteOutlinedIcon />
 											</IconButton>
 											<IconButton {...provided.dragHandleProps}>

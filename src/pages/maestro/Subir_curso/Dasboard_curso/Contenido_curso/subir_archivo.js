@@ -190,8 +190,8 @@ export default function SubirArchivoTema({ tema }) {
 	};
 
 	const render_archivos = tema.resources.map((recurso, index) => (
-		<List>
-			<Recursos key={index} recurso={recurso} handleClick={handleClick} />
+		<List key={index}>
+			<Recursos recurso={recurso} handleClick={handleClick} />
 			<Divider />
 		</List>
 	));
