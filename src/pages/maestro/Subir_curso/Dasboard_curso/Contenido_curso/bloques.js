@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core';
 import clsx from 'clsx';
 import AddIcon from '@material-ui/icons/Add';
-/* import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined'; */
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import DragIndicatorOutlinedIcon from '@material-ui/icons/DragIndicatorOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -66,7 +66,7 @@ export default function Bloques({ bloques, setBloques, open, setOpen }) {
 		mensaje: '',
 		status: ''
 	});
-	const [ action, setAction ] = useState(true);
+	const [ action, setAction ] = useState(false);
 
 	const handleClickOpen = (action, block) => {
 		if (action === 'edit') {
@@ -172,9 +172,24 @@ export default function Bloques({ bloques, setBloques, open, setOpen }) {
 		}
 	};
 
-	/* const eliminarBloqueBD = (idBloque) => {
-		console.log(idBloque);
-	}; */
+	const eliminarBloqueBD = async (idBloque) => {
+		setLoading(false);
+		await clienteAxios
+			.delete(`/course/block/delete/${idBloque}`, {
+				headers: {
+					Authorization: `bearer ${token}`
+				}
+			})
+			.then((res) => {
+				setLoading(false);
+				messages('success', res.data.message);
+				setUpdate(!update);
+			})
+			.catch((err) => {
+				setLoading(false);
+				messages('error', err);
+			});
+	};
 
 	const onDragEnd = (result) => {
 		const { destination, source } = result;
@@ -198,8 +213,7 @@ export default function Bloques({ bloques, setBloques, open, setOpen }) {
 				handleClickOpenTema={handleClickOpenTema}
 				openNewTheme={openNewTheme}
 				setOpenNewTheme={setOpenNewTheme}
-				/* eliminarBloqueBD={eliminarBloqueBD} */
-
+				eliminarBloqueBD={eliminarBloqueBD}
 			/>
 		);
 	});
@@ -259,17 +273,17 @@ function RenderBlock({
 	handleClickOpenTema,
 	openNewTheme,
 	setOpenNewTheme,
-	eliminarBloqueBD,
+	eliminarBloqueBD
 }) {
 	const classes = useStyles();
 	const [ expanded, setExpanded ] = useState(false);
 	const block = bloque.block;
-	/* const [ deleteConfimation, setDeleteConfimation ] = useState({ open: false, id: '' }); */
-	const [ temas, setTemas ] = useState(bloque.topics);
+	const [ deleteConfimation, setDeleteConfimation ] = useState({ open: false, id: '' });
+	/* const [ temas, setTemas ] = useState(bloque.topics); */
 
-	/* const handleDeleteConfimation = (idBlock) => {
+	const handleDeleteConfimation = (idBlock) => {
 		setDeleteConfimation({ open: !deleteConfimation.open, id: idBlock });
-	}; */
+	};
 
 	const handleExpandClick = () => {
 		setExpanded(!expanded);
@@ -284,11 +298,11 @@ function RenderBlock({
 					ref={provided.innerRef}
 					{...provided.draggableProps} /* {...provided.dragHandleProps} */
 				>
-					{/* <AlertConfimationDelete
+					<AlertConfimationDelete
 						deleteConfimation={deleteConfimation}
 						handleDeleteConfimation={handleDeleteConfimation}
 						eliminarBloqueBD={eliminarBloqueBD}
-					/> */}
+					/>
 					<Card variant="outlined">
 						<CardActions disableSpacing>
 							<Grid container spacing={3}>
@@ -298,9 +312,11 @@ function RenderBlock({
 											<IconButton onClick={() => handleClickOpen('edit', block)}>
 												<EditOutlinedIcon />
 											</IconButton>
-											{/* <IconButton onClick={() => handleDeleteConfimation(block._id)}>
-												<DeleteOutlinedIcon />
-											</IconButton> */}
+											{bloque.topics.length === 0 ? (
+												<IconButton onClick={() => handleDeleteConfimation(block._id)}>
+													<DeleteOutlinedIcon />
+												</IconButton>
+											) : null}
 											<IconButton {...provided.dragHandleProps}>
 												<DragIndicatorOutlinedIcon />
 											</IconButton>
@@ -326,9 +342,11 @@ function RenderBlock({
 											<IconButton onClick={() => handleClickOpen('edit', block)}>
 												<EditOutlinedIcon />
 											</IconButton>
-											{/* <IconButton onClick={() => handleDeleteConfimation(block._id)}>
-												<DeleteOutlinedIcon />
-											</IconButton> */}
+											{bloque.topics.length === 0 ? (
+												<IconButton onClick={() => handleDeleteConfimation(block._id)}>
+													<DeleteOutlinedIcon />
+												</IconButton>
+											) : null}
 											<IconButton {...provided.dragHandleProps}>
 												<DragIndicatorOutlinedIcon />
 											</IconButton>
@@ -371,8 +389,8 @@ function RenderBlock({
 												bloque={bloque}
 												bloques={bloques}
 												setBloques={setBloques}
-												temas={temas}
-												setTemas={setTemas}
+												/* temas={temas} */
+												/* setTemas={setTemas} */
 											/>
 										</Box>
 									</Grid>
@@ -386,7 +404,7 @@ function RenderBlock({
 	);
 }
 
-/* function AlertConfimationDelete({ deleteConfimation, handleDeleteConfimation, eliminarBloqueBD }) {
+function AlertConfimationDelete({ deleteConfimation, handleDeleteConfimation, eliminarBloqueBD }) {
 	return (
 		<div>
 			<Dialog
@@ -414,4 +432,4 @@ function RenderBlock({
 			</Dialog>
 		</div>
 	);
-} */
+}

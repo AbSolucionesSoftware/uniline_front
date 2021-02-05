@@ -20,6 +20,10 @@ import OndemandVideoIcon from '@material-ui/icons/OndemandVideo';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { Link } from 'react-router-dom';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
+
 const token = localStorage.getItem('token');
 
 const drawerWidth = 240;
@@ -101,7 +105,7 @@ export default function NavbarMaestro(props) {
 	const [ anchorEl, setAnchorEl ] = useState(null);
 	const [ open, setOpen ] = React.useState(true);
 	const isMenuOpen = Boolean(anchorEl);
-	let user = { _id: '' };
+	let user = { _id: '', name: '', imagen: '' };
 
 	if (token !== null) user = JSON.parse(localStorage.getItem('student'));
 
@@ -115,6 +119,12 @@ export default function NavbarMaestro(props) {
 	};
 	const handleMenuClose = () => {
 		setAnchorEl(null);
+		firebase.auth().signOut();
+		localStorage.removeItem('token');
+		localStorage.removeItem('student');
+		setTimeout(() => {
+			window.location.reload();
+		}, 500);
 	};
 
 	const handleDrawerOpen = () => {
@@ -188,7 +198,7 @@ export default function NavbarMaestro(props) {
 						onClick={handleProfileMenuOpen}
 						color="inherit"
 					>
-						{!user.imagen ? (
+						{!user ? (<Avatar alt="foto de perfil"></Avatar>) : !user.imagen ? (
 							<Avatar className={classes.orange}>
 								{user.name ? user.name.charAt(0) : <CircularProgress style={{ color: '#FFFFFF' }} />}
 							</Avatar>

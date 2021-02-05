@@ -153,7 +153,7 @@ export default function CursosProfesor({ curso }) {
 												startIcon={curso.publication ? <DoneIcon /> : <VisibilityOffIcon />}
 												/* onClick={publicacionCurso} */
 											>
-												{curso.publication ? 'No publicado' : 'Publicar'}
+												{curso.publication ? 'Publicado' : 'Publicar'}
 											</Button>
 										</Grid>
 										<Grid item xs={12} md={12} sm={4}>

@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
 export default function RegistroContenido() {
 	const classes = useStyles();
 	const { datos, update } = useContext(CursoContext);
+	const token = localStorage.getItem('token');
 	const [ bloques, setBloques ] = useState([]);
 	const [ open, setOpen ] = React.useState(false);
 	const [ loading, setLoading ] = useState(false);
@@ -84,6 +85,41 @@ export default function RegistroContenido() {
 		[ datos._id ]
 	);
 
+	const guardarOrdenBD = async () => {
+		console.log(bloques);
+		setLoading(true);
+		await clienteAxios
+			.put(`/course/content/order/`, bloques, {
+				headers: {
+					Authorization: `bearer ${token}`
+				}
+			})
+			.then((res) => {
+				setSnackbar({
+					open: true,
+					mensaje: res.data.message,
+					status: 'success'
+				});
+				setLoading(false);
+			})
+			.catch((err) => {
+				setLoading(false);
+				if (err.response) {
+					setSnackbar({
+						open: true,
+						mensaje: err.response.data.message,
+						status: 'error'
+					});
+				} else {
+					setSnackbar({
+						open: true,
+						mensaje: 'Al parecer no se a podido conectar al servidor.',
+						status: 'error'
+					});
+				}
+			});
+	};
+
 	useEffect(
 		() => {
 			obtenerBloquesBD();
@@ -106,7 +142,7 @@ export default function RegistroContenido() {
 					color="primary"
 					aria-label="Guardar"
 					className={classes.iconSave}
-					/* onClick={() => guardarBloqueBD()} */
+					onClick={() => guardarOrdenBD()}
 				>
 					<SaveIcon className={classes.margin} />
 					Guardar Orden

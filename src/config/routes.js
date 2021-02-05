@@ -14,7 +14,6 @@ import RegistroInformacionCurso from '../pages/maestro/Subir_curso/Dasboard_curs
 import QueAprenderaEstudiante from '../pages/maestro/Subir_curso/Dasboard_curso/Info_general/Learnings/vista_learnings';
 import RegistroContenido from '../pages/maestro/Subir_curso/Dasboard_curso/Contenido_curso/contenido';
 import PrecioCurso from '../pages/maestro/Subir_curso/Dasboard_curso/Publicacion_curso/precio';
-import PromocionCurso from '../pages/maestro/Subir_curso/Dasboard_curso/Publicacion_curso/promocion';
 
 //Users pages
 import Home from '../pages/users/Home/home';
@@ -67,11 +66,6 @@ const routes = [
 			{
 				path: '/instructor/contenido_curso/:curso/precio',
 				component: PrecioCurso,
-				exact: true,
-			},
-			{
-				path: '/instructor/contenido_curso/:curso/promocion',
-				component: PromocionCurso,
 				exact: true,
 			},
 			{

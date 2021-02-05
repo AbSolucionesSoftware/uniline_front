@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Editor } from '@tinymce/tinymce-react';
-import { Box, Grid, Select, TextField, Divider, Typography, Button } from '@material-ui/core';
+import { Box, Grid, Select, TextField, Divider, Typography, Button, InputAdornment } from '@material-ui/core';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -54,6 +54,20 @@ export default function RegistroInformacionCurso() {
 			description: e
 		});
 	};
+	const obtenerStartMessage = (e) => {
+		setValidacion(false);
+		setDatos({
+			...datos,
+			startMessage: e
+		});
+	};
+	const obtenerFinalMessage = (e) => {
+		setValidacion(false);
+		setDatos({
+			...datos,
+			finalMessage: e
+		});
+	};
 
 	const obtenerCampos = (e) => {
 		setValidacion(false);
@@ -102,7 +116,10 @@ export default function RegistroInformacionCurso() {
 			!datos.language ||
 			!datos.category ||
 			!datos.subCategory ||
-			!datos.level
+			!datos.level ||
+			!datos.hours  ||
+			!datos.startMessage ||
+			!datos.finalMessage
 		) {
 			setValidacion(true);
 			setSnackbar({
@@ -124,7 +141,10 @@ export default function RegistroInformacionCurso() {
 					language: datos.language,
 					category: datos.category,
 					subCategory: datos.subCategory,
-					level: datos.level
+					level: datos.level,
+					hours: datos.hours,
+					startMessage: datos.startMessage,
+					finalMessage: datos.finalMessage
 				},
 				{
 					headers: {
@@ -373,6 +393,76 @@ export default function RegistroInformacionCurso() {
 							</FormControl>
 						</Grid>
 					</Grid>
+				</Box>
+				<Box my={2}>
+					<TextField
+						/* fullWidth */
+						required
+						type="number"
+						name="hours"
+						id="horas-curso"
+						label="Horas del curso"
+						value={datos.hours ? datos.hours : ''}
+						variant="outlined"
+						error={validacion && !datos.hours ? true : false}
+						helperText={validacion && !datos.hours ? 'Campo requerido' : ''}
+						onChange={obtenerCampos}
+						InputProps={{
+							endAdornment: <InputAdornment position="start">Hrs.</InputAdornment>
+						}}
+					/>
+				</Box>
+				<Box my={2}>
+					<Typography variant="subtitle1">Mensaje inicial del curso</Typography>
+					<FormControl
+						variant="outlined"
+						className={classes.select}
+						error={validacion && !datos.startMessage ? true : false}
+					>
+						<Editor
+							name="startMessage"
+							init={{
+								height: 300,
+								menubar: true,
+								plugins: [
+									'advlist autolink lists link image charmap print preview anchor',
+									'searchreplace visualblocks code fullscreen',
+									'insertdatetime media table paste code help wordcount'
+								],
+								toolbar:
+									'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help'
+							}}
+							onEditorChange={obtenerStartMessage}
+							value={datos.startMessage ? datos.startMessage : ''}
+						/>
+						{validacion && !datos.startMessage ? <FormHelperText>campo requerido</FormHelperText> : null}
+					</FormControl>
+				</Box>
+				<Box my={2}>
+					<Typography variant="subtitle1">Mensaje final del curso</Typography>
+					<FormControl
+						variant="outlined"
+						className={classes.select}
+						error={validacion && !datos.finalMessage ? true : false}
+					>
+						<Editor
+							name="finalMessage"
+							init={{
+								height: 300,
+								menubar: true,
+								plugins: [
+									'advlist autolink lists link image charmap print preview anchor',
+									'searchreplace visualblocks code fullscreen',
+									'insertdatetime media table paste code help wordcount'
+								],
+								toolbar:
+									'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help'
+							}}
+							onEditorChange={obtenerFinalMessage}
+							value={datos.finalMessage ? datos.finalMessage : ''}
+						/>
+						{validacion && !datos.finalMessage ? <FormHelperText>campo requerido</FormHelperText> : null}
+					</FormControl>
 				</Box>
 				<Divider />
 				<Typography variant="h6">Imagen promocional del curso</Typography>

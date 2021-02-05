@@ -54,7 +54,7 @@ const reorder = (list, startIndex, endIndex) => {
 	return newList;
 };
 
-export default function Temas({ openNewTheme, setOpenNewTheme, bloque, bloques, setBloques, temas, setTemas }) {
+export default function Temas({ openNewTheme, setOpenNewTheme, bloque, bloques, setBloques }) {
 	const token = localStorage.getItem('token');
 	const { update, setUpdate } = useContext(CursoContext);
 	const [ snackbar, setSnackbar ] = useState({
@@ -167,12 +167,30 @@ export default function Temas({ openNewTheme, setOpenNewTheme, bloque, bloques, 
 		}
 	};
 
-	const eliminarTemaBD = (idTema, video) => {
+	const eliminarTemaBD = async (tema) => {
+		if (!tema.video) {
+			await clienteAxios
+				.delete(`/course/topic/delete/${tema.id}`, {
+					headers: {
+						Authorization: `bearer ${token}`
+					}
+				})
+				.then((res) => {
+					setLoading(false);
+					messages('success', res.data.message);
+					setUpdate(!update);
+				})
+				.catch((err) => {
+					setLoading(false);
+					messages('error', err);
+				});
+				return;
+		}
 		setLoading(true);
 		client.request(
 			{
 				method: 'DELETE',
-				path: `/videos/${video}`
+				path: `/videos/${tema.video}`
 			},
 			function(error, body, status_code) {
 				if (error) {
@@ -185,7 +203,7 @@ export default function Temas({ openNewTheme, setOpenNewTheme, bloque, bloques, 
 					return;
 				}
 				clienteAxios
-					.delete(`/course/topic/delete/${idTema}`, {
+					.delete(`/course/topic/delete/${tema.id}`, {
 						headers: {
 							Authorization: `bearer ${token}`
 						}
@@ -210,16 +228,16 @@ export default function Temas({ openNewTheme, setOpenNewTheme, bloque, bloques, 
 		if (destination.droppableId === source.droppableId && destination.index === source.index) return;
 
 		const new_topics = reorder(bloque.topics, source.index, destination.index);
-		const nuevo_bloque = { block: bloque.block, topics: new_topics }
+		const nuevo_bloque = { block: bloque.block, topics: new_topics };
 		let nuevos_bloques = [];
 
 		bloques.forEach((res) => {
-			if(res.block._id === bloque.block._id){
-				nuevos_bloques.push({block: nuevo_bloque.block, topics: nuevo_bloque.topics})
-			}else{
-				nuevos_bloques.push({block: res.block, topics: res.topics})
+			if (res.block._id === bloque.block._id) {
+				nuevos_bloques.push({ block: nuevo_bloque.block, topics: nuevo_bloque.topics });
+			} else {
+				nuevos_bloques.push({ block: res.block, topics: res.topics });
 			}
-		})
+		});
 		setBloques(nuevos_bloques);
 	};
 
@@ -302,7 +320,7 @@ const RenderTemas = ({ index, tema, handleClickOpen, eliminarTemaBD }) => {
 	};
 
 	return (
-		<Draggable draggableId={`topic-${tema._id}`} index={index}>
+		<Draggable draggableId={`topic-${index}`} index={index}>
 			{(provided) => (
 				<Box
 					className={classes.container}
@@ -465,7 +483,7 @@ function AlertConfimationDelete({ deleteConfimation, handleDeleteConfimation, el
 					<Button
 						onClick={() => {
 							handleDeleteConfimation();
-							eliminarTemaBD(deleteConfimation.id, deleteConfimation.video);
+							eliminarTemaBD(deleteConfimation);
 						}}
 						color="secondary"
 						autoFocus

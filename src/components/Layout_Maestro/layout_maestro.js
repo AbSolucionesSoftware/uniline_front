@@ -6,7 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from '../../config/themeConfig';
 import darkMode from '../../config/darkMode';
-/* import Sesion from '../Verificacion_sesion/verificacion_sesion'; */
+import Sesion from '../Verificacion_sesion/verificacion_sesion';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -41,7 +41,7 @@ export default function LayoutMaestro(props) {
 	}, [tema]);
 
 	useEffect(() => {
-		//Sesion(props);
+		Sesion(props);
 	}, [props])
 
 	return (
