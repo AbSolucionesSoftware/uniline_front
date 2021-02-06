@@ -1,21 +1,7 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import {
-	Hidden,
-	IconButton,
-	Button,
-	Divider,
-	Typography,
-	Toolbar,
-	AppBar,
-	Box,
-	MenuItem,
-	Popover,
-	Avatar,
-	CircularProgress,
-	Drawer,
-	List
-} from '@material-ui/core';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Hidden, IconButton, Divider, Typography, Toolbar, Button } from '@material-ui/core';
+import { Link, withRouter } from 'react-router-dom';
+import { AppBar, Box, MenuItem, Popover, Avatar, CircularProgress, Drawer, List } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core/';
 import BrightnessMediumIcon from '@material-ui/icons/BrightnessMedium';
@@ -33,8 +19,11 @@ import 'firebase/firestore';
 import ListaContenido from './lista';
 import ContenidoDashboard from './contenido_dashboard';
 import { useStyles } from './styles';
+import Spin from '../../../components/Spin/spin';
+import MessageSnackbar from '../../../components/Snackbar/snackbar';
+import clienteAxios from '../../../config/axios';
 
-export default function DashboarUsuario(props) {
+function DashboarUsuario(props) {
 	const classes = useStyles();
 	let user = { _id: '' };
 	const token = localStorage.getItem('token');
@@ -42,6 +31,14 @@ export default function DashboarUsuario(props) {
 	const [ anchorEl, setAnchorEl ] = useState(null);
 	const [ open, setOpen ] = useState(false);
 	const [ openSecondary, setOpenSecondary ] = useState(false);
+	const [ curso, setCurso ] = useState([]);
+	const idcurso = props.match.params.url;
+	const [ loading, setLoading ] = useState(false);
+	const [ snackbar, setSnackbar ] = useState({
+		open: false,
+		mensaje: '',
+		status: ''
+	});
 
 	const isMenuOpen = Boolean(anchorEl);
 
@@ -67,6 +64,46 @@ export default function DashboarUsuario(props) {
 	const handleDrawerSecondary = () => {
 		setOpenSecondary(!openSecondary);
 	};
+
+	const obtenerCursoBD = useCallback(
+		async () => {
+			setLoading(true);
+			await clienteAxios
+				.get(`/course/${idcurso}`, {
+					headers: {
+						Authorization: `bearer ${token}`
+					}
+				})
+				.then((res) => {
+					setLoading(false);
+					setCurso(res.data);
+				})
+				.catch((err) => {
+					setLoading(false);
+					if (err.response) {
+						setSnackbar({
+							open: true,
+							mensaje: err.response.data.message,
+							status: 'error'
+						});
+					} else {
+						setSnackbar({
+							open: true,
+							mensaje: 'Al parecer no se a podido conectar al servidor.',
+							status: 'error'
+						});
+					}
+				});
+		},
+		[ idcurso, token, setCurso ]
+	);
+
+	useEffect(
+		() => {
+			obtenerCursoBD();
+		},
+		[ obtenerCursoBD ]
+	);
 
 	const menuId = 'primary-search-account-menu';
 	const renderMenu = (
@@ -143,7 +180,7 @@ export default function DashboarUsuario(props) {
 					</Hidden>
 					<Box ml={2}>
 						<Typography className={classes.title} variant="h6" noWrap>
-							Curso React desde 0 a experto
+							{curso.title ? curso.title : ''}
 						</Typography>
 					</Box>
 					<div className={classes.grow} />
@@ -168,7 +205,9 @@ export default function DashboarUsuario(props) {
 							onClick={handleProfileMenuOpen}
 							color="inherit"
 						>
-							{!user.imagen ? (
+							{!user ? (
+								<Avatar alt="foto de perfil" />
+							) : !user.imagen ? (
 								<Avatar className={classes.orange}>
 									{user.name ? (
 										user.name.charAt(0)
@@ -195,7 +234,7 @@ export default function DashboarUsuario(props) {
 				>
 					<Toolbar />
 					<div className={classes.drawerContainer}>
-						<ListaContenido />
+						<ListaContenido curso={curso} />
 					</div>
 				</Drawer>
 			</Hidden>
@@ -216,7 +255,7 @@ export default function DashboarUsuario(props) {
 					</div>
 					<Divider />
 					<div className={classes.drawerContainer}>
-						<ListaContenido />
+						<ListaContenido curso={curso} />
 					</div>
 				</Drawer>
 			</Hidden>
@@ -244,7 +283,9 @@ export default function DashboarUsuario(props) {
 					<List>
 						<ListItem button component={Link} to="/perfil" onClick={handleDrawer}>
 							<ListItemIcon>
-								{!user.imagen ? (
+								{!user ? (
+									<Avatar alt="foto de perfil" />
+								) : !user.imagen ? (
 									<Avatar className={classes.orange}>
 										{user.name ? (
 											user.name.charAt(0)
@@ -290,8 +331,17 @@ export default function DashboarUsuario(props) {
 
 			<main className={classes.content}>
 				<Toolbar />
-				<ContenidoDashboard />
+				<ContenidoDashboard curso={curso} />
+				<Spin loading={loading} />
+				<MessageSnackbar
+					open={snackbar.open}
+					mensaje={snackbar.mensaje}
+					status={snackbar.status}
+					setSnackbar={setSnackbar}
+				/>
 			</main>
 		</div>
 	);
 }
+
+export default withRouter(DashboarUsuario);
