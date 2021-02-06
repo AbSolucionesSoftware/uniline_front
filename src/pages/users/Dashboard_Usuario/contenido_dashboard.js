@@ -161,9 +161,11 @@ export default function ContenidoDashboard({ curso }) {
 					<Typography variant="h6">Descripción del curso</Typography>
 					<Divider />
 					<Box p={2} textAlign="justify">
-						<Typography dangerouslySetInnerHTML={{
-									__html: DOMPurify.sanitize(curso.description ? curso.description : '')
-								}} />
+						<Typography
+							dangerouslySetInnerHTML={{
+								__html: DOMPurify.sanitize(curso.description ? curso.description : '')
+							}}
+						/>
 					</Box>
 					<Typography variant="h6">¿Qué aprenderas en este curso?</Typography>
 					<Box px={5} py={2}>
