@@ -84,8 +84,8 @@ export default function Footer() {
 						<Button id="is" style={{ fontSize: 12 }} component={Link} to="/politicas">
 							Políticas de Privacidad
 						</Button>
-						<Button id="is" style={{ fontSize: 12 }} component={Link} to="/politicas">
-							Misión
+						<Button id="is" style={{ fontSize: 12 }} component={Link} to="/imagen_corporativa">
+							Imagen corporativa
 						</Button>
 					</Typography>
 				</Grid>
