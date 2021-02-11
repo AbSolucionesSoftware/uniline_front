@@ -1,48 +1,45 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Box, Grid, Typography } from '@material-ui/core';
+import { Box, makeStyles, Typography } from '@material-ui/core';
 import CardsCursos from '../../CardCurso/card_curso';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import Slider from 'react-slick';
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 import clienteAxios from '../../../../config/axios';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import SpinNormal from '../../../../components/Spin/spinNormal';
+import Error500 from '../../../error500';
 
-export default function CursosComprados() {
-	const token = localStorage.getItem('token');
+const useStyles = makeStyles((theme) => ({
+	margin: {
+		margin: theme.spacing(5),
+		[theme.breakpoints.down('xs')]: {
+			margin: '32px 8px'
+		}
+	}
+}));
+
+export default function CursosDisponibles() {
+	const classes = useStyles();
 	const [ cursos, setCursos ] = useState([]);
 	const [ loading, setLoading ] = useState(false);
 	const [ error, setError ] = useState({error: false, message: ''});
 
-	let settings = {
-		dots: false,
-		infinite: true,
-		speed: 500,
-		slidesToShow: 4,
-		slidesToScroll: 1,
-		responsive: [
-			{
-				breakpoint: 1024,
-				settings: {
-					slidesToShow: 3,
-					slidesToScroll: 1,
-				}
-			},
-			{
-				breakpoint: 800,
-				settings: {
-					slidesToShow: 2,
-					slidesToScroll: 1,
-				}
-			},
-			{
-				breakpoint: 550,
-				settings: {
-					slidesToShow: 1,
-					slidesToScroll: 1
-				}
-			}
-		]
+	const responsive = {
+		superLargeDesktop: {
+			// the naming can be any, depends on you.
+			breakpoint: { max: 3000, min: 1365},
+			items: 4
+		},
+		desktop: {
+			breakpoint: { max: 1365, min: 998 },
+			items: 3
+		},
+		tablet: {
+			breakpoint: { max: 998, min: 449 },
+			items: 2
+		},
+		mobile: {
+			breakpoint: { max: 480, min: 0 },
+			items: 1
+		}
 	};
 
 	const obtenerCursosBD = useCallback(
@@ -66,29 +63,28 @@ export default function CursosComprados() {
 		[ ],
 	)
 
+	const render_cursos = cursos.map((curso, index) => (<CardsCursos key={index} curso={curso} />))
+
 	useEffect(() => {
 		obtenerCursosBD();
 	}, [ obtenerCursosBD ]);
-
-	console.log("infinite");
 
 	if(loading){
 		return (
 			<SpinNormal />
 		)
 	}
+	if(error.error){
+		return (
+			<Error500 error={error} />
+		)
+	}
 
 	return (
-		<Box>
-			<Typography variant="h4">¡Continua viendo tus cursos!</Typography>
-			<Box my={5} py={2}>
-				<Slider {...settings}>
-					<CardsCursos cursos={cursos} />
-					<CardsCursos cursos={cursos} />
-					<CardsCursos cursos={cursos} />
-					<CardsCursos cursos={cursos} />
-					<CardsCursos cursos={cursos} />
-				</Slider>
+		<Box className={classes.margin}>
+			<Typography variant="h4">¡Nuestros cursos!</Typography>
+			<Box py={2}>
+				<Carousel swipeable responsive={responsive}>{render_cursos}</Carousel>
 			</Box>
 		</Box>
 	);

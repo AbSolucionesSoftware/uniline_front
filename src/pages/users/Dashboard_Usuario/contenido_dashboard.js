@@ -31,8 +31,6 @@ const useStyles = makeStyles((theme) => ({
 export default function ContenidoDashboard({ curso }) {
 	const classes = useStyles();
 
-	console.log(curso);
-
 	return (
 		<div>
 			<Box className={classes.video} display="flex" justifyContent="center" alignItems="center">

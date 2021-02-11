@@ -1,17 +1,28 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
+@import 'node_modules/react-modal-video/scss/modal-video.scss';
 
 .clase{
     align-items: flex-end;
     justify-content: space-between;
-    background-color: rgba(255, 255, 255, 0.507);
+    background-color: rgba(255, 255, 255, 0);
+    position: relative;
 }
 .slick-arrow{
-    width: auto;
-    height: auto;
+    width: auto!important;
+    height: auto!important;
 }
 .slick-arrow::before{
     background-color: rgba(255, 255, 255, 0)!important;
     color: rgb(156, 156, 156)!important;
     font-size: 40px!important;
 }
+.slick-slide, .slick-active, .slick-current{
+    width: auto!important;
+}
+
+/* @media(max-width: 300){
+    .slick-slide, .slick-active, .slick-current{
+        width: 300px!important;
+    }
+} */

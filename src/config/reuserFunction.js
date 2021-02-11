@@ -26,6 +26,15 @@ export const formatoFecha = (fecha) => {
 	}
 };
 
+export const formatoFechaCurso = (fecha) => {
+	if (!fecha) {
+		return null;
+	} else {
+		var newdate = new Date(fecha);
+		return newdate.toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' });
+	}
+};
+
 export const formatoHora = (hora) => {
 	if (!hora) {
 		return null;

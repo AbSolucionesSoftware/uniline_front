@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Box, makeStyles, Typography } from '@material-ui/core';
-import clienteAxios from '../../../config/axios';
-import SpinNormal from '../../../components/Spin/spinNormal';
-import Error500 from '../../error500';
-import CardsCursosEstudiantes from '../../users/CardCurso/card_curso_estudiante';
+import clienteAxios from '../../../../config/axios';
+import SpinNormal from '../../../../components/Spin/spinNormal';
+import Error500 from '../../../error500';
+import CardsCursosEstudiantes from '../../CardCurso/card_curso_estudiante';
 
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function MisCursos() {
+export default function CursosComprados() {
 	const classes = useStyles();
 	let token = localStorage.getItem('token');
 	const [ cursos, setCursos ] = useState([]);

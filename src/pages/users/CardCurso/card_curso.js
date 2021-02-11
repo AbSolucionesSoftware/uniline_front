@@ -1,118 +1,160 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import clsx from 'clsx';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Collapse from '@material-ui/core/Collapse';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles';
+import { Card, CardHeader, CardMedia, CardContent, CardActions, Chip } from '@material-ui/core';
+import { Avatar, Box, Tooltip, Button, IconButton, Typography } from '@material-ui/core';
+import Rating from '@material-ui/lab/Rating';
 import { red } from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+import FacebookIcon from '@material-ui/icons/Facebook';
+import WhatsAppIcon from '@material-ui/icons/WhatsApp';
+import { formatoFechaCurso, formatoMexico } from '../../../config/reuserFunction';
+import { Link } from 'react-router-dom';
+
+const HtmlTooltip = withStyles((theme) => ({
+	tooltip: {
+		backgroundColor: theme.palette.common.white,
+		color: 'rgba(0, 0, 0, 0.87)',
+		maxWidth: 330,
+		fontSize: theme.typography.pxToRem(12),
+		border: '1px solid #dadde9'
+	}
+}))(Tooltip);
 
 const useStyles = makeStyles((theme) => ({
 	root: {
-        maxWidth: 300,
-        margin: '8px 16px!important'
+		width: 300,
+		margin: '8px 16px!important'
 	},
 	media: {
-		height: 0,
-		paddingTop: '56.25%' // 16:9
-	},
-	expand: {
-		transform: 'rotate(0deg)',
-		marginLeft: 'auto',
-		transition: theme.transitions.create('transform', {
-			duration: theme.transitions.duration.shortest
-		})
-	},
-	expandOpen: {
-		transform: 'rotate(180deg)'
+		height: 170
+		/* paddingTop: '56.25%' // 16:9 */
 	},
 	avatar: {
 		backgroundColor: red[500]
+	},
+	free: {
+		backgroundColor: theme.palette.success.secondary
+	},
+	title: {
+		height: 70
+	},
+	descripcion: {
+		height: 200,
+		width: '100%',
+		whiteSpace: 'normal',
+		overflow: 'hidden',
+		textOverflow: 'ellipsis'
 	}
 }));
 
-export default function CardsCursos({cursos}) {
+export default function CardsCursos({ curso }) {
 	const classes = useStyles();
-	const [ expanded, setExpanded ] = React.useState(false);
 
-	const handleExpandClick = () => {
-		setExpanded(!expanded);
-	};
+	const descriptionCurso = (
+		<Box>
+			<Typography variant="subtitle1" color="inherit">
+				{curso.title}
+			</Typography>
+			<Typography variant="subtitle2" color="inherit">
+				{curso.subtitle}
+			</Typography>
+			<Typography variant="caption" color="textSecondary">
+				{`nivel ${curso.level}, ${curso.hours} horas de curso, en ${curso.language}`}
+			</Typography>
+			<ul>
+				{curso.learnings.map((learning, index) => {
+					if (index + 1 > 3) {
+						return null;
+					}
+					return (
+						<li key={index}>
+							<Typography variant="subtitle1">{learning.learning}</Typography>
+						</li>
+					);
+				})}
+			</ul>
+			<Button variant="text" color="primary" fullWidth component={Link} to={`/curso/${curso._id}`}>
+				Ver descripción completa
+			</Button>
+            <br/>
+            <Typography align="center">¡Comparte este curso!</Typography>
+            <br />
+			<Box display="flex" justifyContent="space-around">
+				<Button variant="outlined" color="primary" startIcon={<FacebookIcon />}>
+					Facebook
+				</Button>
+                <Button variant="outlined" color="primary" startIcon={<WhatsAppIcon />}>
+					WhatsApp
+				</Button>
+			</Box>
+		</Box>
+	);
 
 	return (
-		<Card className={classes.root}>
-			<CardHeader
-				avatar={
-					<Avatar aria-label="recipe" className={classes.avatar}>
-						R
-					</Avatar>
-				}
-				action={
-					<IconButton aria-label="settings">
-						<MoreVertIcon />
-					</IconButton>
-				}
-				title="Shrimp and Chorizo Paella"
-				subheader="September 14, 2016"
-			/>
-			<CardMedia className={classes.media} image="/static/images/cards/paella.jpg" title="Paella dish" />
-			<CardContent>
-				<Typography variant="body2" color="textSecondary" component="p">
-					This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add
-					1 cup of frozen peas along with the mussels, if you like.
-				</Typography>
-			</CardContent>
-			<CardActions disableSpacing>
-				<IconButton aria-label="add to favorites">
-					<FavoriteIcon />
-				</IconButton>
-				<IconButton aria-label="share">
-					<ShareIcon />
-				</IconButton>
-				<IconButton
-					className={clsx(classes.expand, {
-						[classes.expandOpen]: expanded
-					})}
-					onClick={handleExpandClick}
-					aria-expanded={expanded}
-					aria-label="show more"
-				>
-					<ExpandMoreIcon />
-				</IconButton>
-			</CardActions>
-			<Collapse in={expanded} timeout="auto" unmountOnExit>
+		<HtmlTooltip title={descriptionCurso} placement="right" interactive>
+			<Card className={classes.root}>
+				<CardHeader
+					avatar={
+						curso.idProfessor.urlImage ? (
+							<Avatar aria-label="recipe" className={classes.avatar} src={curso.idProfessor.urlImage} />
+						) : (
+							<Avatar aria-label="recipe" className={classes.avatar}>
+								{curso.idProfessor.name.charAt(0)}
+							</Avatar>
+						)
+					}
+					title={curso.idProfessor.name}
+					subheader={`Creado el ${formatoFechaCurso(curso.createdAt)}`}
+				/>
+				<CardMedia className={classes.media} image={curso.urlPromotionalImage} />
 				<CardContent>
-					<Typography paragraph>Method:</Typography>
-					<Typography paragraph>
-						Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside for 10 minutes.
+					<Typography variant="h6" color="textPrimary" className={classes.title}>
+						{curso.title}
 					</Typography>
-					<Typography paragraph>
-						Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high heat. Add
-						chicken, shrimp and chorizo, and cook, stirring occasionally until lightly browned, 6 to 8
-						minutes. Transfer shrimp to a large plate and set aside, leaving chicken and chorizo in the pan.
-						Add pimentón, bay leaves, garlic, tomatoes, onion, salt and pepper, and cook, stirring often
-						until thickened and fragrant, about 10 minutes. Add saffron broth and remaining 4 1/2 cups
-						chicken broth; bring to a boil.
-					</Typography>
-					<Typography paragraph>
-						Add rice and stir very gently to distribute. Top with artichokes and peppers, and cook without
-						stirring, until most of the liquid is absorbed, 15 to 18 minutes. Reduce heat to medium-low, add
-						reserved shrimp and mussels, tucking them down into the rice, and cook again without stirring,
-						until mussels have opened and rice is just tender, 5 to 7 minutes more. (Discard any mussels
-						that don’t open.)
-					</Typography>
-					<Typography>Set aside off of the heat to let rest for 10 minutes, and then serve.</Typography>
+					<Rating name="read-only" value={curso.qualification} precision={0.5} readOnly />
+					<Box>
+						{curso.priceCourse.free ? (
+							<Chip
+								className={classes.free}
+								label={
+									<Typography variant="h6" color="textPrimary">
+										¡Gratis!
+									</Typography>
+								}
+							/>
+						) : curso.priceCourse.promotionPrice ? (
+							<Box display="flex">
+								<Box mr={2}>
+									<Typography variant="h6" color="textPrimary">
+										{formatoMexico(curso.priceCourse.promotionPrice)} MX$
+									</Typography>
+								</Box>
+								<Typography variant="h6" color="textSecondary">
+									<s>{formatoMexico(curso.priceCourse.price)} MX$</s>
+								</Typography>
+							</Box>
+						) : (
+							<Typography variant="h6" color="textPrimary">
+								<b>{formatoMexico(curso.priceCourse.price)} MX$</b>
+							</Typography>
+						)}
+					</Box>
 				</CardContent>
-			</Collapse>
-		</Card>
+				<CardActions>
+					<Box>
+						<Button variant="text" color="primary" fullWidth component={Link} to={`/curso/${curso._id}`}>
+							Ver descripción completa
+						</Button>
+						<Button variant="contained" color="primary">
+							Comprar ahora
+						</Button>
+						<IconButton variant="contained" color="secondary">
+							<AddShoppingCartIcon />
+						</IconButton>
+					</Box>
+				</CardActions>
+			</Card>
+		</HtmlTooltip>
 	);
 }

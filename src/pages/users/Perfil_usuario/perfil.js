@@ -28,7 +28,7 @@ import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
 export default function PerfilUsuario(props) {
 	const classes = useStyles();
-	const token = localStorage.getItem('token');
+	let token = localStorage.getItem('token');
 	const [ datos, setDatos ] = useState([]);
 	const [ preview, setPreview ] = useState(null);
 	const [ validate, setValidate ] = useState(false);
@@ -128,16 +128,14 @@ export default function PerfilUsuario(props) {
 				}
 			})
 			.then((res) => {
+				localStorage.setItem('token', res.data.token);
+				localStorage.setItem('student', JSON.stringify(jwt_decode(res.data.token)));
 				setLoading(false);
 				setSnackbar({
 					open: true,
 					mensaje: 'Guardado correctamente',
 					status: 'success'
 				});
-				localStorage.removeItem('token');
-				localStorage.removeItem('student');
-				localStorage.setItem('token', res.data.token);
-				localStorage.setItem('student', JSON.stringify(jwt_decode(res.data.token)));
 				setUpdate(!update);
 			})
 			.catch((err) => {

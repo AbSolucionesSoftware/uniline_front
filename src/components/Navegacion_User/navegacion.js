@@ -45,7 +45,7 @@ import { NavContext } from '../../context/context_nav'; */
 
 export default function NavegacionUsuario(props) {
 	const [ darkTheme, setDarkTheme ] = props.tema;
-	const token = localStorage.getItem('token');
+	let token = localStorage.getItem('token');
 	const classes = useStyles();
 	const [ anchorEl, setAnchorEl ] = useState(null);
 	const [ open, setOpen ] = useState(false);

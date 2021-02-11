@@ -25,13 +25,14 @@ import Spin from '../../../../../components/Spin/spin';
 import MessageSnackbar from '../../../../../components/Snackbar/snackbar';
 import clienteAxios from '../../../../../config/axios';
 import { CursoContext } from '../../../../../context/curso_context';
+import theme from '../../../../../config/themeConfig';
 
 const useStyles = makeStyles({
 	table: {
 		width: '100%'
 	},
 	colorCanjeados: {
-		color: '#5cb85c'
+		color: theme.palette.success.main
 	},
 	root: {
 		padding: '0px 4px',

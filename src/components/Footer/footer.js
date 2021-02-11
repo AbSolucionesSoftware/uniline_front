@@ -16,6 +16,9 @@ import { Link } from 'react-router-dom';
 import Imagen from '../../images/uniline2.png';
 
 const useStyles = makeStyles((theme) => ({
+	background: {
+		backgroundColor: theme.palette.background.default
+	},
 	root: {
 		flexGrow: 1
 	},
@@ -44,7 +47,7 @@ export default function Footer() {
 	const classes = useStyles();
 
 	return (
-		<div>
+		<Box position="relative" zIndex="2" className={classes.background}>
 			<Grid container>
 				<Grid item sm={4} xs={12}>
 					<Typography className={classes.marginText} align="center" variant="subtitle1">
@@ -90,6 +93,6 @@ export default function Footer() {
 					</Typography>
 				</Grid>
 			</Grid>
-		</div>
+		</Box>
 	);
 }
