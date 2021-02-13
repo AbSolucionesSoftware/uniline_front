@@ -1,14 +1,16 @@
-import React, { Fragment, useState } from 'react';
-import { Box, CardContent, Divider, Button, TextField, Chip } from '@material-ui/core';
+import React, { Fragment, useContext, useState } from 'react';
+import { Box, CardContent, Divider, Button, TextField, Chip, Dialog } from '@material-ui/core';
 import { makeStyles, Typography, IconButton, CircularProgress } from '@material-ui/core';
 import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import PlayCircleFilledOutlinedIcon from '@material-ui/icons/PlayCircleFilledOutlined';
+import WarningIcon from '@material-ui/icons/Warning';
 import { formatoMexico } from '../../../config/reuserFunction';
-import clienteAxios from '../../../config/axios';
 import { withRouter } from 'react-router-dom';
-import MessageSnackbar from '../../../components/Snackbar/snackbar';
+import RegistroAlterno from '../RegistroAlterno/registro_alterno';
+import { NavContext } from '../../../context/context_nav';
+import { CanjearCupon } from '../PeticionesCompras/peticiones_compras';
 
 const useStyles = makeStyles((theme) => ({
 	background: {
@@ -23,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 		height: 220,
 		width: '100%',
 		position: 'absolute',
-		backgroundColor: 'rgba(0,0,0, 0.5)!important',
+		backgroundColor: 'rgba(0,0,0, 0.3)!important',
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center'
@@ -38,73 +40,53 @@ const useStyles = makeStyles((theme) => ({
 function VistaCursoPanelPrincipal(props) {
 	const classes = useStyles();
 	let token = localStorage.getItem('token');
-	const { curso, handleVideoModal } = props;
+	const { curso, handleVideoModal, setSnackbar } = props;
 	const [ cupon, setCupon ] = useState('');
 	const [ loading, setLoading ] = useState(false);
-	const [ snackbar, setSnackbar ] = useState({
-		open: false,
-		mensaje: '',
-		status: ''
-	});
+	const { error, setError, open, setOpen } = useContext(NavContext);
 	let user = { _id: '' };
+	const urlActual = props.match.url;
 
 	if (token !== null) user = JSON.parse(localStorage.getItem('student'));
 
 	const obtenerCupon = (e) => setCupon(e.target.value);
+	const handleModal = () => setOpen(!open);
 
 	const canjearCupon = async () => {
-		if(!token || !user._id){
-			props.history.push('/mis_cursos');
+		if (!cupon) {
 			return;
-		}else if(!cupon){
+		} else if (!token || !user._id) {
+			handleModal();
+			localStorage.setItem('coupon', JSON.stringify({ curso, cupon, urlActual }));
 			return;
 		}
+		const result = await CanjearCupon(token, user, curso, cupon);
+
 		setLoading(true);
-		await clienteAxios
-			.put(
-				`/course/coupon/exchange/${curso.course._id}`,
-				{
-					idUser: user._id,
-					idCourse: curso.course._id,
-					code: cupon
-				},
-				{
-					headers: {
-						Authorization: `bearer ${token}`
-					}
-				}
-			)
-			.then((res) => {
-				setLoading(false);
-				setCupon('');
-				props.history.push('/mis_cursos');
-			})
-			.catch((err) => {
-				setLoading(false);
-				if (err.response) {
-					setSnackbar({
-						open: true,
-						mensaje: err.response.data.message,
-						status: 'error'
-					});
-				} else {
-					setSnackbar({
-						open: true,
-						mensaje: 'Al parecer no se a podido conectar al servidor.',
-						status: 'error'
-					});
-				}
-			});
+		if (result.status && result.status === 200) {
+			setLoading(false);
+			setCupon('');
+			props.history.push('/mis_cursos');
+		} else {
+			setLoading(false);
+			if (result.response) {
+				setSnackbar({
+					open: true,
+					mensaje: result.response.data.message,
+					status: 'error'
+				});
+			} else {
+				setSnackbar({
+					open: true,
+					mensaje: 'Al parecer no se a podido conectar al servidor.',
+					status: 'error'
+				});
+			}
+		}
 	};
 
 	return (
 		<Fragment>
-			<MessageSnackbar
-				open={snackbar.open}
-				mensaje={snackbar.mensaje}
-				status={snackbar.status}
-				setSnackbar={setSnackbar}
-			/>
 			<Box
 				height="220px"
 				display="flex"
@@ -195,7 +177,33 @@ function VistaCursoPanelPrincipal(props) {
 					</Box>
 				</Box>
 			</CardContent>
+			<ModalRegistro handleModal={handleModal} open={open} error={error} setError={setError} />
 		</Fragment>
 	);
 }
+
+const ModalRegistro = ({ handleModal, open, error, setError }) => {
+	const handleClose = () => {
+		handleModal();
+		localStorage.removeItem('coupon');
+		setError({ error: false, message: '' });
+	};
+	return (
+		<Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} fullWidth>
+			{!error.error ? (
+				<RegistroAlterno />
+			) : error.message.response ? (
+				<Box m={5} display="flex" alignItems="center">
+					<WarningIcon style={{ fontSize: 70, marginRight: 10 }} color="error" />
+					<Box>
+						<Typography variant="h6">Lo sentimos</Typography>
+						<Typography variant="h5">{error.message.response.data.message}</Typography>
+					</Box>
+				</Box>
+			) : (
+				<div>hubo un error desconocido</div>
+			)}
+		</Dialog>
+	);
+};
 export default withRouter(VistaCursoPanelPrincipal);

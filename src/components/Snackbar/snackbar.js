@@ -8,7 +8,8 @@ const useStyles = makeStyles((theme) => ({
 		width: '100%',
 		'& > * + *': {
 			marginTop: theme.spacing(2)
-		}
+		},
+		zIndex: '99999'
 	}
 }));
 

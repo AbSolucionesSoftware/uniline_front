@@ -1,4 +1,4 @@
-import React, { /* useCallback, useContext, useEffect, */ useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
 	Button,
@@ -40,8 +40,6 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import Sesion from '../Verificacion_sesion/verificacion_sesion';
 import useStyles from './styles';
-/* import clienteAxios from '../../config/axios';
-import { NavContext } from '../../context/context_nav'; */
 
 export default function NavegacionUsuario(props) {
 	const [ darkTheme, setDarkTheme ] = props.tema;
@@ -50,8 +48,6 @@ export default function NavegacionUsuario(props) {
 	const [ anchorEl, setAnchorEl ] = useState(null);
 	const [ open, setOpen ] = useState(false);
 	const sesion = Sesion(props, false);
-	/* const [ datos, setDatos ] = useState([]); */
-	/* const { update } = useContext(NavContext); */
 	const isMenuOpen = Boolean(anchorEl);
 	let user = { _id: '' };
 
@@ -77,31 +73,9 @@ export default function NavegacionUsuario(props) {
 		setOpen(false);
 	};
 
-	/* const obtenerDatosBD = useCallback(
-		async () => {
-			if (!user._id) return;
-			await clienteAxios
-				.get(`/user/${user._id}`, {
-					headers: {
-						Authorization: `bearer ${token}`
-					}
-				})
-				.then((res) => {
-					setDatos(res.data);
-				})
-				.catch((err) => {
-					console.log(err);
-				});
-		},
-		[ token, user._id ]
-	); */
-
-	/* useEffect(
-		() => {
-			obtenerDatosBD();
-		},
-		[ obtenerDatosBD, update ]
-	); */
+	useEffect(() => {
+		localStorage.removeItem('urlActual');
+	}, []);
 
 	const menuId = 'primary-search-account-menu';
 	const renderMenu = (
@@ -134,6 +108,7 @@ export default function NavegacionUsuario(props) {
 					firebase.auth().signOut();
 					localStorage.removeItem('token');
 					localStorage.removeItem('student');
+					localStorage.removeItem('urlActual');
 					setTimeout(() => {
 						window.location.reload();
 					}, 500);
@@ -399,6 +374,7 @@ export default function NavegacionUsuario(props) {
 									firebase.auth().signOut();
 									localStorage.removeItem('token');
 									localStorage.removeItem('student');
+									localStorage.removeItem('urlActual');
 									setTimeout(() => {
 										window.location.reload();
 									}, 500);

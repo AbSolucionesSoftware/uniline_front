@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import firebaseConfig from '../../config/firebase';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import clienteAxios from '../../config/axios';
@@ -9,6 +9,9 @@ import './firebase.scss';
 import MessageSnackbar from '../Snackbar/snackbar';
 import Spin from '../Spin/spin';
 import jwt_decode from 'jwt-decode';
+import { withRouter } from 'react-router-dom';
+import { NavContext } from '../../context/context_nav';
+import { CanjearCupon } from '../../pages/users/PeticionesCompras/peticiones_compras';
 /* import * as firebaseui from 'firebaseui'; */
 
 /* var ui = new firebaseui.auth.AuthUI(firebase.auth());
@@ -21,6 +24,7 @@ if (!firebase.apps.length) {
 function Firebase(props) {
 	const [ user, setUser ] = useState(false);
 	const [ loading, setLoading ] = useState(false);
+	const { setError } = useContext(NavContext);
 	const [ snackbar, setSnackbar ] = useState({
 		open: false,
 		mensaje: '',
@@ -36,8 +40,29 @@ function Firebase(props) {
 		}
 	};
 
-	useEffect(() => {
-		function onAuthStateChange() {
+	const canjearCupon = useCallback(
+		async ({ curso, cupon, urlActual }) => {
+			setLoading(true);
+			let token = localStorage.getItem('token');
+			let user = JSON.parse(localStorage.getItem('student'));
+
+			const result = await CanjearCupon(token, user, curso, cupon);
+			if (!result.status || result.status !== 200) {
+				setLoading(false);
+				localStorage.removeItem('coupon');
+				setError({ error: true, message: result });
+				props.history.push(urlActual);
+				return;
+			}
+			setLoading(false);
+			localStorage.removeItem('coupon');
+			props.history.push('/mis_cursos');
+		},
+		[ props.history, setError ]
+	);
+
+	const onAuthStateChange = useCallback(
+		() => {
 			return firebase.auth().onAuthStateChanged(async (user) => {
 				if (user) {
 					setLoading(true);
@@ -54,7 +79,15 @@ function Firebase(props) {
 							const decoded = jwt_decode(token);
 							localStorage.setItem('token', token);
 							localStorage.setItem('student', JSON.stringify(decoded));
-							window.location.href = '/';
+							/* window.location.href = '/'; */
+
+							/* redireccion en caso de ser comprado un curso o aplicar cupon */
+							let cuponItem = JSON.parse(localStorage.getItem('coupon'));
+							if (cuponItem) {
+								canjearCupon(cuponItem);
+							} else {
+								props.history.push('/');
+							}
 						})
 						.catch((err) => {
 							setLoading(false);
@@ -76,9 +109,16 @@ function Firebase(props) {
 					setUser(false);
 				}
 			});
-		}
-		onAuthStateChange();
-	}, []);
+		},
+		[ props.history, canjearCupon ]
+	);
+
+	useEffect(
+		() => {
+			onAuthStateChange();
+		},
+		[ onAuthStateChange ]
+	);
 
 	return (
 		<div className="App">
@@ -106,4 +146,4 @@ function Firebase(props) {
 	);
 }
 
-export default Firebase;
+export default withRouter(Firebase);

@@ -1,15 +1,19 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import { Box, TextField, Button, Typography, Divider } from '@material-ui/core';
 import clienteAxios from '../../../config/axios';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
 import Spin from '../../../components/Spin/spin';
 import Firebase from '../../../components/Firebase/firebase';
 import jwt_decode from 'jwt-decode';
+import { withRouter } from 'react-router-dom';
+import { NavContext } from '../../../context/context_nav';
+import { CanjearCupon } from '../PeticionesCompras/peticiones_compras';
 
-export default function FormLoginUsuario() {
+function FormLoginUsuario(props) {
 	const [ datos, setDatos ] = useState([]);
 	const [ validate, setValidate ] = useState(false);
 	const [ loading, setLoading ] = useState(false);
+	const { setError } = useContext(NavContext);
 	const [ snackbar, setSnackbar ] = useState({
 		open: false,
 		mensaje: '',
@@ -37,7 +41,15 @@ export default function FormLoginUsuario() {
 				const token = res.data.token;
 				localStorage.setItem('token', token);
 				localStorage.setItem('student', JSON.stringify(decoded));
-				window.location.href = '/';
+				/* window.location.href = '/'; */
+
+				/* redireccion en caso de ser comprado un curso o aplicar cupon */
+				let cuponItem = JSON.parse(localStorage.getItem('coupon'));
+				if (cuponItem) {
+					canjearCupon(cuponItem);
+				} else {
+					props.history.push('/');
+				}
 			})
 			.catch((err) => {
 				setLoading(false);
@@ -55,6 +67,24 @@ export default function FormLoginUsuario() {
 					});
 				}
 			});
+	};
+
+	const canjearCupon = async ({ curso, cupon, urlActual }) => {
+		setLoading(true);
+		let token = localStorage.getItem('token');
+		let user = JSON.parse(localStorage.getItem('student'));
+
+		const result = await CanjearCupon(token, user, curso, cupon);
+		if (!result.status || result.status !== 200) {
+			setLoading(false);
+			localStorage.removeItem('coupon');
+			setError({ error: true, message: result });
+			props.history.push(urlActual);
+			return;
+		}
+		setLoading(false);
+		localStorage.removeItem('coupon');
+		props.history.push('/mis_cursos');
 	};
 
 	return (
@@ -107,3 +137,4 @@ export default function FormLoginUsuario() {
 		</Fragment>
 	);
 }
+export default withRouter(FormLoginUsuario);

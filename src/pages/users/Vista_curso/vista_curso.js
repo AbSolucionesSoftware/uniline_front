@@ -8,6 +8,7 @@ import Error500 from '../../error500';
 import VistaCursoPanelPrincipal from './panel_principal';
 import VistaCursoContenidoInfo from './contenido_info';
 import ModalVideo from 'react-modal-video';
+import MessageSnackbar from '../../../components/Snackbar/snackbar';
 
 const useStyles = makeStyles((theme) => ({
 	background: {
@@ -57,6 +58,11 @@ export default function VistaCurso(props) {
 	const [ error, setError ] = useState({ error: false, message: '' });
 	const idcurso = props.match.params.url;
 	const [ open, setOpen ] = useState(false);
+	const [ snackbar, setSnackbar ] = useState({
+		open: false,
+		mensaje: '',
+		status: ''
+	});
 
 	const handleVideoModal = () => setOpen(!open);
 
@@ -84,6 +90,7 @@ export default function VistaCurso(props) {
 	useEffect(
 		() => {
 			obtenerCursosBD();
+			window.scrollTo(0, 0);
 		},
 		[ obtenerCursosBD ]
 	);
@@ -118,7 +125,7 @@ export default function VistaCurso(props) {
 								{loading ? (
 									<SpinNormal />
 								) : (
-									<VistaCursoPanelPrincipal curso={cursos} handleVideoModal={handleVideoModal} />
+									<VistaCursoPanelPrincipal curso={cursos} handleVideoModal={handleVideoModal} setSnackbar={setSnackbar} />
 								)}
 							</Card>
 						</Box>
@@ -134,6 +141,12 @@ export default function VistaCurso(props) {
 				isOpen={open}
 				videoId={cursos.course.urlCourseVideo}
 				onClose={handleVideoModal}
+			/>
+			<MessageSnackbar
+				open={snackbar.open}
+				mensaje={snackbar.mensaje}
+				status={snackbar.status}
+				setSnackbar={setSnackbar}
 			/>
 		</Box>
 	);

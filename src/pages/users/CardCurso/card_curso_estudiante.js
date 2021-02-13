@@ -39,15 +39,15 @@ export default function CardsCursosEstudiantes({ curso }) {
 
 	return (
 		<Card className={classes.root}>
-			<CardMedia className={classes.media} image={curso.urlPromotionalImage} />
-            <BorderLinearProgress variant="determinate" value={50} />
+			<CardMedia className={classes.media} image={curso.idCourse.urlPromotionalImage} />
+            <BorderLinearProgress variant="determinate" value={parseInt(curso.studentAdvance)} />
 			<CardContent className={classes.cardContent}>
 				<Typography variant="h6" color="textPrimary" className={classes.title}>
-					{curso.title}
+					{curso.idCourse.title}
 				</Typography>
 			</CardContent>
 			<CardActions className={classes.cardContent}>
-                <Button variant="text" color="primary" fullWidth component={Link} to={`/dashboard/${curso._id}`}>
+                <Button variant="text" color="primary" fullWidth component={Link} to={`/dashboard/${curso.idCourse._id}`}>
 					¡Continuar con tus clases!
 				</Button>
 			</CardActions>

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
 	Box,
@@ -14,9 +14,11 @@ import {
 import clienteAxios from '../../../config/axios';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
 import Spin from '../../../components/Spin/spin';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import LinkMaterial from '@material-ui/core/Link';
 import jwt_decode from 'jwt-decode';
+import { NavContext } from '../../../context/context_nav';
+import { CanjearCupon } from '../PeticionesCompras/peticiones_compras';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -27,17 +29,19 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function FormRegistroUsuario() {
+function FormRegistroUsuario(props) {
 	const classes = useStyles();
 	const [ datos, setDatos ] = useState([]);
 	const [ checked, setChecked ] = useState(false);
 	const [ validate, setValidate ] = useState(false);
 	const [ loading, setLoading ] = useState(false);
+	const { setError } = useContext(NavContext);
 	const [ snackbar, setSnackbar ] = useState({
 		open: false,
 		mensaje: '',
 		status: ''
 	});
+	const url = props.match.path.split('/');
 
 	const obtenerCampos = (e) => {
 		if (e.target.name === 'acceptPolicies') {
@@ -68,7 +72,14 @@ export default function FormRegistroUsuario() {
 				const decoded = jwt_decode(token);
 				localStorage.setItem('token', token);
 				localStorage.setItem('student', JSON.stringify(decoded));
-				window.location.href = '/';
+
+				/* redireccion en caso de ser comprado un curso o aplicar cupon */
+				let cuponItem = JSON.parse(localStorage.getItem('coupon'));
+				if (cuponItem) {
+					canjearCupon(cuponItem);
+				} else {
+					props.history.push('/');
+				}
 			})
 			.catch((err) => {
 				setLoading(false);
@@ -86,6 +97,24 @@ export default function FormRegistroUsuario() {
 					});
 				}
 			});
+	};
+
+	const canjearCupon = async ({ curso, cupon, urlActual }) => {
+		setLoading(true);
+		let token = localStorage.getItem('token');
+		let user = JSON.parse(localStorage.getItem('student'));
+
+		const result = await CanjearCupon(token, user, curso, cupon);
+		if (!result.status || result.status !== 200) {
+			setLoading(false);
+			localStorage.removeItem('coupon');
+			setError({ error: true, message: result });
+			props.history.push(urlActual);
+			return;
+		}
+		setLoading(false);
+		localStorage.removeItem('coupon');
+		props.history.push('/mis_cursos');
 	};
 
 	return (
@@ -177,14 +206,20 @@ export default function FormRegistroUsuario() {
 							Crear cuenta
 						</Button>
 					</Box>
-					<Divider />
-					<Box display="flex" justifyContent="center" mt={2}>
-						<Button variant="contained" color="secondary" component={Link} to="/login">
-							Iniciar sesión con Google o Facebook
-						</Button>
-					</Box>
+
+					{url[1] === 'registro' ? (
+						<Fragment>
+							<Divider />
+							<Box display="flex" justifyContent="center" mt={2}>
+								<Button variant="contained" color="secondary" component={Link} to="/login">
+									Iniciar sesión con Google o Facebook
+								</Button>
+							</Box>
+						</Fragment>
+					) : null}
 				</Box>
 			</div>
 		</Fragment>
 	);
 }
+export default withRouter(FormRegistroUsuario);
