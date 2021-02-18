@@ -18,3 +18,20 @@ export const CanjearCupon = async (token, user, curso, cupon) => {
 		.then((res) => res)
 		.catch((err) => err);
 };
+
+export const AgregarCarritoBD = async (token, user, idCourse) => {
+	return await clienteAxios
+		.post(
+			`/cart/${user._id}`,
+			{
+				idCourse: idCourse
+			},
+			{
+				headers: {
+					Authorization: `bearer ${token}`
+				}
+			}
+		)
+		.then((res) => res)
+		.catch((err) => err);
+};

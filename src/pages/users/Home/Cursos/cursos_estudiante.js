@@ -48,8 +48,8 @@ export default function CursosComprados() {
 	};
 
 	const obtenerCursosBD = useCallback(async () => {
-		setLoading(true);
 		if (!user._id) return;
+		setLoading(true);
 		await clienteAxios
 			.get(`/course/user/${user._id}`, {
 				headers: {
@@ -70,8 +70,6 @@ export default function CursosComprados() {
 			});
 	}, [ token, user._id]);
 
-	/* console.log("infinite");
-	console.log(cursos); */
 
 	const render_cursos = cursos.map((curso, index) => <CardsCursosEstudiantes key={index} curso={curso} />);
 
@@ -86,11 +84,12 @@ export default function CursosComprados() {
 		return <SpinNormal />;
 	}
 	if (error.error) {
-		return <Error500 error={error} />;
+		return <Error500 error={error.message} />;
 	}
 	if (cursos.length === 0) {
 		return null;
 	}
+	
 
 	return (
 		<Box className={classes.margin}>

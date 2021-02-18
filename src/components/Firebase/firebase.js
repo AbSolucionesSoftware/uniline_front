@@ -11,7 +11,7 @@ import Spin from '../Spin/spin';
 import jwt_decode from 'jwt-decode';
 import { withRouter } from 'react-router-dom';
 import { NavContext } from '../../context/context_nav';
-import { CanjearCupon } from '../../pages/users/PeticionesCompras/peticiones_compras';
+import { AgregarCarritoBD, CanjearCupon } from '../../pages/users/PeticionesCompras/peticiones_compras';
 /* import * as firebaseui from 'firebaseui'; */
 
 /* var ui = new firebaseui.auth.AuthUI(firebase.auth());
@@ -24,7 +24,7 @@ if (!firebase.apps.length) {
 function Firebase(props) {
 	const [ user, setUser ] = useState(false);
 	const [ loading, setLoading ] = useState(false);
-	const { setError } = useContext(NavContext);
+	const { setError, carrito, misCursos } = useContext(NavContext);
 	const [ snackbar, setSnackbar ] = useState({
 		open: false,
 		mensaje: '',
@@ -61,6 +61,58 @@ function Firebase(props) {
 		[ props.history, setError ]
 	);
 
+	const agregarCarrito = useCallback(
+		async ({ curso, urlActual }) => {
+			setLoading(true);
+			let token = localStorage.getItem('token');
+			let user = JSON.parse(localStorage.getItem('student'));
+
+			let course = false;
+			let cart = false;
+
+			/* verificar si ya tienes el curso */
+			misCursos.forEach((res) => {
+				if (res.idCourse._id === curso) {
+					course = true;
+				}
+				return;
+			});
+
+			/* verificar si esta en carrito */
+			if (carrito && carrito.courses) {
+				carrito.courses.forEach((res) => {
+					cart = true;
+					return;
+				});
+			}
+			if (course) {
+				setLoading(false);
+				localStorage.removeItem('cart');
+				props.history.push(`/dashboard/${curso}`);
+				return;
+			}
+			if (cart) {
+				setLoading(false);
+				localStorage.removeItem('cart');
+				props.history.push('/carrito');
+				return;
+			}
+
+			const result = await AgregarCarritoBD(token, user, curso);
+			if (!result.status || result.status !== 200) {
+				setLoading(false);
+				localStorage.removeItem('cart');
+				setError({ error: true, message: result });
+				props.history.push(urlActual);
+				return;
+			}
+			setLoading(false);
+			localStorage.removeItem('cart');
+			props.history.push('/carrito');
+		},
+		[ props.history, setError, carrito, misCursos ]
+	);
+
 	const onAuthStateChange = useCallback(
 		() => {
 			return firebase.auth().onAuthStateChanged(async (user) => {
@@ -79,12 +131,14 @@ function Firebase(props) {
 							const decoded = jwt_decode(token);
 							localStorage.setItem('token', token);
 							localStorage.setItem('student', JSON.stringify(decoded));
-							/* window.location.href = '/'; */
 
 							/* redireccion en caso de ser comprado un curso o aplicar cupon */
 							let cuponItem = JSON.parse(localStorage.getItem('coupon'));
+							let cartItem = JSON.parse(localStorage.getItem('cart'));
 							if (cuponItem) {
 								canjearCupon(cuponItem);
+							} else if (cartItem) {
+								agregarCarrito(cartItem);
 							} else {
 								props.history.push('/');
 							}
@@ -110,7 +164,7 @@ function Firebase(props) {
 				}
 			});
 		},
-		[ props.history, canjearCupon ]
+		[ props.history, canjearCupon, agregarCarrito ]
 	);
 
 	useEffect(

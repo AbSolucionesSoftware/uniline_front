@@ -1,34 +1,36 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { withStyles } from '@material-ui/core/styles';
-import { Card, CardHeader, CardMedia, CardContent, CardActions, Chip } from '@material-ui/core';
-import { Avatar, Box, Tooltip, Button, IconButton, Typography } from '@material-ui/core';
+import {
+	Card,
+	CardHeader,
+	CardMedia,
+	CardContent,
+	CardActions,
+	Chip,
+	CircularProgress,
+	Dialog
+} from '@material-ui/core';
+import { Avatar, Box, Button, IconButton, Typography } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
 import { red } from '@material-ui/core/colors';
-import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
-import FacebookIcon from '@material-ui/icons/Facebook';
-import WhatsAppIcon from '@material-ui/icons/WhatsApp';
+import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import { formatoFechaCurso, formatoMexico } from '../../../config/reuserFunction';
-import { Link } from 'react-router-dom';
-
-const HtmlTooltip = withStyles((theme) => ({
-	tooltip: {
-		backgroundColor: theme.palette.common.white,
-		color: 'rgba(0, 0, 0, 0.87)',
-		maxWidth: 330,
-		fontSize: theme.typography.pxToRem(12),
-		border: '1px solid #dadde9'
-	}
-}))(Tooltip);
+import { Link, withRouter } from 'react-router-dom';
+import WarningIcon from '@material-ui/icons/Warning';
+import MessageSnackbar from '../../../components/Snackbar/snackbar';
+import { NavContext } from '../../../context/context_nav';
+import { AgregarCarritoBD } from '../PeticionesCompras/peticiones_compras';
+import RegistroAlterno from '../RegistroAlterno/registro_alterno';
+import { Fragment } from 'react';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
 		width: 300,
+		minHeight: 512,
 		margin: '8px 16px!important'
 	},
 	media: {
 		height: 170
-		/* paddingTop: '56.25%' // 16:9 */
 	},
 	avatar: {
 		backgroundColor: red[500]
@@ -37,7 +39,13 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: theme.palette.success.secondary
 	},
 	title: {
-		height: 70
+		display: '-webkit-box',
+		height: 70,
+		overflow: 'hidden',
+		position: 'relative',
+		textOverflow: 'ellipsis',
+		'-webkit-line-clamp': 2,
+		'-webkit-box-orient': 'vertical'
 	},
 	descripcion: {
 		height: 200,
@@ -48,51 +56,86 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function CardsCursos({ curso }) {
+function CardsCursos(props) {
 	const classes = useStyles();
+	const { curso } = props;
+	let token = localStorage.getItem('token');
+	const [ loading, setLoading ] = useState(false);
+	const [ open, setOpen ] = useState(false);
+	const { error, setError, update, setUpdate, carrito, misCursos } = useContext(NavContext);
+	const [ snackbar, setSnackbar ] = useState({
+		open: false,
+		mensaje: '',
+		status: ''
+	});
+	const urlActual = props.match.url;
+	let user = { _id: '' };
 
-	const descriptionCurso = (
-		<Box>
-			<Typography variant="subtitle1" color="inherit">
-				{curso.title}
-			</Typography>
-			<Typography variant="subtitle2" color="inherit">
-				{curso.subtitle}
-			</Typography>
-			<Typography variant="caption" color="textSecondary">
-				{`nivel ${curso.level}, ${curso.hours} horas de curso, en ${curso.language}`}
-			</Typography>
-			<ul>
-				{curso.learnings.map((learning, index) => {
-					if (index + 1 > 3) {
-						return null;
-					}
-					return (
-						<li key={index}>
-							<Typography variant="subtitle1">{learning.learning}</Typography>
-						</li>
-					);
-				})}
-			</ul>
-			<Button variant="text" color="primary" fullWidth component={Link} to={`/curso/${curso._id}`}>
-				Ver descripción completa
-			</Button>
-            <br/>
-            <Typography align="center">¡Comparte este curso!</Typography>
-            <br />
-			<Box display="flex" justifyContent="space-around">
-				<Button variant="outlined" color="primary" startIcon={<FacebookIcon />}>
-					Facebook
-				</Button>
-                <Button variant="outlined" color="primary" startIcon={<WhatsAppIcon />}>
-					WhatsApp
-				</Button>
-			</Box>
-		</Box>
-	);
+	if (token !== null) user = JSON.parse(localStorage.getItem('student'));
+
+	const handleModal = () => setOpen(!open);
+
+	const agregarCarrito = async (curso) => {
+		if (!token || !user._id) {
+			handleModal();
+			localStorage.setItem('cart', JSON.stringify({ curso, urlActual }));
+			return;
+		}
+
+		const result = await AgregarCarritoBD(token, user, curso);
+		setLoading(true);
+		if (result.status && result.status === 200) {
+			setLoading(false);
+			setUpdate(!update);
+			setSnackbar({
+				open: true,
+				mensaje: result.data.message,
+				status: 'success'
+			});
+		} else {
+			setLoading(false);
+			if (result.response) {
+				setSnackbar({
+					open: true,
+					mensaje: result.response.data.message,
+					status: 'error'
+				});
+			} else {
+				setSnackbar({
+					open: true,
+					mensaje: 'Al parecer no se a podido conectar al servidor.',
+					status: 'error'
+				});
+			}
+		}
+	};
+
+	/* verificar si esta en carrito */
+	let cart = false;
+	if (carrito && carrito.courses) {
+		carrito.courses.forEach((res) => {
+			if (res.course._id === curso._id) cart = true;
+		});
+	}
+	/* verificar si ya tiene el curso */
+	let course = false;
+	if (misCursos) {
+		misCursos.forEach((res) => {
+			if (res.idCourse._id === curso._id) {
+				course = true;
+			}
+			return;
+		});
+	}
 
 	return (
-		<HtmlTooltip title={descriptionCurso} placement="right" interactive>
+		<Fragment>
+			<MessageSnackbar
+				open={snackbar.open}
+				mensaje={snackbar.mensaje}
+				status={snackbar.status}
+				setSnackbar={setSnackbar}
+			/>
 			<Card className={classes.root}>
 				<CardHeader
 					avatar={
@@ -127,34 +170,84 @@ export default function CardsCursos({ curso }) {
 							<Box display="flex">
 								<Box mr={2}>
 									<Typography variant="h6" color="textPrimary">
-										{formatoMexico(curso.priceCourse.promotionPrice)} MX$
+										{formatoMexico(curso.priceCourse.promotionPrice)} MXN$
 									</Typography>
 								</Box>
 								<Typography variant="h6" color="textSecondary">
-									<s>{formatoMexico(curso.priceCourse.price)} MX$</s>
+									<s>{formatoMexico(curso.priceCourse.price)} MXN$</s>
 								</Typography>
 							</Box>
 						) : (
 							<Typography variant="h6" color="textPrimary">
-								<b>{formatoMexico(curso.priceCourse.price)} MX$</b>
+								<b>{formatoMexico(curso.priceCourse.price)} MXN$</b>
 							</Typography>
 						)}
 					</Box>
 				</CardContent>
 				<CardActions>
-					<Box>
+					<Box width="100%">
 						<Button variant="text" color="primary" fullWidth component={Link} to={`/curso/${curso._id}`}>
 							Ver descripción completa
 						</Button>
-						<Button variant="contained" color="primary">
-							Comprar ahora
-						</Button>
-						<IconButton variant="contained" color="secondary">
-							<AddShoppingCartIcon />
-						</IconButton>
+						{course ? (
+							<Box my={1}>
+								<Button fullWidth variant="contained" color="primary">
+									Ver curso
+								</Button>
+							</Box>
+						) : (
+							<Box display="flex" justifyContent="space-around" alignItems="center">
+								<Button variant="contained" color="primary">
+									Comprar ahora
+								</Button>
+								{loading ? (
+									<CircularProgress color="secondary" size={30} />
+								) : cart ? (
+									<Button size="large" color="secondary">
+										En carrito
+									</Button>
+								) : (
+									<IconButton
+										variant="contained"
+										color="secondary"
+										onClick={() => agregarCarrito(curso._id)}
+									>
+										<ShoppingCartOutlinedIcon style={{ fontSize: 30 }} />
+									</IconButton>
+								)}
+							</Box>
+						)}
 					</Box>
 				</CardActions>
+				<ModalRegistro handleModal={handleModal} open={open} error={error} setError={setError} />
 			</Card>
-		</HtmlTooltip>
+		</Fragment>
 	);
 }
+const ModalRegistro = ({ handleModal, open, error, setError }) => {
+	const handleClose = () => {
+		handleModal();
+		localStorage.removeItem('coupon');
+		localStorage.removeItem('cart');
+		setError({ error: false, message: '' });
+	};
+	return (
+		<Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} fullWidth>
+			{!error.error ? (
+				<RegistroAlterno />
+			) : error.message.response ? (
+				<Box m={5} display="flex" alignItems="center">
+					<WarningIcon style={{ fontSize: 70, marginRight: 10 }} color="error" />
+					<Box>
+						<Typography variant="h6">Lo sentimos</Typography>
+						<Typography variant="h5">{error.message.response.data.message}</Typography>
+					</Box>
+				</Box>
+			) : (
+				<div>hubo un error desconocido</div>
+			)}
+		</Dialog>
+	);
+};
+
+export default withRouter(CardsCursos);

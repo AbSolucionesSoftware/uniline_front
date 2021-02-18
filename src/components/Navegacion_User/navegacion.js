@@ -1,22 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import {
-	Button,
-	Hidden,
-	AppBar,
-	Toolbar,
-	InputBase,
-	Badge,
-	MenuItem,
-	Popover,
-	Drawer,
-	CircularProgress
-} from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
+import { Link, withRouter } from 'react-router-dom';
+import { MenuItem, Popover, Drawer, Box, IconButton } from '@material-ui/core';
+import { Button, Hidden, AppBar, Toolbar, InputBase, CircularProgress } from '@material-ui/core';
+import { Avatar, List, Divider, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import BrightnessMediumIcon from '@material-ui/icons/BrightnessMedium';
 import Brightness5Icon from '@material-ui/icons/Brightness5';
 import HomeIcon from '@material-ui/icons/Home';
@@ -24,30 +12,24 @@ import VideoLibraryIcon from '@material-ui/icons/VideoLibrary';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import Avatar from '@material-ui/core/Avatar';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import HowToRegIcon from '@material-ui/icons/HowToReg';
-
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
-import Sesion from '../Verificacion_sesion/verificacion_sesion';
 import useStyles from './styles';
+import ImagenLogo from '../../images/uniline2.png';
+import CarritoNavbar from './carrito';
 
-export default function NavegacionUsuario(props) {
+function NavegacionUsuario(props) {
 	const [ darkTheme, setDarkTheme ] = props.tema;
 	let token = localStorage.getItem('token');
 	const classes = useStyles();
 	const [ anchorEl, setAnchorEl ] = useState(null);
 	const [ open, setOpen ] = useState(false);
-	const sesion = Sesion(props, false);
+	const [ busqueda, setBusqueda ] = useState('');
 	const isMenuOpen = Boolean(anchorEl);
 	let user = { _id: '' };
 
@@ -58,19 +40,17 @@ export default function NavegacionUsuario(props) {
 		localStorage.setItem('tema', !darkTheme);
 	};
 
-	const handleProfileMenuOpen = (event) => {
-		setAnchorEl(event.currentTarget);
-	};
-	const handleMenuClose = () => {
-		setAnchorEl(null);
-	};
+	const handleProfileMenuOpen = (event) => setAnchorEl(event.currentTarget);
+	const handleMenuClose = () => setAnchorEl(null);
+	const handleDrawerAction = () => setOpen(!open);
 
-	const handleDrawerOpen = () => {
-		setOpen(true);
-	};
-
-	const handleDrawerClose = () => {
-		setOpen(false);
+	const obtenerBusqueda = (e) => setBusqueda(e.target.value);
+	const buscarBD = () => {
+		if (!busqueda) {
+			return;
+		}
+		/* setBusqueda(''); */
+		props.history.push(`/busqueda/${busqueda}`);
 	};
 
 	useEffect(() => {
@@ -132,37 +112,45 @@ export default function NavegacionUsuario(props) {
 								edge="start"
 								aria-label="show more"
 								aria-haspopup="true"
-								onClick={handleDrawerOpen}
+								onClick={handleDrawerAction}
 								color="inherit"
 								className={classes.menuButton}
 							>
 								<MenuIcon />
 							</IconButton>
 						</Hidden>
-						<Button color="inherit" component={Link} to="/">
-							<Typography className={classes.title} variant="h6" noWrap>
-								UNILINE
-							</Typography>
-						</Button>
+						<Hidden smDown>
+							<Button color="inherit" component={Link} to="/">
+								<Box className={classes.logo}>
+									<img alt="logo navbar" src={ImagenLogo} className={classes.imagen} />
+								</Box>
+							</Button>
+						</Hidden>
 						<div className={classes.search}>
-							<div className={classes.searchIcon}>
+							{/* <div className={classes.searchIcon}>
 								<SearchIcon />
-							</div>
+							</div> */}
 							<InputBase
-								placeholder="Buscar..."
+								placeholder="Buscar algún curso..."
 								classes={{
 									root: classes.inputRoot,
 									input: classes.inputInput
 								}}
 								inputProps={{ 'aria-label': 'search' }}
+								value={busqueda}
+								onChange={obtenerBusqueda}
 							/>
+							<div className={classes.grow} />
+							<IconButton size="small" color="inherit" onClick={() => buscarBD()}>
+								<SearchIcon />
+							</IconButton>
 						</div>
 						<div className={classes.grow} />
 						<Hidden smDown>
 							<Button color="inherit" component={Link} to="/" className={classes.marginButton}>
 								Inicio
 							</Button>
-							{sesion ? (
+							{token ? (
 								<Button
 									color="inherit"
 									component={Link}
@@ -174,7 +162,7 @@ export default function NavegacionUsuario(props) {
 							) : (
 								<div />
 							)}
-							{sesion && sesion.rol === 'Maestro' ? (
+							{token && user.rol === 'Maestro' ? (
 								<Button
 									color="inherit"
 									component={Link}
@@ -186,14 +174,14 @@ export default function NavegacionUsuario(props) {
 							) : (
 								<div />
 							)}
-							{!sesion ? (
+							{!token ? (
 								<Button color="inherit" component={Link} to="/login" className={classes.marginButton}>
 									Iniciar sesión
 								</Button>
 							) : (
 								<div />
 							)}
-							{!sesion ? (
+							{!token ? (
 								<Button
 									color="inherit"
 									component={Link}
@@ -205,21 +193,19 @@ export default function NavegacionUsuario(props) {
 							) : (
 								<div />
 							)}
-							{sesion ? (
+							{token ? (
 								<IconButton
 									aria-label="show 17 new notifications"
 									color="inherit"
 									component={Link}
 									to="/carrito"
 								>
-									<Badge badgeContent={17} color="secondary">
-										<ShoppingCartIcon />
-									</Badge>
+									<CarritoNavbar />
 								</IconButton>
 							) : (
 								<div />
 							)}
-							{sesion ? (
+							{token ? (
 								<IconButton
 									edge="end"
 									aria-label="account of current user"
@@ -243,7 +229,7 @@ export default function NavegacionUsuario(props) {
 							) : (
 								<div />
 							)}
-							{!sesion ? (
+							{!token ? (
 								<IconButton aria-label="show 17 theme config" color="inherit" onClick={darkModeAction}>
 									{darkTheme ? <Brightness5Icon /> : <BrightnessMediumIcon />}
 								</IconButton>
@@ -258,9 +244,7 @@ export default function NavegacionUsuario(props) {
 								component={Link}
 								to="/carrito"
 							>
-								<Badge badgeContent={17} color="secondary">
-									<ShoppingCartIcon />
-								</Badge>
+								<CarritoNavbar />
 							</IconButton>
 						</Hidden>
 					</Toolbar>
@@ -270,26 +254,32 @@ export default function NavegacionUsuario(props) {
 					className={classes.drawer}
 					anchor="left"
 					open={open}
-					onClose={handleDrawerClose}
+					onClose={handleDrawerAction}
 					classes={{
 						paper: classes.drawerPaper
 					}}
 				>
 					<div className={classes.drawerHeader}>
-						<IconButton onClick={handleDrawerClose}>
+						<Button color="inherit" component={Link} to="/">
+							<Box className={classes.logoResponsive}>
+								<img alt="logo navbar" src={ImagenLogo} className={classes.imagen} />
+							</Box>
+						</Button>
+						<div className={classes.grow} />
+						<IconButton onClick={handleDrawerAction}>
 							<ChevronLeftIcon />
 						</IconButton>
 					</div>
 					<Divider />
 					<List>
-						<ListItem button component={Link} to="/" onClick={handleDrawerClose}>
+						<ListItem button component={Link} to="/" onClick={handleDrawerAction}>
 							<ListItemIcon>
 								<HomeIcon />
 							</ListItemIcon>
 							<ListItemText primary="Inicio" />
 						</ListItem>
-						{sesion ? (
-							<ListItem button component={Link} to="/mis_cursos" onClick={handleDrawerClose}>
+						{token ? (
+							<ListItem button component={Link} to="/mis_cursos" onClick={handleDrawerAction}>
 								<ListItemIcon>
 									<VideoLibraryIcon />
 								</ListItemIcon>
@@ -298,8 +288,8 @@ export default function NavegacionUsuario(props) {
 						) : (
 							<div />
 						)}
-						{sesion && sesion.rol === 'Maestro' ? (
-							<ListItem button component={Link} to="/instructor/cursos" onClick={handleDrawerClose}>
+						{token && user.rol === 'Maestro' ? (
+							<ListItem button component={Link} to="/instructor/cursos" onClick={handleDrawerAction}>
 								<ListItemIcon>
 									<DashboardIcon />
 								</ListItemIcon>
@@ -308,12 +298,10 @@ export default function NavegacionUsuario(props) {
 						) : (
 							<div />
 						)}
-						{sesion ? (
-							<ListItem button component={Link} to="/carrito" onClick={handleDrawerClose}>
+						{token ? (
+							<ListItem button component={Link} to="/carrito" onClick={handleDrawerAction}>
 								<ListItemIcon>
-									<Badge badgeContent={17} color="secondary">
-										<ShoppingCartIcon />
-									</Badge>
+									<CarritoNavbar />
 								</ListItemIcon>
 								<ListItemText primary="Carrito" />
 							</ListItem>
@@ -323,8 +311,8 @@ export default function NavegacionUsuario(props) {
 					</List>
 					<Divider />
 					<List>
-						{!sesion ? (
-							<ListItem button component={Link} to="/login" onClick={handleDrawerClose}>
+						{!token ? (
+							<ListItem button component={Link} to="/login" onClick={handleDrawerAction}>
 								<ListItemIcon>
 									<MeetingRoomIcon />
 								</ListItemIcon>
@@ -333,8 +321,8 @@ export default function NavegacionUsuario(props) {
 						) : (
 							<div />
 						)}
-						{!sesion ? (
-							<ListItem button component={Link} to="/registro" onClick={handleDrawerClose}>
+						{!token ? (
+							<ListItem button component={Link} to="/registro" onClick={handleDrawerAction}>
 								<ListItemIcon>
 									<HowToRegIcon />
 								</ListItemIcon>
@@ -343,8 +331,8 @@ export default function NavegacionUsuario(props) {
 						) : (
 							<div />
 						)}
-						{sesion ? (
-							<ListItem button component={Link} to="/perfil" onClick={handleDrawerClose}>
+						{token ? (
+							<ListItem button component={Link} to="/perfil" onClick={handleDrawerAction}>
 								<ListItemIcon>
 									{!user.imagen ? (
 										<Avatar className={classes.orange}>
@@ -367,7 +355,7 @@ export default function NavegacionUsuario(props) {
 							<ListItemIcon>{darkTheme ? <Brightness5Icon /> : <BrightnessMediumIcon />}</ListItemIcon>
 							<ListItemText primary={`tema: ${darkTheme === true ? 'Oscuro' : 'Por defecto'}`} />
 						</ListItem>
-						{sesion ? (
+						{token ? (
 							<ListItem
 								button
 								onClick={() => {
@@ -395,3 +383,4 @@ export default function NavegacionUsuario(props) {
 		</div>
 	);
 }
+export default withRouter(NavegacionUsuario);

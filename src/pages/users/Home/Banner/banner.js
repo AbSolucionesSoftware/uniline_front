@@ -102,13 +102,13 @@ export default function Banner() {
 				</Grid>
 
 				<Grid container className={classes.bannerTwo}>
-					<Grid item xs={12} lg={6} className={classes.altura}>
+					<Grid item xs={12} md={6} lg={6} className={classes.altura}>
 						<QueueAnim delay={900}>
 							<img key="a" alt="Celualar Animado" src={Celular} className={classes.imagen} />
 						</QueueAnim>
 					</Grid>
 
-					<Grid item xs={12} lg={6} className={classes.altura}>
+					<Grid item xs={12} md={6} lg={6} className={classes.altura}>
 						<Box display="flex" justifyContent="center" alignItems="center">
 							<QueueAnim delay={700} className="queue-simple">
 								<Box key="a">

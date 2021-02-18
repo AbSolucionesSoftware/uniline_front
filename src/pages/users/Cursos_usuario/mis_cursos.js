@@ -60,8 +60,8 @@ export default function MisCursos() {
 
 	const obtenerCursosBD = useCallback(
 		async () => {
-			setLoading(true);
 			if (!user._id) return;
+			setLoading(true);
 			await clienteAxios
 				.get(`/course/user/${user._id}`, {
 					headers: {
@@ -69,6 +69,7 @@ export default function MisCursos() {
 					}
 				})
 				.then((res) => {
+					console.log(res);
 					setLoading(false);
 					setCursos(res.data);
 				})
@@ -121,7 +122,13 @@ export default function MisCursos() {
 	return (
 		<Container maxWidth="md" className={classes.margin}>
 			<Typography variant="h4">¡Estos son los cursos que has adquirido!</Typography>
-			<Box py={3}>{render_cursos}</Box>
+			<Box py={3}>
+				<Grid container spacing={4}>
+					<Grid item lg={12}>
+						{render_cursos}
+					</Grid>
+				</Grid>{' '}
+			</Box>
 		</Container>
 	);
 }
@@ -162,7 +169,15 @@ const CardMisCursos = ({ curso }) => {
 							</Grid>
 						</Grid>
 						<Box mt={2} className={classes.button}>
-							<Button size="large" variant="contained" color="primary" component={Link} to={`/dashboard/${curso.idCourse._id}`}>Ir al curso</Button>
+							<Button
+								size="large"
+								variant="contained"
+								color="primary"
+								component={Link}
+								to={`/dashboard/${curso.idCourse._id}`}
+							>
+								Ir al curso
+							</Button>
 						</Box>
 					</Box>
 				</Grid>

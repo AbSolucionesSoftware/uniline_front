@@ -96,7 +96,7 @@ export default function VistaCurso(props) {
 	);
 
 	if (error.error) {
-		return <Error500 error={error} />;
+		return <Error500 error={error.message} />;
 	}
 
 	if (cursos.length === 0) {

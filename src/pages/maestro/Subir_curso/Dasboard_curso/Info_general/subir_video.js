@@ -1,17 +1,18 @@
-import React, { Fragment, useState, useContext } from 'react';
+import React, { Fragment, useState, useCallback, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Box, InputBase, Typography, Button, Grid } from '@material-ui/core';
 import VideoCallIcon from '@material-ui/icons/VideoCall';
 import Alert from '@material-ui/lab/Alert';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import VideocamOutlinedIcon from '@material-ui/icons/VideocamOutlined';
-import { CursoContext } from '../../../../../context/curso_context';
+/* import { CursoContext } from '../../../../../context/curso_context'; */
 import { configVimeo /*  ClientRequestVimeo */ } from '../../../../../config/config_vimeo';
 
 import VimeoReproductor from '../../../../../components/Vimeo_Reproductor/Vimeo';
 import MessageSnackbar from '../../../../../components/Snackbar/snackbar';
 import clienteAxios from '../../../../../config/axios';
 import BackDropVideo from '../../../../../components/Spin/backdropVideo';
+import { withRouter } from 'react-router-dom';
 
 var Vimeo = require('vimeo').Vimeo;
 let client = new Vimeo(
@@ -46,10 +47,11 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function SubirVideo() {
+function SubirVideo(props) {
 	const classes = useStyles();
 	const token = localStorage.getItem('token');
-	const { datos, update, setUpdate } = useContext(CursoContext);
+	const [ datos, setDatos ] = useState([]);
+	const [ update, setUpdate ] = useState(false);
 	const [ snackbar, setSnackbar ] = useState({
 		open: false,
 		mensaje: '',
@@ -59,6 +61,7 @@ export default function SubirVideo() {
 	const [ progress, setProgress ] = useState(0);
 	const [ loading, setLoading ] = useState(false);
 	const [ backdrop, setBackdrop ] = useState(false);
+	const idcurso = props.match.params.curso;
 
 	const getFile = (e) => {
 		try {
@@ -98,6 +101,26 @@ export default function SubirVideo() {
 			});
 		}
 	};
+
+	const obtenerCursoBD = useCallback(
+		async () => {
+			setLoading(true);
+			await clienteAxios
+				.get(`/course/${idcurso}`, {
+					headers: {
+						Authorization: `bearer ${token}`
+					}
+				})
+				.then((res) => {
+					setLoading(false);
+					setDatos(res.data);
+				})
+				.catch((err) => {
+					errorAPI(err);
+				});
+		},
+		[ idcurso, token, setDatos ]
+	);
 
 	const enviarVideo = () => {
 		setLoading(true);
@@ -183,6 +206,13 @@ export default function SubirVideo() {
 			}
 		);
 	};
+
+	useEffect(
+		() => {
+			obtenerCursoBD();
+		},
+		[ obtenerCursoBD, update ]
+	);
 
 	return (
 		<Fragment>
@@ -295,7 +325,7 @@ export default function SubirVideo() {
 		</Fragment>
 	);
 }
-
+export default withRouter(SubirVideo)
 /* function LinearProgressWithLabel(props) {
 	return (
 		<Box display="flex" alignItems="center">

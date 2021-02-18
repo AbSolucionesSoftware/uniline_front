@@ -86,7 +86,6 @@ export default function RegistroContenido() {
 	);
 
 	const guardarOrdenBD = async () => {
-		console.log(bloques);
 		setLoading(true);
 		await clienteAxios
 			.put(`/course/content/order/`, bloques, {

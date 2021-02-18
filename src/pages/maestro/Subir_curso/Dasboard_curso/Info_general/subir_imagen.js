@@ -1,12 +1,13 @@
-import React, { Fragment, useState, useCallback, useContext } from 'react';
+import React, { Fragment, useState, useCallback, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Box, Button, Grid, Typography } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { CursoContext } from '../../../../../context/curso_context';
+/* import { CursoContext } from '../../../../../context/curso_context'; */
 import { useDropzone } from 'react-dropzone';
 import clienteAxios from '../../../../../config/axios';
 import MessageSnackbar from '../../../../../components/Snackbar/snackbar';
+import { withRouter } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
 	imagen: {
@@ -19,16 +20,55 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function SubirImagen() {
+function SubirImagen(props) {
 	const classes = useStyles();
 	const token = localStorage.getItem('token');
-	const { datos, setDatos, update, setUpdate, preview, setPreview } = useContext(CursoContext);
+	const [ datos, setDatos ] = useState([]);
+	const [ update, setUpdate ] = useState(false);
+	const [ preview, setPreview ] = useState('');
 	const [ loading, setLoading ] = useState(false);
+	const idcurso = props.match.params.curso;
 	const [ snackbar, setSnackbar ] = useState({
 		open: false,
 		mensaje: '',
 		status: ''
 	});
+
+	const obtenerCursoBD = useCallback(
+		async () => {
+			setLoading(true);
+			await clienteAxios
+				.get(`/course/${idcurso}`, {
+					headers: {
+						Authorization: `bearer ${token}`
+					}
+				})
+				.then((res) => {
+					setLoading(false);
+					setDatos(res.data);
+					if (res.data.urlPromotionalImage) {
+						setPreview(res.data.urlPromotionalImage);
+					}
+				})
+				.catch((err) => {
+					setLoading(false);
+					if (err.response) {
+						setSnackbar({
+							open: true,
+							mensaje: err.response.data.message,
+							status: 'error'
+						});
+					} else {
+						setSnackbar({
+							open: true,
+							mensaje: 'Al parecer no se a podido conectar al servidor.',
+							status: 'error'
+						});
+					}
+				});
+		},
+		[ idcurso, token, setDatos, setPreview ]
+	);
 
 	const onDrop = useCallback(
 		(files) => {
@@ -85,6 +125,13 @@ export default function SubirImagen() {
 			});
 	};
 
+	useEffect(
+		() => {
+			obtenerCursoBD();
+		},
+		[ obtenerCursoBD, update ]
+	);
+
 	return (
 		<Fragment>
 			<MessageSnackbar
@@ -137,3 +184,4 @@ export default function SubirImagen() {
 		</Fragment>
 	);
 }
+export default withRouter(SubirImagen)

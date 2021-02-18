@@ -21,6 +21,18 @@
     width: auto!important;
 }
 
+/* elipsis multiline */
+.truncate-multiline{
+    display: 'block';
+    display: -webkit-box;
+    line-height: 1.5;
+	overflow: hidden;
+	position: relative;
+	text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+  	-webkit-box-orient: vertical;
+}
+
 /* @media(max-width: 300){
     .slick-slide, .slick-active, .slick-current{
         width: 300px!important;

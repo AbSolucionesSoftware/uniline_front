@@ -7,7 +7,8 @@ export function verificarInformacionCurso(datos) {
 		!datos.language ||
 		!datos.level ||
 		!datos.category ||
-		!datos.subCategory ||
+        !datos.subCategory ||
+        !datos.keyPromotionalImage ||
 		!datos.urlPromotionalImage ||
 		!datos.urlCourseVideo ||
 		!datos.keyPromotionalImage ||
@@ -22,11 +23,15 @@ export function verificarInformacionCurso(datos) {
 }
 
 export function verificarLearningsCurso(datos) {
-	if (!datos.learnings || !datos.requirements || !datos.whoStudents) {
-		return false;
-	} else {
-		return true;
-	}
+	if(datos.learnings || datos.requirements || datos.whoStudents){
+        if (datos.learnings.length === 0 || datos.requirements.length === 0 || datos.whoStudents.length === 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }else{
+        return false;
+    }
 }
 
 export function verificarBloquesCurso(blocks) {

@@ -95,7 +95,7 @@ export default function Bloques({ bloques, setBloques, open, setOpen }) {
 			});
 			return;
 		}
-		if (!bloques) {
+		if (bloques.length === 0) {
 			setDatosBloque({ ...datosBloque, [e.target.name]: e.target.value, preference: 1 });
 		} else {
 			const preference = bloques[bloques.length - 1].block.preference + 1;

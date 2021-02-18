@@ -76,7 +76,7 @@ export default function CursosDisponibles() {
 	}
 	if(error.error){
 		return (
-			<Error500 error={error} />
+			<Error500 error={error.message} />
 		)
 	}
 

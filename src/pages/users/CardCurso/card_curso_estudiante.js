@@ -5,17 +5,17 @@ import { Button, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
 const BorderLinearProgress = withStyles((theme) => ({
-    root: {
-      height: 6,
-    },
-    colorPrimary: {
-      backgroundColor: theme.palette.grey[theme.palette.type === 'light' ? 200 : 700],
-    },
-    bar: {
-      borderRadius: 2,
-      backgroundColor: theme.palette.primary.main,
-    },
-  }))(LinearProgress);
+	root: {
+		height: 6
+	},
+	colorPrimary: {
+		backgroundColor: theme.palette.grey[theme.palette.type === 'light' ? 200 : 700]
+	},
+	bar: {
+		borderRadius: 2,
+		backgroundColor: theme.palette.primary.main
+	}
+}))(LinearProgress);
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -27,11 +27,19 @@ const useStyles = makeStyles((theme) => ({
 		/* paddingTop: '56.25%' // 16:9 */
 	},
 	title: {
-		height: 70
-    },
-    cardContent: {
-        padding: theme.spacing(1)
-    }
+		display: '-webkit-box',
+		height: 70,
+		/* lineHeight: 1.5, */
+		overflow: 'hidden',
+		position: 'relative',
+		textOverflow: 'ellipsis',
+		'-webkit-line-clamp': 2,
+		'-webkit-box-orient': 'vertical'
+		/* whiteSpace: 'nowrap', */
+	},
+	cardContent: {
+		padding: theme.spacing(1)
+	}
 }));
 
 export default function CardsCursosEstudiantes({ curso }) {
@@ -40,14 +48,20 @@ export default function CardsCursosEstudiantes({ curso }) {
 	return (
 		<Card className={classes.root}>
 			<CardMedia className={classes.media} image={curso.idCourse.urlPromotionalImage} />
-            <BorderLinearProgress variant="determinate" value={parseInt(curso.studentAdvance)} />
+			<BorderLinearProgress variant="determinate" value={parseInt(curso.studentAdvance)} />
 			<CardContent className={classes.cardContent}>
 				<Typography variant="h6" color="textPrimary" className={classes.title}>
 					{curso.idCourse.title}
 				</Typography>
 			</CardContent>
 			<CardActions className={classes.cardContent}>
-                <Button variant="text" color="primary" fullWidth component={Link} to={`/dashboard/${curso.idCourse._id}`}>
+				<Button
+					variant="text"
+					color="primary"
+					fullWidth
+					component={Link}
+					to={`/dashboard/${curso.idCourse._id}`}
+				>
 					¡Continuar con tus clases!
 				</Button>
 			</CardActions>

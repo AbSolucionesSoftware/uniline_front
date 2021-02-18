@@ -25,6 +25,7 @@ import DateRangeIcon from '@material-ui/icons/DateRange';
 import SchoolIcon from '@material-ui/icons/School';
 import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import WorkOutlineIcon from '@material-ui/icons/WorkOutline';
 
 export default function PerfilUsuario(props) {
 	const classes = useStyles();
@@ -256,6 +257,7 @@ export default function PerfilUsuario(props) {
 								id="name"
 								name="name"
 								label="Nombre"
+								placeholder="Nombre"
 								fullWidth
 								variant="outlined"
 								value={datos.name ? datos.name : ''}
@@ -274,6 +276,7 @@ export default function PerfilUsuario(props) {
 								id="age"
 								name="age"
 								label="Edad"
+								placeholder="Edad"
 								type="number"
 								fullWidth
 								variant="outlined"
@@ -327,6 +330,7 @@ export default function PerfilUsuario(props) {
 								id="phone"
 								name="phone"
 								label="Telefono"
+								placeholder="Telefono"
 								type="number"
 								fullWidth
 								variant="outlined"
@@ -346,6 +350,7 @@ export default function PerfilUsuario(props) {
 								id="email"
 								name="email"
 								label="Correo electrónico"
+								placeholder="Correo electrónico"
 								fullWidth
 								variant="outlined"
 								value={datos.email ? datos.email : ''}
@@ -354,6 +359,25 @@ export default function PerfilUsuario(props) {
 									startAdornment: (
 										<InputAdornment position="start">
 											<MailOutlineIcon />
+										</InputAdornment>
+									)
+								}}
+							/>
+						</Grid>
+						<Grid item xs={12}>
+							<TextField
+								id="profession"
+								name="profession"
+								label="Profesión"
+								fullWidth
+								variant="outlined"
+								placeholder="Ejemplo: Ingeniero, maestro en diseño grafico, desarrollador web"
+								value={datos.profession ? datos.profession : ''}
+								onChange={obtenerCampos}
+								InputProps={{
+									startAdornment: (
+										<InputAdornment position="start">
+											<WorkOutlineIcon />
 										</InputAdornment>
 									)
 								}}

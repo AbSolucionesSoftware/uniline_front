@@ -119,12 +119,6 @@ export default function NavbarMaestro(props) {
 	};
 	const handleMenuClose = () => {
 		setAnchorEl(null);
-		firebase.auth().signOut();
-		localStorage.removeItem('token');
-		localStorage.removeItem('student');
-		setTimeout(() => {
-			window.location.reload();
-		}, 500);
 	};
 
 	const handleDrawerOpen = () => {
@@ -151,13 +145,23 @@ export default function NavbarMaestro(props) {
 				horizontal: 'center'
 			}}
 		>
-			<MenuItem onClick={handleMenuClose} component={Link} to="/intructor/perfil">
+			<MenuItem onClick={handleMenuClose} component={Link} to="/perfil">
 				<ListItemIcon>
 					<AccountCircleIcon />
 				</ListItemIcon>
 				<ListItemText primary="Mi perfil" />
 			</MenuItem>
-			<MenuItem onClick={handleMenuClose}>
+			<MenuItem
+				onClick={() => {
+					handleMenuClose();
+					firebase.auth().signOut();
+					localStorage.removeItem('token');
+					localStorage.removeItem('student');
+					setTimeout(() => {
+						window.location.reload();
+					}, 500);
+				}}
+			>
 				<ListItemIcon>
 					<ExitToAppIcon />
 				</ListItemIcon>
@@ -198,7 +202,9 @@ export default function NavbarMaestro(props) {
 						onClick={handleProfileMenuOpen}
 						color="inherit"
 					>
-						{!user ? (<Avatar alt="foto de perfil"></Avatar>) : !user.imagen ? (
+						{!token ? (
+							<Avatar alt="foto de perfil" />
+						) : !user.imagen ? (
 							<Avatar className={classes.orange}>
 								{user.name ? user.name.charAt(0) : <CircularProgress style={{ color: '#FFFFFF' }} />}
 							</Avatar>

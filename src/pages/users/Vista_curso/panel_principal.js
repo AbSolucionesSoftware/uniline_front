@@ -10,7 +10,7 @@ import { formatoMexico } from '../../../config/reuserFunction';
 import { withRouter } from 'react-router-dom';
 import RegistroAlterno from '../RegistroAlterno/registro_alterno';
 import { NavContext } from '../../../context/context_nav';
-import { CanjearCupon } from '../PeticionesCompras/peticiones_compras';
+import { AgregarCarritoBD, CanjearCupon } from '../PeticionesCompras/peticiones_compras';
 
 const useStyles = makeStyles((theme) => ({
 	background: {
@@ -43,7 +43,9 @@ function VistaCursoPanelPrincipal(props) {
 	const { curso, handleVideoModal, setSnackbar } = props;
 	const [ cupon, setCupon ] = useState('');
 	const [ loading, setLoading ] = useState(false);
-	const { error, setError, open, setOpen } = useContext(NavContext);
+	const [ loadingCart, setLoadingCart ] = useState(false);
+	const [ open, setOpen ] = useState(false);
+	const { error, setError, update, setUpdate, carrito } = useContext(NavContext);
 	let user = { _id: '' };
 	const urlActual = props.match.url;
 
@@ -84,6 +86,49 @@ function VistaCursoPanelPrincipal(props) {
 			}
 		}
 	};
+
+	const agregarCarrito = async () => {
+		if (!token || !user._id) {
+			handleModal();
+			localStorage.setItem('cart', JSON.stringify({ curso: curso.course._id, urlActual }));
+			return;
+		}
+
+		const result = await AgregarCarritoBD(token, user, curso.course._id);
+		setLoadingCart(true);
+		if (result.status && result.status === 200) {
+			setLoadingCart(false);
+			setUpdate(!update);
+			setSnackbar({
+				open: true,
+				mensaje: result.data.message,
+				status: 'success'
+			});
+		} else {
+			setLoadingCart(false);
+			if (result.response) {
+				setSnackbar({
+					open: true,
+					mensaje: result.response.data.message,
+					status: 'error'
+				});
+			} else {
+				setSnackbar({
+					open: true,
+					mensaje: 'Al parecer no se a podido conectar al servidor.',
+					status: 'error'
+				});
+			}
+		}
+	};
+
+	/* verificar si esta en carrito */
+	let cart = false;
+	if (carrito && carrito.courses) {
+		carrito.courses.forEach((res) => {
+			if (res.course._id === curso.course._id) cart = true;
+		});
+	}
 
 	return (
 		<Fragment>
@@ -135,15 +180,35 @@ function VistaCursoPanelPrincipal(props) {
 					</Button>
 				</Box>
 				<Box my={1}>
-					<Button
-						color="secondary"
-						variant="outlined"
-						fullWidth
-						size="large"
-						startIcon={<ShoppingCartOutlinedIcon />}
-					>
-						Agregar a carrito
-					</Button>
+					{cart ? (
+						<Button
+							color="secondary"
+							variant="outlined"
+							fullWidth
+							size="large"
+							startIcon={<ShoppingCartOutlinedIcon />}
+							onClick={() => props.history.push('/carrito')}
+						>
+							Ir al carrito
+						</Button>
+					) : (
+						<Button
+							color="secondary"
+							variant="outlined"
+							fullWidth
+							size="large"
+							startIcon={
+								loadingCart ? (
+									<CircularProgress size={20} color="inherit" />
+								) : (
+									<ShoppingCartOutlinedIcon />
+								)
+							}
+							onClick={() => agregarCarrito()}
+						>
+							Agregar a carrito
+						</Button>
+					)}
 				</Box>
 				<Divider />
 				<Box my={2}>
@@ -186,6 +251,7 @@ const ModalRegistro = ({ handleModal, open, error, setError }) => {
 	const handleClose = () => {
 		handleModal();
 		localStorage.removeItem('coupon');
+		localStorage.removeItem('cart');
 		setError({ error: false, message: '' });
 	};
 	return (
