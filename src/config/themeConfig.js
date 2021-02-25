@@ -21,7 +21,7 @@ const theme = createMuiTheme({
 		},
 		success: {
 			main: '#5cb85c',
-			secondary: '#A5FF95'
+			secondary: '#c0ffb5'
 		},
 		text: {
 			primary: 'rgba(0, 0, 0, 0.87)',

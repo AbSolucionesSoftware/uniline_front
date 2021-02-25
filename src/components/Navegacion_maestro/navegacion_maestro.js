@@ -24,8 +24,6 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 
-const token = localStorage.getItem('token');
-
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -100,6 +98,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function NavbarMaestro(props) {
 	const [ darkTheme, setDarkTheme ] = props.tema;
+	const token = localStorage.getItem('token');
 	const classes = useStyles();
 	const theme = useTheme();
 	const [ anchorEl, setAnchorEl ] = useState(null);

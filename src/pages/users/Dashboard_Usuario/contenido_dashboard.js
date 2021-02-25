@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Avatar, Box, Divider, Grid, Typography, Button } from '@material-ui/core';
+import { Avatar, Box, Divider, Grid, Typography, Button, CircularProgress } from '@material-ui/core';
 import { List, ListItem, ListItemAvatar, ListItemIcon, ListItemText } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
 import DOMPurify from 'dompurify';
+import Vimeo from '@u-wave/react-vimeo';
 
 import InsertChartOutlinedIcon from '@material-ui/icons/InsertChartOutlined';
 import LanguageOutlinedIcon from '@material-ui/icons/LanguageOutlined';
@@ -12,7 +13,9 @@ import SubscriptionsOutlinedIcon from '@material-ui/icons/SubscriptionsOutlined'
 import QueryBuilderOutlinedIcon from '@material-ui/icons/QueryBuilderOutlined';
 import FolderOutlinedIcon from '@material-ui/icons/FolderOutlined';
 import ComentariosCurso from './comentarios';
-import VimeoReproductor from '../../../components/Vimeo_Reproductor/Vimeo';
+import { Fragment } from 'react';
+import { DashboardContext } from '../../../context/dashboar_context';
+import clienteAxios from '../../../config/axios';
 
 const useStyles = makeStyles((theme) => ({
 	itemIcon: {
@@ -25,35 +28,89 @@ const useStyles = makeStyles((theme) => ({
 		[theme.breakpoints.down('sm')]: {
 			height: '40vh'
 		}
+	},
+	vimeoPlayer: {
+		height: '100%',
+		width: '100%',
+		'& iframe': {
+			height: '100%',
+			width: '100%'
+		}
 	}
 }));
 
-export default function ContenidoDashboard({ curso }) {
+export default function ContenidoDashboard({ user }) {
 	const classes = useStyles();
+	const token = localStorage.getItem('token');
+	const { curso, temaActual, topics, update, setUpdate, setProgreso } = useContext(DashboardContext);
+
+	const checkTema = async (topic) => {
+		await clienteAxios
+			.post(
+				`/course/complete/topic/`,
+				{
+					idCourse: curso.course._id,
+					idTopic: topic._id,
+					idUser: user._id
+				},
+				{
+					headers: {
+						Authorization: `bearer ${token}`
+					}
+				}
+			)
+			.then((res) => {
+				setUpdate(!update);
+				setProgreso(res.data.message);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
+
+	const checkVideo = () => {
+		topics.forEach((topic, i) => {
+			if (temaActual.index === i) {
+				checkTema(topic);
+			}
+		});
+	};
 
 	useEffect(() => {
-		window.scrollTo(0, 0);
-	}, [])
+		/* window.scrollTo(0, 0); */
+	}, []);
 
 	return (
 		<div>
-			<Box className={classes.video} display="flex" justifyContent="center" alignItems="center">
-				<VimeoReproductor
-					idVideo={curso.urlCourseVideo ? curso.urlCourseVideo : ''}
-					width="100%"
-					height="100%"
-				/>
+			<Box
+				id="dashboard-reproductor"
+				className={classes.video}
+				display="flex"
+				justifyContent="center"
+				alignItems="center"
+			>
+				{!temaActual.video ? (
+					<CircularProgress style={{ color: '#FFFF' }} />
+				) : (
+					<Vimeo
+						video={temaActual.video ? temaActual.video : ''}
+						autoplay={true}
+						onEnd={() => checkVideo()}
+						id="vimeo-player"
+						className={classes.vimeoPlayer}
+					/>
+				)}
 			</Box>
 			<Box minHeight={200}>
 				<Box m={2}>
 					<Grid container justify="space-between">
 						<Grid item>
-							<Typography variant="h6">{curso.title ? curso.title : ''}</Typography>
+							<Typography variant="h6">{curso.course.title ? curso.course.title : ''}</Typography>
 						</Grid>
 						<Grid item>
 							<Rating
 								name="read-only"
-								value={curso.qualification ? curso.qualification : 0}
+								value={curso.course.qualification ? curso.course.qualification : 0}
 								readOnly
 								precision={0.5}
 							/>
@@ -64,7 +121,9 @@ export default function ContenidoDashboard({ curso }) {
 				<Box p={2}>
 					<Typography variant="h5">Más información de este curso</Typography>
 					<Box mt={2}>
-						<Typography variant="subtitle1">{curso.subtitle ? curso.subtitle : ''}</Typography>
+						<Typography variant="subtitle1">
+							{curso.course.subtitle ? curso.course.subtitle : ''}
+						</Typography>
 					</Box>
 					<Box mt={3}>
 						<Grid container spacing={5}>
@@ -79,7 +138,7 @@ export default function ContenidoDashboard({ curso }) {
 													<InsertChartOutlinedIcon />
 												</ListItemIcon>
 												<Typography variant="subtitle1">
-													{curso.level ? `Nivel: ${curso.level}` : 'Nivel: -'}
+													{curso.course.level ? `Nivel: ${curso.course.level}` : 'Nivel: -'}
 												</Typography>
 											</ListItem>
 											<ListItem>
@@ -87,7 +146,11 @@ export default function ContenidoDashboard({ curso }) {
 													<LanguageOutlinedIcon />
 												</ListItemIcon>
 												<Typography variant="subtitle1">
-													{curso.language ? `Lenguaje: ${curso.language}` : 'Lenguaje: -'}
+													{curso.course.language ? (
+														`Lenguaje: ${curso.course.language}`
+													) : (
+														'Lenguaje: -'
+													)}
 												</Typography>
 											</ListItem>
 											<ListItem>
@@ -104,14 +167,20 @@ export default function ContenidoDashboard({ curso }) {
 												<ListItemIcon className={classes.itemIcon}>
 													<SubscriptionsOutlinedIcon />
 												</ListItemIcon>
-												<Typography variant="subtitle1">75 clases</Typography>
+												<Typography variant="subtitle1">
+													{`${curso.totalTopics} clases`}
+												</Typography>
 											</ListItem>
 											<ListItem>
 												<ListItemIcon className={classes.itemIcon}>
 													<QueryBuilderOutlinedIcon />
 												</ListItemIcon>
 												<Typography variant="subtitle1">
-													{curso.hours ? `${curso.hours} horas de curso` : '0 horas de curso'}
+													{curso.course.hours ? (
+														`${curso.course.hours} horas de curso`
+													) : (
+														'0 horas de curso'
+													)}
 												</Typography>
 											</ListItem>
 											<ListItem>
@@ -122,38 +191,67 @@ export default function ContenidoDashboard({ curso }) {
 											</ListItem>
 										</List>
 									</Grid>
+									<Grid item lg={4}>
+										<List dense>
+											<ListItem>
+												<ListItemAvatar>
+													{curso.course.idProfessor.urlImage ? (
+														<Avatar
+															alt="img-maestro"
+															src={curso.course.idProfessor.urlImage}
+														/>
+													) : (
+														<Avatar>P</Avatar>
+													)}
+												</ListItemAvatar>
+												<ListItemText
+													primary={
+														<Fragment>
+															<Typography>Instructor</Typography>
+															<Typography variant="subtitle1">
+																{curso.course.idProfessor.name ? (
+																	curso.course.idProfessor.name
+																) : (
+																	'-'
+																)}
+															</Typography>
+														</Fragment>
+													}
+													secondary={
+														<Typography variant="subtitle2">
+															{curso.course.idProfessor.profession ? (
+																curso.course.idProfessor.profession
+															) : (
+																'-'
+															)}
+														</Typography>
+													}
+												/>
+											</ListItem>
+										</List>
+									</Grid>
+									<Grid item>
+										<Box display="flex" justifyContent="center" alignItems="center" height="100%">
+											<div>
+												<Box m={1}>
+													<Button
+														fullWidth
+														variant="outlined"
+														color="primary"
+														disabled={curso.inscriptionStudent.studentAdvance !== '100'}
+													>
+														Proyecto final
+													</Button>
+												</Box>
+												<Box m={1}>
+													<Button fullWidth variant="outlined" color="primary" disabled>
+														Certificado
+													</Button>
+												</Box>
+											</div>
+										</Box>
+									</Grid>
 								</Grid>
-							</Grid>
-							<Grid item>
-								<Typography>Instructor</Typography>
-								<Divider />
-								<List dense>
-									<ListItem>
-										<ListItemAvatar>
-											<Avatar>A</Avatar>
-										</ListItemAvatar>
-										<ListItemText
-											primary={<Typography variant="subtitle1">Aldo Chagollan</Typography>}
-											secondary={<Typography variant="subtitle2">Desarrollador web</Typography>}
-										/>
-									</ListItem>
-								</List>
-							</Grid>
-							<Grid item>
-								<Box display="flex" justifyContent="center" alignItems="center" height="100%">
-									<div>
-										<Box m={1} width={200}>
-											<Button fullWidth variant="outlined" color="primary" disabled>
-												Proyecto final
-											</Button>
-										</Box>
-										<Box m={1} width={200}>
-											<Button fullWidth variant="outlined" color="primary" disabled>
-												Certificado
-											</Button>
-										</Box>
-									</div>
-								</Box>
 							</Grid>
 						</Grid>
 					</Box>
@@ -165,15 +263,15 @@ export default function ContenidoDashboard({ curso }) {
 					<Box p={2} textAlign="justify">
 						<Typography
 							dangerouslySetInnerHTML={{
-								__html: DOMPurify.sanitize(curso.description ? curso.description : '')
+								__html: DOMPurify.sanitize(curso.course.description ? curso.course.description : '')
 							}}
 						/>
 					</Box>
 					<Typography variant="h6">¿Qué aprenderas en este curso?</Typography>
 					<Box px={5} py={2}>
 						<ul>
-							{curso.learnings ? (
-								curso.learnings.map((res) => {
+							{curso.course.learnings ? (
+								curso.course.learnings.map((res) => {
 									return (
 										<li key={res._id}>
 											<Typography>{res.learning}</Typography>
@@ -186,8 +284,8 @@ export default function ContenidoDashboard({ curso }) {
 					<Typography variant="h6">Requisitos para realizar este curso</Typography>
 					<Box px={5} py={2}>
 						<ul>
-							{curso.requirements ? (
-								curso.requirements.map((res) => {
+							{curso.course.requirements ? (
+								curso.course.requirements.map((res) => {
 									return (
 										<li key={res._id}>
 											<Typography>{res.requirement}</Typography>
@@ -200,8 +298,8 @@ export default function ContenidoDashboard({ curso }) {
 					<Typography variant="h6">¿Para quién es este curso?</Typography>
 					<Box px={5} py={2}>
 						<ul>
-							{curso.whoStudents ? (
-								curso.whoStudents.map((res) => {
+							{curso.course.whoStudents ? (
+								curso.course.whoStudents.map((res) => {
 									return (
 										<li key={res._id}>
 											<Typography>{res.whoStudent}</Typography>
@@ -215,7 +313,7 @@ export default function ContenidoDashboard({ curso }) {
 			</Box>
 			<Divider />
 			<Box minHeight={200}>
-				<ComentariosCurso />
+				<ComentariosCurso curso={curso} />
 			</Box>
 		</div>
 	);

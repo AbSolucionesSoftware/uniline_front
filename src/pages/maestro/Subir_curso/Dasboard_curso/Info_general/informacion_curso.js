@@ -71,12 +71,19 @@ export default function RegistroInformacionCurso() {
 
 	const obtenerCampos = (e) => {
 		setValidacion(false);
-		if(e.target.name === 'category'){
+		if (e.target.name === 'category') {
 			setDatos({
 				...datos,
-				subCategory: '',
+				subCategory: ''
 			});
-			return
+			return;
+		}
+		if (e.target.name === 'slug') {
+			setDatos({
+				...datos,
+				slug: e.target.value.replace(' ', '-')
+			});
+			return;
 		}
 		setDatos({
 			...datos,
@@ -112,12 +119,13 @@ export default function RegistroInformacionCurso() {
 		if (
 			!datos.title ||
 			!datos.subtitle ||
+			!datos.slug ||
 			!datos.description ||
 			!datos.language ||
 			!datos.category ||
 			!datos.subCategory ||
 			!datos.level ||
-			!datos.hours  ||
+			!datos.hours ||
 			!datos.startMessage ||
 			!datos.finalMessage
 		) {
@@ -137,6 +145,7 @@ export default function RegistroInformacionCurso() {
 				{
 					title: datos.title,
 					subtitle: datos.subtitle,
+					slug: datos.slug,
 					description: datos.description,
 					language: datos.language,
 					category: datos.category,
@@ -235,6 +244,43 @@ export default function RegistroInformacionCurso() {
 						helperText={validacion && !datos.subtitle ? 'Campo requerido' : ''}
 						onChange={obtenerCampos}
 					/>
+				</Box>
+				<Box my={2}>
+					<Grid container spacing={2}>
+						<Grid item lg={2} md={4} xs={12}>
+							<TextField
+								fullWidth
+								required
+								type="number"
+								name="hours"
+								id="horas-curso"
+								label="Horas del curso"
+								value={datos.hours ? datos.hours : ''}
+								variant="outlined"
+								error={validacion && !datos.hours ? true : false}
+								helperText={validacion && !datos.hours ? 'Campo requerido' : ''}
+								onChange={obtenerCampos}
+								InputProps={{
+									endAdornment: <InputAdornment position="start">Hrs.</InputAdornment>
+								}}
+							/>
+						</Grid>
+						<Grid item lg={10} md={8} xs={12}>
+							<TextField
+								fullWidth
+								required
+								name="slug"
+								id="slug-curso"
+								placeholder="Ejemplo: curso-html-javascrip"
+								label="Slug"
+								value={datos.slug ? datos.slug : ''}
+								variant="outlined"
+								error={validacion && !datos.slug ? true : false}
+								helperText={validacion && !datos.slug ? 'Campo requerido' : ''}
+								onChange={obtenerCampos}
+							/>
+						</Grid>
+					</Grid>
 				</Box>
 				<Box my={2}>
 					<Typography variant="subtitle1">Descripción</Typography>
@@ -393,24 +439,6 @@ export default function RegistroInformacionCurso() {
 							</FormControl>
 						</Grid>
 					</Grid>
-				</Box>
-				<Box my={2}>
-					<TextField
-						/* fullWidth */
-						required
-						type="number"
-						name="hours"
-						id="horas-curso"
-						label="Horas del curso"
-						value={datos.hours ? datos.hours : ''}
-						variant="outlined"
-						error={validacion && !datos.hours ? true : false}
-						helperText={validacion && !datos.hours ? 'Campo requerido' : ''}
-						onChange={obtenerCampos}
-						InputProps={{
-							endAdornment: <InputAdornment position="start">Hrs.</InputAdornment>
-						}}
-					/>
 				</Box>
 				<Box my={2}>
 					<Typography variant="subtitle1">Mensaje inicial del curso</Typography>

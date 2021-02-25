@@ -62,5 +62,19 @@ export const useStyles = makeStyles((theme) => ({
 		position: 'fixed',
 		bottom: theme.spacing(1),
 		right: theme.spacing(2)
-	}
+	},
+	logo: {
+		display: 'none',
+		height: 40,
+		[theme.breakpoints.up('sm')]: {
+			display: 'block'
+		}
+	},
+	logoResponsive: {
+		height: 40,
+	},
+	imagen: {
+		maxHeight: '100%',
+		maxWidth: '100%'
+	},
 }));

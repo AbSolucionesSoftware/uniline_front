@@ -174,7 +174,7 @@ const CardMisCursos = ({ curso }) => {
 								variant="contained"
 								color="primary"
 								component={Link}
-								to={`/dashboard/${curso.idCourse._id}`}
+								to={`/dashboard/${curso.idCourse.slug}`}
 							>
 								Ir al curso
 							</Button>

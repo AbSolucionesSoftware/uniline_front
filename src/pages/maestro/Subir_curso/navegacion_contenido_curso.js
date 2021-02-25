@@ -14,7 +14,12 @@ import clienteAxios from '../../../config/axios';
 import Spin from '../../../components/Spin/spin';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
 import { CursoContext } from '../../../context/curso_context';
-import { verificarInformacionCurso, verificarLearningsCurso, verificarBloquesCurso, verificarPrecioCurso } from './verificar_contenido';
+import {
+	verificarInformacionCurso,
+	verificarLearningsCurso,
+	verificarBloquesCurso,
+	verificarPrecioCurso
+} from './verificar_contenido';
 
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
@@ -86,64 +91,76 @@ export default function NavegacionContenidoCurso(props) {
 
 	const obtenerBloquesBD = useCallback(
 		async () => {
-			if(datos._id){
+			if (datos._id && token) {
 				await clienteAxios
-				.get(`/course/data/${datos._id}`)
-				.then((res) => {
-					setBlocks(res.data);
-				})
-				.catch((err) => {
-					return
-				});
+					.get(`/course/data/${datos._id}`, {
+						headers: {
+							Authorization: `bearer ${token}`
+						}
+					})
+					.then((res) => {
+						setBlocks(res.data);
+					})
+					.catch((err) => {
+						return;
+					});
 			}
 		},
-		[ datos._id ]
+		[ datos._id, token ]
 	);
 
 	const publicarCurso = async () => {
-		if(verificarInformacionCurso(datos) && verificarLearningsCurso(datos) && verificarBloquesCurso(blocks) && verificarPrecioCurso(datos) ){
+		if (
+			verificarInformacionCurso(datos) &&
+			verificarLearningsCurso(datos) &&
+			verificarBloquesCurso(blocks) &&
+			verificarPrecioCurso(datos)
+		) {
 			await clienteAxios
-			.put(`/course/public/${datos._id}`, {
-				publication: !datos.publication
-			}, {
-				headers: {
-					Authorization: `bearer ${token}`
-				}
-			})
-			.then((res) => {
-				setSnackbar({
-					open: true,
-					mensaje: res.data.message,
-					status: 'success'
+				.put(
+					`/course/public/${datos._id}`,
+					{
+						publication: !datos.publication
+					},
+					{
+						headers: {
+							Authorization: `bearer ${token}`
+						}
+					}
+				)
+				.then((res) => {
+					setSnackbar({
+						open: true,
+						mensaje: res.data.message,
+						status: 'success'
+					});
+					setLoading(false);
+					setUpdate(!update);
+				})
+				.catch((err) => {
+					setLoading(false);
+					if (err.response) {
+						setSnackbar({
+							open: true,
+							mensaje: err.response.data.message,
+							status: 'error'
+						});
+					} else {
+						setSnackbar({
+							open: true,
+							mensaje: 'Al parecer no se a podido conectar al servidor.',
+							status: 'error'
+						});
+					}
 				});
-				setLoading(false);
-				setUpdate(!update);
-			})
-			.catch((err) => {
-				setLoading(false);
-				if (err.response) {
-					setSnackbar({
-						open: true,
-						mensaje: err.response.data.message,
-						status: 'error'
-					});
-				} else {
-					setSnackbar({
-						open: true,
-						mensaje: 'Al parecer no se a podido conectar al servidor.',
-						status: 'error'
-					});
-				}
-			});
-		}else{
+		} else {
 			setSnackbar({
 				open: true,
 				mensaje: 'Tu curso aun esta incompleto.',
 				status: 'error'
 			});
 		}
-
-	}
+	};
 
 	useEffect(
 		() => {
@@ -180,7 +197,11 @@ export default function NavegacionContenidoCurso(props) {
 						onClick={() => setTitle('Información del curso')}
 					>
 						<ListItemIcon>
-							{verificarInformacionCurso(datos) ? <CheckCircleIcon className={classes.colorOK} /> : <ErrorIcon className={classes.colorERR} />}
+							{verificarInformacionCurso(datos) ? (
+								<CheckCircleIcon className={classes.colorOK} />
+							) : (
+								<ErrorIcon className={classes.colorERR} />
+							)}
 						</ListItemIcon>
 						<ListItemText primary="Información del curso" />
 					</ListItem>
@@ -191,7 +212,11 @@ export default function NavegacionContenidoCurso(props) {
 						onClick={() => setTitle('Que enseñarás')}
 					>
 						<ListItemIcon>
-							{verificarLearningsCurso(datos) ? <CheckCircleIcon className={classes.colorOK} /> : <ErrorIcon className={classes.colorERR} />}
+							{verificarLearningsCurso(datos) ? (
+								<CheckCircleIcon className={classes.colorOK} />
+							) : (
+								<ErrorIcon className={classes.colorERR} />
+							)}
 						</ListItemIcon>
 						<ListItemText primary="Que enseñarás" />
 					</ListItem>
@@ -208,7 +233,11 @@ export default function NavegacionContenidoCurso(props) {
 						onClick={() => setTitle('Bloques y temas del curso')}
 					>
 						<ListItemIcon>
-							{verificarBloquesCurso(blocks) ? <CheckCircleIcon className={classes.colorOK} /> : <ErrorIcon className={classes.colorERR} />}
+							{verificarBloquesCurso(blocks) ? (
+								<CheckCircleIcon className={classes.colorOK} />
+							) : (
+								<ErrorIcon className={classes.colorERR} />
+							)}
 						</ListItemIcon>
 						<ListItemText primary="Bloques y temas" />
 					</ListItem>
@@ -226,7 +255,11 @@ export default function NavegacionContenidoCurso(props) {
 							onClick={() => setTitle('Precio del curso')}
 						>
 							<ListItemIcon>
-							{verificarPrecioCurso(datos) ? <CheckCircleIcon className={classes.colorOK} /> : <ErrorIcon className={classes.colorERR} />}
+								{verificarPrecioCurso(datos) ? (
+									<CheckCircleIcon className={classes.colorOK} />
+								) : (
+									<ErrorIcon className={classes.colorERR} />
+								)}
 							</ListItemIcon>
 							<ListItemText primary="Precio y promociones" />
 						</ListItem>
@@ -235,7 +268,14 @@ export default function NavegacionContenidoCurso(props) {
 			</Box>
 			<Box display="flex" justifyContent="center" mt={4}>
 				<Box width={250}>
-					<Button size="large" color="primary" variant="outlined" fullWidth component={Link} to="/instructor/cursos">
+					<Button
+						size="large"
+						color="primary"
+						variant="outlined"
+						fullWidth
+						component={Link}
+						to="/instructor/cursos"
+					>
 						Volver a tus cursos
 					</Button>
 				</Box>
@@ -272,7 +312,12 @@ export default function NavegacionContenidoCurso(props) {
 					<Typography variant="h6" noWrap className={classes.title}>
 						{datos.title ? datos.title : ''}
 					</Typography>
-					<Button color="inherit" variant="outlined" target="_blank" href={ruta_actual[4] !== 'contenido' ? `/curso/${datos._id}` : `/dashboard/${datos._id}`}>
+					<Button
+						color="inherit"
+						variant="outlined"
+						target="_blank"
+						href={ruta_actual[4] !== 'contenido' ? `/curso/${datos._id}` : `/dashboard/${datos._id}`}
+					>
 						Vista previa
 					</Button>
 					<IconButton aria-label="show 17 theme config" color="inherit" onClick={darkModeAction}>

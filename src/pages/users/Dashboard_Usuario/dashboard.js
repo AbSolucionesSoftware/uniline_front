@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Hidden, IconButton, Divider, Typography, Toolbar, Button } from '@material-ui/core';
 import { Link, withRouter } from 'react-router-dom';
 import { AppBar, Box, MenuItem, Popover, Avatar, CircularProgress, Drawer, List } from '@material-ui/core';
@@ -18,10 +18,14 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import ListaContenido from './lista';
 import ContenidoDashboard from './contenido_dashboard';
+import ImagenLogo from '../../../images/uniline2.png';
 import { useStyles } from './styles';
 import Spin from '../../../components/Spin/spin';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
 import clienteAxios from '../../../config/axios';
+import Error500 from '../../error500';
+import SpinNormal from '../../../components/Spin/spinNormal';
+import { DashboardContext } from '../../../context/dashboar_context';
 
 function DashboarUsuario(props) {
 	const classes = useStyles();
@@ -31,15 +35,14 @@ function DashboarUsuario(props) {
 	const [ anchorEl, setAnchorEl ] = useState(null);
 	const [ open, setOpen ] = useState(false);
 	const [ openSecondary, setOpenSecondary ] = useState(false);
-	const [ curso, setCurso ] = useState([]);
-	const idcurso = props.match.params.url;
+	const { curso, setCurso, setProgreso, setEndTopic } = useContext(DashboardContext);
+	const slugCourse = props.match.params.url;
 	const [ loading, setLoading ] = useState(false);
 	const [ snackbar, setSnackbar ] = useState({
 		open: false,
 		mensaje: '',
 		status: ''
 	});
-
 	const isMenuOpen = Boolean(anchorEl);
 
 	/* if (!token) props.history.push('/'); */
@@ -50,33 +53,26 @@ function DashboarUsuario(props) {
 		localStorage.setItem('tema', !darkTheme);
 	};
 
-	const handleProfileMenuOpen = (event) => {
-		setAnchorEl(event.currentTarget);
-	};
-	const handleMenuClose = () => {
-		setAnchorEl(null);
-	};
-
-	const handleDrawer = () => {
-		setOpen(!open);
-	};
-
-	const handleDrawerSecondary = () => {
-		setOpenSecondary(!openSecondary);
-	};
+	const handleProfileMenuOpen = (event) => setAnchorEl(event.currentTarget);
+	const handleMenuClose = () => setAnchorEl(null);
+	const handleDrawer = () => setOpen(!open);
+	const handleDrawerSecondary = () => setOpenSecondary(!openSecondary);
 
 	const obtenerCursoBD = useCallback(
 		async () => {
 			setLoading(true);
 			await clienteAxios
-				.get(`/course/${idcurso}`, {
+				.get(`/course/view/${slugCourse}/user-progress/${user._id}`, {
 					headers: {
 						Authorization: `bearer ${token}`
 					}
 				})
 				.then((res) => {
+					console.log(res.data);
 					setLoading(false);
 					setCurso(res.data);
+					setProgreso(res.data.inscriptionStudent.studentAdvance);
+					setEndTopic(res.data.endTopicView);
 				})
 				.catch((err) => {
 					setLoading(false);
@@ -95,8 +91,8 @@ function DashboarUsuario(props) {
 					}
 				});
 		},
-		[ idcurso, token, setCurso ]
-	);
+		[ slugCourse, token, setCurso, user._id, setProgreso, setEndTopic ]
+	);	
 
 	useEffect(
 		() => {
@@ -104,6 +100,17 @@ function DashboarUsuario(props) {
 		},
 		[ obtenerCursoBD ]
 	);
+
+	if (loading){
+		return <Spin loading={loading} />;
+	}
+	if (curso.length === 0) {
+		if (loading) {
+			return <SpinNormal />;
+		} else {
+			return <Error500 />;
+		}
+	}
 
 	const menuId = 'primary-search-account-menu';
 	const renderMenu = (
@@ -172,15 +179,15 @@ function DashboarUsuario(props) {
 					</Hidden>
 					<Hidden smDown>
 						<Button color="inherit" component={Link} to="/">
-							<Typography className={classes.title} variant="h6" noWrap>
-								UNILINE
-							</Typography>
+							<Box className={classes.logo}>
+								<img alt="logo navbar" src={ImagenLogo} className={classes.imagen} />
+							</Box>
 						</Button>
-						<Divider orientation="vertical" className={classes.divider} />
+						{/* <Divider orientation="vertical" className={classes.divider} /> */}
 					</Hidden>
 					<Box ml={2}>
 						<Typography className={classes.title} variant="h6" noWrap>
-							{curso.title ? curso.title : ''}
+							{curso.course.title ? curso.course.title : ''}
 						</Typography>
 					</Box>
 					<div className={classes.grow} />
@@ -269,11 +276,11 @@ function DashboarUsuario(props) {
 					open={openSecondary}
 					onClose={handleDrawerSecondary}
 				>
-					<Box display="flex" justifyContent="space-between">
+					<Box display="flex" justifyContent="space-between" alignItems="center">
 						<Button color="inherit" component={Link} to="/">
-							<Typography className={classes.title} variant="h6" noWrap>
-								UNILINE
-							</Typography>
+							<Box className={classes.logoResponsive}>
+								<img alt="logo navbar" src={ImagenLogo} className={classes.imagen} />
+							</Box>
 						</Button>
 						<IconButton onClick={handleDrawerSecondary}>
 							<ArrowBackIosIcon />
@@ -331,7 +338,7 @@ function DashboarUsuario(props) {
 
 			<main className={classes.content}>
 				<Toolbar />
-				<ContenidoDashboard curso={curso} />
+				<ContenidoDashboard user={user} />
 				<Spin loading={loading} />
 				<MessageSnackbar
 					open={snackbar.open}

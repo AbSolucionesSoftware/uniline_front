@@ -186,12 +186,12 @@ function CardsCursos(props) {
 				</CardContent>
 				<CardActions>
 					<Box width="100%">
-						<Button variant="text" color="primary" fullWidth component={Link} to={`/curso/${curso._id}`}>
+						<Button variant="text" color="primary" fullWidth component={Link} to={`/curso/${curso.slug}`}>
 							Ver descripción completa
 						</Button>
 						{course ? (
 							<Box my={1}>
-								<Button fullWidth variant="contained" color="primary">
+								<Button fullWidth variant="contained" color="primary" component={Link} to={`/dashboard/${curso.slug}`}>
 									Ver curso
 								</Button>
 							</Box>
@@ -204,7 +204,7 @@ function CardsCursos(props) {
 									<CircularProgress color="secondary" size={30} />
 								) : cart ? (
 									<Button size="large" color="secondary">
-										En carrito
+										Ir a carrito
 									</Button>
 								) : (
 									<IconButton

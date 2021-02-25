@@ -5,6 +5,7 @@ import darkMode from '../../config/darkMode';
 import { CssBaseline } from '@material-ui/core';
 import { NavProvider } from '../../context/context_nav';
 import DashboarUsuario from '../../pages/users/Dashboard_Usuario/dashboard';
+import { DashProvider } from '../../context/dashboar_context';
 
 export default function LayoutDashboardUser(props) {
 	let thema = localStorage.getItem('tema');
@@ -12,7 +13,9 @@ export default function LayoutDashboardUser(props) {
 	let tema = JSON.parse(thema);
 	const [ darkTheme, setDarkTheme ] = useState(tema);
 
-	if (!token) {props.history.push('/');}
+	if (!token) {
+		props.history.push('/');
+	}
 
 	useEffect(
 		() => {
@@ -29,10 +32,11 @@ export default function LayoutDashboardUser(props) {
 			<CssBaseline />
 			<div>
 				<NavProvider>
-					<DashboarUsuario tema={[ darkTheme, setDarkTheme ]} />
+					<DashProvider>
+						<DashboarUsuario tema={[ darkTheme, setDarkTheme ]} />
+					</DashProvider>
 				</NavProvider>
 			</div>
 		</ThemeProvider>
 	);
 }
-

@@ -60,7 +60,11 @@ export default function RegistroContenido() {
 			setLoading(true);
 			if (!datos._id) return;
 			await clienteAxios
-				.get(`/course/data/${datos._id}`)
+				.get(`/course/data/${datos._id}`, {
+					headers: {
+						Authorization: `bearer ${token}`
+					}
+				})
 				.then((res) => {
 					setLoading(false);
 					setBloques(res.data);
@@ -82,7 +86,7 @@ export default function RegistroContenido() {
 					}
 				});
 		},
-		[ datos._id ]
+		[ datos._id, token ]
 	);
 
 	const guardarOrdenBD = async () => {

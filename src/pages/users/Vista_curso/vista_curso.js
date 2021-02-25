@@ -74,6 +74,7 @@ export default function VistaCurso(props) {
 				.then((res) => {
 					setLoading(false);
 					setCursos(res.data);
+					
 				})
 				.catch((err) => {
 					setLoading(false);

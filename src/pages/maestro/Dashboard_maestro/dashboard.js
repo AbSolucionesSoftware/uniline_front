@@ -58,6 +58,7 @@ export default function DashboardMaestro(props) {
 	const token = localStorage.getItem('token');
 	const [ datos, setDatos ] = useState([]);
 	const [ loading, setLoading ] = useState(false);
+	const [ update, setUpdate ] = useState(false);
 	const [ snackbar, setSnackbar ] = useState({
 		open: false,
 		mensaje: '',
@@ -103,9 +104,9 @@ export default function DashboardMaestro(props) {
 
 	useEffect(() => {
 		obtenerCursosBD();
-	}, [ obtenerCursosBD ]);
+	}, [ obtenerCursosBD, update ]);
 
-	const render_cursos = datos.map((curso) => (<CursosProfesor key={curso._id} curso={curso} />))
+	const render_cursos = datos.map((curso) => (<CursosProfesor key={curso._id} curso={curso} update={update} setUpdate={setUpdate} />))
 
 	if (!datos) {
 		return (

@@ -60,7 +60,7 @@ export default function CardsCursosEstudiantes({ curso }) {
 					color="primary"
 					fullWidth
 					component={Link}
-					to={`/dashboard/${curso.idCourse._id}`}
+					to={`/dashboard/${curso.idCourse.slug}`}
 				>
 					¡Continuar con tus clases!
 				</Button>
