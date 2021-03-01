@@ -4,6 +4,7 @@ import BannerInformartivo from './Banner_Informativo/banner_informativo';
 import CursosComprados from './Cursos/cursos_estudiante';
 import CursosDisponibles from './Cursos/cursos';
 import { Box } from '@material-ui/core';
+import Metadata from '../../../config/metadata';
 
 export default function Home() {
 	useEffect(() => {
@@ -11,6 +12,7 @@ export default function Home() {
 	}, []);
 	return (
 		<Box>
+			<Metadata />
 			<Banner />
 			<CursosComprados />
 			<CursosDisponibles />
