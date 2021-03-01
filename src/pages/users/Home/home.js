@@ -12,7 +12,12 @@ export default function Home() {
 	}, []);
 	return (
 		<Box>
-			<Metadata />
+			<Metadata
+				title="UNILINE"
+				ogTitle="Escuela Al Revés UNILINE"
+				description="Aprende en nuestra escuela en linea."
+				url="https://priceless-roentgen-d8c7ba.netlify.app"
+			/>
 			<Banner />
 			<CursosComprados />
 			<CursosDisponibles />

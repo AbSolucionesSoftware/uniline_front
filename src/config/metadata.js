@@ -1,15 +1,18 @@
 import React from 'react'
-import { Helmet } from 'react-helmet'
-import Image from '../images/inicio.jpg';
+/* import { Helmet } from 'react-helmet' */
+import { HeadProvider, Title, Meta } from 'react-head';
+import Imagen from '../images/inicio.jpg';
 
-export default function Metadata() {
+export default function Metadata({title, ogTitle, description, image, url}) {
+    if(!image) image = Imagen;
+
     return (
-        <Helmet>
-            <title>UNILINE</title>
-			<meta property="og:title" content="Escuela Al Revés UNILINE" />
-			<meta property="og:description" content="Aprende en nuestra escuela en linea." />
-			<meta property="og:image" content={Image} />
-			<meta property="og:url" content="https://priceless-roentgen-d8c7ba.netlify.app" />
-        </Helmet>
+        <HeadProvider>
+            <Title>{title}</Title>
+			<Meta property="og:title" content={ogTitle} />
+			<Meta property="og:description" content={description} />
+			<Meta property="og:image" content={image} />
+			<Meta property="og:url" content={url} />
+        </HeadProvider>
     )
 }

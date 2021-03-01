@@ -10,6 +10,7 @@ import VistaCursoContenidoInfo from './contenido_info';
 import ModalVideo from 'react-modal-video';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
 import { Helmet } from 'react-helmet';
+import Metadata from '../../../config/metadata';
 
 const useStyles = makeStyles((theme) => ({
 	background: {
@@ -103,7 +104,7 @@ export default function VistaCurso(props) {
 	if (cursos.length === 0) {
 		return <Spin loading={loading} />;
 	}
-	
+
 	/* <Helmet title={cursos.course.title}
 				meta={[
 					{ property: 'og:title', content: cursos.course.title },
@@ -114,7 +115,14 @@ export default function VistaCurso(props) {
 
 	return (
 		<Box>
-			<Helmet >
+			<Metadata
+				title={cursos.course.title}
+				ogTitle={cursos.course.title}
+				description={cursos.course.subtitle}
+				image={cursos.course.urlPromotionalImage}
+				url={`https://priceless-roentgen-d8c7ba.netlify.app/curso/${cursos.course.slug}`}
+			/>
+			{/* <Helmet >
 				<title>{cursos.course.title}</title>
 				<meta property="og:title" content={cursos.course.title} />
 				<meta property="og:description" content="Aprende en nuestra escuela en linea UNILINE." />
@@ -123,7 +131,7 @@ export default function VistaCurso(props) {
 					property="og:url"
 					content={`https://priceless-roentgen-d8c7ba.netlify.app/curso/${cursos.course.slug}`}
 				/>
-			</Helmet>
+			</Helmet> */}
 			<Box
 				className={classes.background}
 				style={{ backgroundImage: `url(${cursos.course.urlPromotionalImage})` }}
