@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import routes from './config/routes';
-import { Helmet } from 'react-helmet';
+/* import { Helmet } from 'react-helmet'; */
 import './styles.scss';
-import Image from '../src/images/inicio.jpg';
+/* import Image from '../src/images/inicio.jpg'; */
 
 {
 	/* <meta charSet="utf-8" />
@@ -17,7 +17,7 @@ import Image from '../src/images/inicio.jpg';
 function App() {
 	return (
 		<div className="App">
-			<Helmet
+			{/* <Helmet
 				title="UNILINE"
 				meta={[
 					{ property: 'og:title', content: "Escuela Al Revés UNILINE" },
@@ -28,7 +28,7 @@ function App() {
 
 					{ name: 'viewport', content: 'width=device-width, maximum-scale=1' },
 				]}
-			/>
+			/> */}
 			<Router>
 				<Switch>{routes.map((route, index) => <RoutesWithSubRoutes key={index} {...route} />)}</Switch>
 			</Router>

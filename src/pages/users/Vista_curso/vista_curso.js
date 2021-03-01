@@ -109,12 +109,9 @@ export default function VistaCurso(props) {
 			<Helmet title={cursos.course.title}
 				meta={[
 					{ property: 'og:title', content: cursos.course.title },
-					{ property: 'og:type', content: 'website' },
 					{ property: 'og:url', content: `https://priceless-roentgen-d8c7ba.netlify.app/curso/${cursos.course.slug}`},
 					{ property: 'og:description', content: "Aprende en nuestra escuela en linea." },
 					{ property: 'og:image', content: cursos.course.urlPromotionalImage},
-
-					{ name: 'viewport', content: 'width=device-width, maximum-scale=1' },
 				]} />
 			<Box
 				className={classes.background}
