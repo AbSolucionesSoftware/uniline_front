@@ -113,7 +113,7 @@ export default function VistaCurso(props) {
 				<meta property="og:image" content={cursos.course.urlPromotionalImage}/>
 				<meta
 					property="og:url"
-					content={`https://www.escuelaalreves.com/curso/${cursos.course.slug}`}
+					content={`https://priceless-roentgen-d8c7ba.netlify.app/curso/${cursos.course.slug}`}
 				/>
 			</Helmet>
 			<Box

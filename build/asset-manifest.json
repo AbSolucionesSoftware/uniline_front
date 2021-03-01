@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.d299f64a.chunk.css",
-    "main.js": "/static/js/main.a93ed75a.chunk.js",
-    "main.js.map": "/static/js/main.a93ed75a.chunk.js.map",
+    "main.js": "/static/js/main.1c725672.chunk.js",
+    "main.js.map": "/static/js/main.1c725672.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.9bb69030.js",
     "runtime-main.js.map": "/static/js/runtime-main.9bb69030.js.map",
     "static/css/2.acc986e7.chunk.css": "/static/css/2.acc986e7.chunk.css",
@@ -25,6 +25,7 @@
     "static/media/Video-tutorial-bro.1c46d030.png": "/static/media/Video-tutorial-bro.1c46d030.png",
     "static/media/banner3.dc67c4fa.jpg": "/static/media/banner3.dc67c4fa.jpg",
     "static/media/imagenCorporativa.9884a2af.png": "/static/media/imagenCorporativa.9884a2af.png",
+    "static/media/inicio.476204b2.jpg": "/static/media/inicio.476204b2.jpg",
     "static/media/politicas.fe4cac35.png": "/static/media/politicas.fe4cac35.png",
     "static/media/register.6d397d94.jpg": "/static/media/register.6d397d94.jpg",
     "static/media/styles.css": "/static/media/revicons.e8746a62.woff",
@@ -36,6 +37,6 @@
     "static/css/2.acc986e7.chunk.css",
     "static/js/2.337d8f07.chunk.js",
     "static/css/main.d299f64a.chunk.css",
-    "static/js/main.a93ed75a.chunk.js"
+    "static/js/main.1c725672.chunk.js"
   ]
 }
