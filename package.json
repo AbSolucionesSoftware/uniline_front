@@ -42,6 +42,7 @@
     "react-number-format": "^4.4.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
+    "react-share": "^4.4.0",
     "react-vimeo": "^2.0.0",
     "slick-carousel": "^1.8.1",
     "tinymce": "^5.6.2",

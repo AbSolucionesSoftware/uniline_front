@@ -11,6 +11,8 @@ import { withRouter } from 'react-router-dom';
 import RegistroAlterno from '../RegistroAlterno/registro_alterno';
 import { NavContext } from '../../../context/context_nav';
 import { AgregarCarritoBD, CanjearCupon } from '../PeticionesCompras/peticiones_compras';
+import { FacebookShareButton, WhatsappShareButton } from 'react-share';
+import urlPage from '../../../config/url';
 
 const useStyles = makeStyles((theme) => ({
 	background: {
@@ -233,12 +235,16 @@ function VistaCursoPanelPrincipal(props) {
 						<b>Comparte este curso con tus amigos</b>
 					</Typography>
 					<Box display="flex" justifyContent="space-around">
-						<Button variant="outlined" color="primary" startIcon={<FacebookIcon />}>
-							Facebook
-						</Button>
-						<Button variant="outlined" color="primary" startIcon={<WhatsAppIcon />}>
-							WhatsApp
-						</Button>
+						<FacebookShareButton url={urlPage + urlActual} quote={curso.course.title}>
+							<Button variant="outlined" color="primary" startIcon={<FacebookIcon />}>
+								Facebook
+							</Button>
+						</FacebookShareButton>
+						<WhatsappShareButton url={urlPage + urlActual} title={curso.course.title} separator=":: ">
+							<Button variant="outlined" color="primary" startIcon={<WhatsAppIcon />}>
+								WhatsApp
+							</Button>
+						</WhatsappShareButton>
 					</Box>
 				</Box>
 			</CardContent>

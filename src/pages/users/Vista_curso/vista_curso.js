@@ -9,7 +9,7 @@ import VistaCursoPanelPrincipal from './panel_principal';
 import VistaCursoContenidoInfo from './contenido_info';
 import ModalVideo from 'react-modal-video';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
-import { Helmet } from 'react-helmet';
+/* import { Helmet } from 'react-helmet'; */
 import Metadata from '../../../config/metadata';
 
 const useStyles = makeStyles((theme) => ({
