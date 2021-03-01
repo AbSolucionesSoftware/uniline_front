@@ -24,7 +24,7 @@ function App() {
 					{ property: 'og:type', content: 'website' },
 					{ property: 'og:url', content: "https://priceless-roentgen-d8c7ba.netlify.app"},
 					{ property: 'og:description', content: "Aprende en nuestra escuela en linea." },
-					{ property: 'og:image', content: image},
+					{ property: 'og:image', content: Image},
 
 					{ name: 'viewport', content: 'width=device-width, maximum-scale=1' },
 				]}
