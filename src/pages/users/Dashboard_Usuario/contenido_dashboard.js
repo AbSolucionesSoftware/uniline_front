@@ -12,10 +12,11 @@ import SchoolOutlinedIcon from '@material-ui/icons/SchoolOutlined';
 import SubscriptionsOutlinedIcon from '@material-ui/icons/SubscriptionsOutlined';
 import QueryBuilderOutlinedIcon from '@material-ui/icons/QueryBuilderOutlined';
 import FolderOutlinedIcon from '@material-ui/icons/FolderOutlined';
-import ComentariosCurso from './comentarios';
+import ComentariosCurso from './Comentarios/comentarios';
 import { Fragment } from 'react';
 import { DashboardContext } from '../../../context/dashboar_context';
 import clienteAxios from '../../../config/axios';
+import Calificacion from './calificacion';
 
 const useStyles = makeStyles((theme) => ({
 	itemIcon: {
@@ -36,15 +37,19 @@ const useStyles = makeStyles((theme) => ({
 			height: '100%',
 			width: '100%'
 		}
-	}
+	} /* , 
+	stars: {
+		dis
+	} */
 }));
 
 export default function ContenidoDashboard({ user }) {
 	const classes = useStyles();
 	const token = localStorage.getItem('token');
-	const { curso, temaActual, topics, update, setUpdate, setProgreso } = useContext(DashboardContext);
+	const { curso, temaActual, topics, update, setUpdate, setProgreso, setAction } = useContext(DashboardContext);
 
 	const checkTema = async (topic) => {
+		setAction(0);
 		await clienteAxios
 			.post(
 				`/course/complete/topic/`,
@@ -70,7 +75,7 @@ export default function ContenidoDashboard({ user }) {
 
 	const checkVideo = () => {
 		topics.forEach((topic, i) => {
-			if (temaActual.index === i) {
+			if (temaActual.id === topic._id) {
 				checkTema(topic);
 			}
 		});
@@ -107,13 +112,18 @@ export default function ContenidoDashboard({ user }) {
 						<Grid item>
 							<Typography variant="h6">{curso.course.title ? curso.course.title : ''}</Typography>
 						</Grid>
-						<Grid item>
-							<Rating
-								name="read-only"
-								value={curso.course.qualification ? curso.course.qualification : 0}
-								readOnly
-								precision={0.5}
-							/>
+						<Grid item classes={classes.stars}>
+							<Box display="flex" justifyContent="center">
+								<Rating
+									name="read-only"
+									value={curso.course.qualification ? curso.course.qualification : 0}
+									readOnly
+									precision={0.5}
+								/>
+							</Box>
+							{curso.commentStudentQualification.length > 0 ? (
+								<Calificacion curso={curso} update={update} setUpdate={setUpdate} />
+							) : null}
 						</Grid>
 					</Grid>
 				</Box>

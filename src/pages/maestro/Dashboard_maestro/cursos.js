@@ -5,8 +5,6 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import EditIcon from '@material-ui/icons/Edit';
-import OndemandVideoIcon from '@material-ui/icons/OndemandVideo';
 import ImageSearchOutlinedIcon from '@material-ui/icons/ImageSearchOutlined';
 import DoneIcon from '@material-ui/icons/Done';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';

@@ -9,6 +9,7 @@ import VistaCursoPanelPrincipal from './panel_principal';
 import VistaCursoContenidoInfo from './contenido_info';
 import ModalVideo from 'react-modal-video';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
+import { Helmet } from 'react-helmet';
 
 const useStyles = makeStyles((theme) => ({
 	background: {
@@ -74,7 +75,6 @@ export default function VistaCurso(props) {
 				.then((res) => {
 					setLoading(false);
 					setCursos(res.data);
-					
 				})
 				.catch((err) => {
 					setLoading(false);
@@ -106,6 +106,16 @@ export default function VistaCurso(props) {
 
 	return (
 		<Box>
+			<Helmet>
+				<title>{cursos.course.title}</title>
+				<meta property="og:title" content={cursos.course.title} />
+				<meta property="og:description" content="Aprende en nuestra escuela en linea UNILINE." />
+				<meta property="og:image" content={cursos.course.urlPromotionalImage}/>
+				<meta
+					property="og:url"
+					content={`https://www.escuelaalreves.com/curso/${cursos.course.slug}`}
+				/>
+			</Helmet>
 			<Box
 				className={classes.background}
 				style={{ backgroundImage: `url(${cursos.course.urlPromotionalImage})` }}
@@ -126,7 +136,11 @@ export default function VistaCurso(props) {
 								{loading ? (
 									<SpinNormal />
 								) : (
-									<VistaCursoPanelPrincipal curso={cursos} handleVideoModal={handleVideoModal} setSnackbar={setSnackbar} />
+									<VistaCursoPanelPrincipal
+										curso={cursos}
+										handleVideoModal={handleVideoModal}
+										setSnackbar={setSnackbar}
+									/>
 								)}
 							</Card>
 						</Box>

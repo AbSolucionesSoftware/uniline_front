@@ -16,6 +16,7 @@ import Rating from '@material-ui/lab/Rating';
 import { formatoFechaCurso } from '../../../config/reuserFunction';
 import DOMPurify from 'dompurify';
 import Scroll from '../../../components/ScrolltoTop/scroll';
+import ComentariosDelCurso from './comentarios';
 
 const useStyles = makeStyles((theme) => ({
 	acordionDetails: {
@@ -155,7 +156,7 @@ export default function VistaCursoContenidoInfo({ curso }) {
 					<Box>
 						{curso.contentCourse.map((res, index) => {
 							return (
-								<Accordion key={index}>
+								<Accordion key={index} variant="outlined">
 									<AccordionSummary expandIcon={<ExpandMoreIcon />}>
 										<Typography variant="h6">{`Bloque ${index + 1}: ${res.block
 											.blockTitle}`}</Typography>
@@ -175,6 +176,20 @@ export default function VistaCursoContenidoInfo({ curso }) {
 							);
 						})}
 					</Box>
+				</Box>
+				<Box>
+					<Box mt={4} mb={2}>
+						<Typography variant="h6">Comentarios del curso</Typography>
+					</Box>
+					{curso.commentCourse.length > 0 ? (
+						curso.commentCourse.map((comentario, index) => (
+							<ComentariosDelCurso key={index} comentario={comentario} curso={curso} />
+						))
+					) : (
+						<Box display="flex" justifyContent="center">
+							<Typography variant="h5" color="textSecondary">No hay comentarios en este curso</Typography>
+						</Box>
+					)}
 				</Box>
 			</Box>
 		</Fragment>

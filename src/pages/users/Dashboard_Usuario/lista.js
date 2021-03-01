@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, Fragment, useContext } from 'react';
-import { Menu, MenuItem, withStyles, makeStyles, Link } from '@material-ui/core';
+import { Menu, MenuItem, withStyles, makeStyles, Link, Grid } from '@material-ui/core';
 import { Box, Checkbox, Divider, IconButton, LinearProgress, Tooltip, Typography } from '@material-ui/core';
 import { List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
 import Collapse from '@material-ui/core/Collapse';
@@ -133,40 +133,95 @@ const StyledMenu = withStyles({
 const ListaBloques = ({ bloque, curso }) => {
 	const block = bloque.block;
 	const temas = bloque.topics;
+	let user = { _id: '' };
+	const token = localStorage.getItem('token');
 	const [ open, setOpen ] = useState(false);
 	const [ anchorEl, setAnchorEl ] = useState(null);
-	const { temaActual, setTemaActual, topics, endTopic, setEndTopic } = useContext(DashboardContext);
+	const {
+		temaActual,
+		setTemaActual,
+		topics,
+		endTopic,
+		setEndTopic,
+		action,
+		setAction,
+		update,
+		setUpdate,
+		setProgreso
+	} = useContext(DashboardContext);
+
+	if (token !== null) user = JSON.parse(localStorage.getItem('student'));
 
 	const handleClickMenu = (event) => setAnchorEl(event.currentTarget);
 	const handleCloseMenu = () => setAnchorEl(null);
 
 	const handleClick = () => setOpen(!open);
-	const handleToggle = (value) => () => {
-		console.log(value);
+	const handleToggle = async (value, topic) => {
+		await clienteAxios
+			.post(
+				`/course/complete/topic/`,
+				{
+					idCourse: curso.course._id,
+					idTopic: topic._id,
+					idUser: user._id,
+					public: value
+				},
+				{
+					headers: {
+						Authorization: `bearer ${token}`
+					}
+				}
+			)
+			.then((res) => {
+				setUpdate(!update);
+				setProgreso(res.data.message);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	};
 
 	const ponerTemaActual = useCallback(
-		() => {
-			console.log(endTopic);
-			topics.forEach((topic, index) => {
-				if (topic.topicCompleted.length > 0 && topic._id === endTopic) {
-					setTemaActual({
-						id: topics.length === index + 1 ? topics[index]._id : topics[index + 1]._id,
-						video: topics.length === index + 1 ?  topics[index].keyTopicVideo : topics[index + 1].keyTopicVideo,
-						index: topics.length === index + 1 ? index : index + 1
-					});
-					setEndTopic(topics.length === index + 1 ? topics[index]._id : topics[index + 1]._id);
-					setOpen(true);
-				} else {
-					if (topic.topicCompleted.length === 0 && topic._id === endTopic) {
-						setTemaActual({ id: topic._id, video: topic.keyTopicVideo, index: index });
+		(topicSelected) => {
+			if (topicSelected) {
+				topics.forEach((topic, index) => {
+					if (topic._id === topicSelected._id) {
+						setAction(1);
+						setTemaActual({
+							id: topics[index]._id,
+							video: topics[index].keyTopicVideo,
+							index: index
+						});
 						setEndTopic(topics[index + 1]._id);
 						setOpen(true);
 					}
-				}
-			});
+				});
+			} else {
+				topics.forEach((topic, index) => {
+					if (topic.topicCompleted.length > 0 && topic._id === endTopic && action === 0) {
+						setAction(1);
+						setTemaActual({
+							id: topics.length === index + 1 ? topics[index]._id : topics[index + 1]._id,
+							video:
+								topics.length === index + 1
+									? topics[index].keyTopicVideo
+									: topics[index + 1].keyTopicVideo,
+							index: topics.length === index + 1 ? index : index + 1
+						});
+						setEndTopic(topics.length === index + 1 ? topics[index]._id : topics[index + 1]._id);
+						setOpen(true);
+					} else {
+						if (topic.topicCompleted.length === 0 && topic._id === endTopic && action === 0) {
+							setAction(1);
+							setTemaActual({ id: topic._id, video: topic.keyTopicVideo, index: index });
+							setEndTopic(topics.length === index + 1 ? topics[index]._id : topics[index + 1]._id);
+							setOpen(true);
+						}
+					}
+				});
+			}
 		},
-		[ setTemaActual, topics, endTopic, setEndTopic ]
+		[ setTemaActual, topics, endTopic, setEndTopic, action, setAction ]
 	);
 
 	useEffect(
@@ -174,7 +229,7 @@ const ListaBloques = ({ bloque, curso }) => {
 			ponerTemaActual();
 		},
 		[ ponerTemaActual ]
-	);  
+	);
 
 	return (
 		<Fragment>
@@ -184,82 +239,84 @@ const ListaBloques = ({ bloque, curso }) => {
 					{open ? <ExpandLess /> : <ExpandMore />}
 				</ListItem>
 				<Collapse in={open} timeout="auto" unmountOnExit>
-					<List dense component="div" disablePadding>
+					<List component="div" disablePadding>
 						{temas.map((topic, index) => {
 							const labelId = `checkbox-list-secondary-label-${topic._id}`;
 							return (
-								<Fragment key={topic._id}>
-									<ListItem
-										button
-										style={{
-											backgroundColor: topic._id === temaActual.id ? '#f5f5f5' : null
-										}}
-										onClick={() =>
-											setTemaActual({
-												id: topic._id,
-												video: topic.keyTopicVideo,
-												index: index + 1
+								<Grid container alignItems="center" key={topic._id}>
+									<Grid item lg={1} xs={1}>
+										<Checkbox
+											edge="end"
+											onClick={() =>
+												topic.topicCompleted.length === 0
+													? handleToggle(true, topic)
+													: handleToggle(false, topic)}
+											checked={topic.topicCompleted.length > 0}
+											inputProps={{ 'aria-labelledby': labelId }}
+										/>
+									</Grid>
+									<Grid item lg={11} xs={11}>
+										<ListItem
+											button
+											style={{
+												backgroundColor: topic._id === temaActual.id ? '#f5f5f5' : null
+											}}
+											onClick={() => {
+												ponerTemaActual(topic);
+											}}
+										>
+											<ListItemText id={labelId} primary={topic.topicTitle} />
+											{topic.resources.length > 0 ? (
+												<ListItemSecondaryAction>
+													<IconButton edge="end" onClick={(e) => handleClickMenu(e)}>
+														<FolderOpenIcon />
+													</IconButton>
+												</ListItemSecondaryAction>
+											) : null}
+										</ListItem>
+										<StyledMenu
+											disableScrollLock={true}
+											id="customized-menu"
+											anchorEl={anchorEl}
+											keepMounted
+											open={Boolean(anchorEl)}
+											onClose={handleCloseMenu}
+										>
+											{topic.resources.map((recurso, index) => {
+												return recurso.urlExtern ? (
+													<Link
+														/* component="button" */
+														key={index}
+														target="_blank"
+														rel="noopener"
+														href={recurso.urlExtern}
+													>
+														<MenuItem dense /* component="a" */>
+															<ListItemIcon>
+																<LinkIcon fontSize="small" />
+															</ListItemIcon>
+															<ListItemText primary={recurso.title} />
+														</MenuItem>
+													</Link>
+												) : (
+													<Link
+														/* component="button" */
+														key={index}
+														href={recurso.urlDownloadResource}
+														download={recurso.title}
+													>
+														<MenuItem dense>
+															<ListItemIcon>
+																<InsertDriveFileOutlinedIcon fontSize="small" />
+															</ListItemIcon>
+															<ListItemText primary={recurso.title} />
+														</MenuItem>
+													</Link>
+												);
 											})}
-									>
-										<ListItemIcon>
-											<Checkbox
-												edge="end"
-												onChange={handleToggle(topic)}
-												checked={topic.topicCompleted.length > 0}
-												inputProps={{ 'aria-labelledby': labelId }}
-											/>
-										</ListItemIcon>
-										<ListItemText id={labelId} primary={topic.topicTitle} />
-										{topic.resources.length > 0 ? (
-											<ListItemSecondaryAction>
-												<IconButton edge="end" onClick={(e) => handleClickMenu(e)}>
-													<FolderOpenIcon />
-												</IconButton>
-											</ListItemSecondaryAction>
-										) : null}
-									</ListItem>
-									<StyledMenu
-										disableScrollLock={true}
-										id="customized-menu"
-										anchorEl={anchorEl}
-										keepMounted
-										open={Boolean(anchorEl)}
-										onClose={handleCloseMenu}
-									>
-										{topic.resources.map((recurso, index) => {
-											return recurso.urlExtern ? (
-												<Link
-													component="button"
-													key={index}
-													target="_blank"
-													rel="noopener"
-													href={recurso.urlExtern}
-												>
-													<MenuItem dense component="a">
-														<ListItemIcon>
-															<LinkIcon fontSize="small" />
-														</ListItemIcon>
-														<ListItemText primary={recurso.title} />
-													</MenuItem>
-												</Link>
-											) : (
-												<Link
-													component="button"
-													key={index}
-													href={recurso.urlDownloadResource}
-													download={recurso.title}
-												>
-													<MenuItem dense>
-														<ListItemIcon>
-															<InsertDriveFileOutlinedIcon fontSize="small" />
-														</ListItemIcon>
-														<ListItemText primary={recurso.title} />
-													</MenuItem>
-												</Link>
-											);
-										})}
-									</StyledMenu>
-								</Fragment>
+										</StyledMenu>
+									</Grid>
+								</Grid>
 							);
 						})}
 					</List>

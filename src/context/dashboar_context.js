@@ -9,6 +9,7 @@ export const DashProvider = ({ children }) => {
 	const [ temaActual, setTemaActual ] = useState({ id: '', video: '', index: 0 });
 	const [ progreso, setProgreso ] = useState(0);
     const [ endTopic, setEndTopic ] = useState('');
+    const [action, setAction] = useState(0);
 
 	return (
 		<DashboardContext.Provider
@@ -24,7 +25,9 @@ export const DashProvider = ({ children }) => {
 				progreso,
 				setProgreso,
                 endTopic, 
-                setEndTopic
+                setEndTopic,
+                action, 
+                setAction
 			}}
 		>
 			{children}

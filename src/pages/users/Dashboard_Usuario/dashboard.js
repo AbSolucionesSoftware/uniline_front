@@ -10,6 +10,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import MenuIcon from '@material-ui/icons/Menu';
+import HomeIcon from '@material-ui/icons/Home';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import SchoolIcon from '@material-ui/icons/School';
 
@@ -68,7 +69,6 @@ function DashboarUsuario(props) {
 					}
 				})
 				.then((res) => {
-					console.log(res.data);
 					setLoading(false);
 					setCurso(res.data);
 					setProgreso(res.data.inscriptionStudent.studentAdvance);
@@ -305,6 +305,12 @@ function DashboarUsuario(props) {
 								)}
 							</ListItemIcon>
 							<ListItemText primary="Mi perfil" />
+						</ListItem>
+						<ListItem button onClick={handleDrawer} component={Link} to="/">
+							<ListItemIcon>
+								<HomeIcon />
+							</ListItemIcon>
+							<ListItemText primary="Inicio" />
 						</ListItem>
 						<ListItem button onClick={handleDrawer} component={Link} to="/mis_cursos">
 							<ListItemIcon>
