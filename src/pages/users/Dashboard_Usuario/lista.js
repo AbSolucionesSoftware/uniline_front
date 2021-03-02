@@ -192,7 +192,7 @@ const ListaBloques = ({ bloque, curso }) => {
 							video: topics[index].keyTopicVideo,
 							index: index
 						});
-						setEndTopic(topics[index + 1]._id);
+						setEndTopic(topics.length === index + 1 ? topics[index]._id : topics[index + 1]._id);
 						setOpen(true);
 					}
 				});

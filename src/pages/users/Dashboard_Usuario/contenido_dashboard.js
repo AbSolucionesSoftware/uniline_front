@@ -121,6 +121,7 @@ export default function ContenidoDashboard({ user }) {
 									precision={0.5}
 								/>
 							</Box>
+							{console.log(curso)}
 							{curso.commentStudentQualification ? (
 								<Calificacion curso={curso} update={update} setUpdate={setUpdate} />
 							) : null}
