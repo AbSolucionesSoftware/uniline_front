@@ -11,6 +11,7 @@ import ModalVideo from 'react-modal-video';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
 /* import { Helmet } from 'react-helmet'; */
 import Metadata from '../../../config/metadata';
+import DocumentMeta from 'react-document-meta';
 
 const useStyles = makeStyles((theme) => ({
 	background: {
@@ -113,15 +114,32 @@ export default function VistaCurso(props) {
 					{ property: 'og:image', content: cursos.course.urlPromotionalImage},
 				]} /> */
 
+				const meta = {
+					title: cursos.course.title,
+					description: 'Aprende en nuestra escuela en linea.',
+					meta: {
+						charset: 'utf-8',
+						name: {
+							keywords: 'react,meta,document,html,tags'
+						},
+						property: {
+							'og:title': cursos.course.title,
+							'og:description': cursos.course.title,
+							'og:image': cursos.course.urlPromotionalImage,
+							'og:url': `https://priceless-roentgen-d8c7ba.netlify.app/curso/${cursos.course.slug}`
+						},
+					}
+				};
+
 	return (
-		<Box>
-			<Metadata
+		<DocumentMeta {...meta}>
+			{/* <Metadata
 				title={cursos.course.title}
 				ogTitle={cursos.course.title}
 				description={cursos.course.subtitle}
 				image={cursos.course.urlPromotionalImage}
 				url={`https://priceless-roentgen-d8c7ba.netlify.app/curso/${cursos.course.slug}`}
-			/>
+			/> */}
 			{/* <Helmet >
 				<title>{cursos.course.title}</title>
 				<meta property="og:title" content={cursos.course.title} />
@@ -179,6 +197,6 @@ export default function VistaCurso(props) {
 				status={snackbar.status}
 				setSnackbar={setSnackbar}
 			/>
-		</Box>
+		</DocumentMeta>
 	);
 }
