@@ -3,9 +3,10 @@ import Banner from './Banner/banner';
 import BannerInformartivo from './Banner_Informativo/banner_informativo';
 import CursosComprados from './Cursos/cursos_estudiante';
 import CursosDisponibles from './Cursos/cursos';
-/* import { Box } from '@material-ui/core'; */
+import { Box } from '@material-ui/core';
 /* import Metadata from '../../../config/metadata'; */
-import DocumentMeta from 'react-document-meta';
+/* import DocumentMeta from 'react-document-meta'; */
+import MetaTags from 'react-meta-tags';
 import Imagen from '../../../images/inicio.jpg';
 
 export default function Home() {
@@ -13,7 +14,7 @@ export default function Home() {
 		window.scrollTo(0, 0);
 	}, []);
 
-	const meta = {
+	/* const meta = {
 		title: 'uniline',
 		description: 'Aprende en nuestra escuela en linea.',
 		meta: {
@@ -28,17 +29,24 @@ export default function Home() {
 				'og:url': 'https://priceless-roentgen-d8c7ba.netlify.app/'
 			},
 		}
-	};
+	}; */
 
 	return (
-		<DocumentMeta {...meta}>
+		<Box>
+			<MetaTags>
+            <title>uniLine</title>
+            <meta name="description" content="Aprende en nuestra escuela en linea." />
+            <meta property="og:title" content="Escuela Al Revés UNILINE" />
+            <meta property="og:image" content={Imagen} />
+			<meta property="og:url" content="https://priceless-roentgen-d8c7ba.netlify.app" />
+          </MetaTags>
 			{/* <Metadata
 				title="UNILINE"
 				ogTitle="Escuela Al Revés UNILINE"
 				description="Aprende en nuestra escuela en linea."
 				url="https://priceless-roentgen-d8c7ba.netlify.app"
-			/>
-			<Banner /> */}
+			/>*/}
+			<Banner /> 
 			<CursosComprados />
 			<CursosDisponibles />
 			<BannerInformartivo />
@@ -47,6 +55,6 @@ export default function Home() {
 			<ul>
 				<Link to="/compra">pagar curso</Link>
 			</ul> */}
-		</DocumentMeta>
+		</Box>
 	);
 }

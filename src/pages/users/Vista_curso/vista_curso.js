@@ -10,8 +10,9 @@ import VistaCursoContenidoInfo from './contenido_info';
 import ModalVideo from 'react-modal-video';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
 /* import { Helmet } from 'react-helmet'; */
-import Metadata from '../../../config/metadata';
-import DocumentMeta from 'react-document-meta';
+/* import Metadata from '../../../config/metadata'; */
+import MetaTags from 'react-meta-tags';
+/* import DocumentMeta from 'react-document-meta'; */
 
 const useStyles = makeStyles((theme) => ({
 	background: {
@@ -114,25 +115,35 @@ export default function VistaCurso(props) {
 					{ property: 'og:image', content: cursos.course.urlPromotionalImage},
 				]} /> */
 
-				const meta = {
-					title: cursos.course.title,
-					description: 'Aprende en nuestra escuela en linea.',
-					meta: {
-						charset: 'utf-8',
-						name: {
-							keywords: 'react,meta,document,html,tags'
-						},
-						property: {
-							'og:title': cursos.course.title,
-							'og:description': cursos.course.title,
-							'og:image': cursos.course.urlPromotionalImage,
-							'og:url': `https://priceless-roentgen-d8c7ba.netlify.app/curso/${cursos.course.slug}`
-						},
-					}
-				};
+	/* const meta = {
+		title: cursos.course.title,
+		description: 'Aprende en nuestra escuela en linea.',
+		meta: {
+			charset: 'utf-8',
+			name: {
+				keywords: 'react,meta,document,html,tags'
+			},
+			property: {
+				'og:title': cursos.course.title,
+				'og:description': cursos.course.title,
+				'og:image': cursos.course.urlPromotionalImage,
+				'og:url': `https://priceless-roentgen-d8c7ba.netlify.app/curso/${cursos.course.slug}`
+			}
+		}
+	}; */
 
 	return (
-		<DocumentMeta {...meta}>
+		<Box>
+			<MetaTags>
+				<title>{cursos.course.title}</title>
+				<meta property="og:title" content={cursos.course.title} />
+				<meta property="og:description" content="Aprende en nuestra escuela en linea UNILINE." />
+				<meta property="og:image" content={cursos.course.urlPromotionalImage} />
+				<meta
+					property="og:url"
+					content={`https://priceless-roentgen-d8c7ba.netlify.app/curso/${cursos.course.slug}`}
+				/>
+			</MetaTags>
 			{/* <Metadata
 				title={cursos.course.title}
 				ogTitle={cursos.course.title}
@@ -197,6 +208,6 @@ export default function VistaCurso(props) {
 				status={snackbar.status}
 				setSnackbar={setSnackbar}
 			/>
-		</DocumentMeta>
+		</Box>
 	);
 }
