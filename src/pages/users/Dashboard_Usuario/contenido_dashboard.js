@@ -121,7 +121,7 @@ export default function ContenidoDashboard({ user }) {
 									precision={0.5}
 								/>
 							</Box>
-							{curso.commentStudentQualification.length > 0 ? (
+							{curso.commentStudentQualification ? (
 								<Calificacion curso={curso} update={update} setUpdate={setUpdate} />
 							) : null}
 						</Grid>

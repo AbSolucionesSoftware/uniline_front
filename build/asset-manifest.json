@@ -1,19 +1,19 @@
 {
   "files": {
     "main.css": "/static/css/main.d299f64a.chunk.css",
-    "main.js": "/static/js/main.ed969950.chunk.js",
-    "main.js.map": "/static/js/main.ed969950.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.c8fa7460.js",
-    "runtime-main.js.map": "/static/js/runtime-main.c8fa7460.js.map",
+    "main.js": "/static/js/main.bca929ca.chunk.js",
+    "main.js.map": "/static/js/main.bca929ca.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.054237d5.js",
+    "runtime-main.js.map": "/static/js/runtime-main.054237d5.js.map",
     "static/css/2.acc986e7.chunk.css": "/static/css/2.acc986e7.chunk.css",
-    "static/js/2.b653e2ca.chunk.js": "/static/js/2.b653e2ca.chunk.js",
-    "static/js/2.b653e2ca.chunk.js.map": "/static/js/2.b653e2ca.chunk.js.map",
-    "static/js/3.4f1efcdc.chunk.js": "/static/js/3.4f1efcdc.chunk.js",
-    "static/js/3.4f1efcdc.chunk.js.map": "/static/js/3.4f1efcdc.chunk.js.map",
+    "static/js/2.c364720f.chunk.js": "/static/js/2.c364720f.chunk.js",
+    "static/js/2.c364720f.chunk.js.map": "/static/js/2.c364720f.chunk.js.map",
+    "static/js/3.556278b5.chunk.js": "/static/js/3.556278b5.chunk.js",
+    "static/js/3.556278b5.chunk.js.map": "/static/js/3.556278b5.chunk.js.map",
     "index.html": "/index.html",
     "static/css/2.acc986e7.chunk.css.map": "/static/css/2.acc986e7.chunk.css.map",
     "static/css/main.d299f64a.chunk.css.map": "/static/css/main.d299f64a.chunk.css.map",
-    "static/js/2.b653e2ca.chunk.js.LICENSE.txt": "/static/js/2.b653e2ca.chunk.js.LICENSE.txt",
+    "static/js/2.c364720f.chunk.js.LICENSE.txt": "/static/js/2.c364720f.chunk.js.LICENSE.txt",
     "static/media/Blog.2f0f366b.png": "/static/media/Blog.2f0f366b.png",
     "static/media/Cart.147d374a.png": "/static/media/Cart.147d374a.png",
     "static/media/Celular.80a06020.gif": "/static/media/Celular.80a06020.gif",
@@ -25,7 +25,6 @@
     "static/media/Video-tutorial-bro.1c46d030.png": "/static/media/Video-tutorial-bro.1c46d030.png",
     "static/media/banner3.dc67c4fa.jpg": "/static/media/banner3.dc67c4fa.jpg",
     "static/media/imagenCorporativa.9884a2af.png": "/static/media/imagenCorporativa.9884a2af.png",
-    "static/media/inicio.476204b2.jpg": "/static/media/inicio.476204b2.jpg",
     "static/media/politicas.fe4cac35.png": "/static/media/politicas.fe4cac35.png",
     "static/media/register.6d397d94.jpg": "/static/media/register.6d397d94.jpg",
     "static/media/styles.css": "/static/media/revicons.e8746a62.woff",
@@ -33,10 +32,10 @@
     "static/media/uniline3.d6759e23.png": "/static/media/uniline3.d6759e23.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.c8fa7460.js",
+    "static/js/runtime-main.054237d5.js",
     "static/css/2.acc986e7.chunk.css",
-    "static/js/2.b653e2ca.chunk.js",
+    "static/js/2.c364720f.chunk.js",
     "static/css/main.d299f64a.chunk.css",
-    "static/js/main.ed969950.chunk.js"
+    "static/js/main.bca929ca.chunk.js"
   ]
 }
