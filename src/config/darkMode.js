@@ -30,13 +30,14 @@ const darkMode = createMuiTheme({
 			icon: 'rgba(255, 255, 255, 0.5)'
 		},
 
-		divider: 'rgba(255, 255, 255, 0.12)',
+		divider: 'rgba(255, 255, 255, 0.12)', */
 		background: {
 			paper: '#424242',
-			default: '#303030'
+			default: '#303030',
+			selected: '#303030'
 		},
 
-		action: {
+		/* action: {
 			active: '#fff',
 			hover: 'rgba(255, 255, 255, 0.08)',
 			hoverOpacity: 0.08,

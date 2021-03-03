@@ -36,7 +36,9 @@ function DashboarUsuario(props) {
 	const [ anchorEl, setAnchorEl ] = useState(null);
 	const [ open, setOpen ] = useState(false);
 	const [ openSecondary, setOpenSecondary ] = useState(false);
-	const { curso, setCurso, setProgreso, setEndTopic } = useContext(DashboardContext);
+	const { curso, setCurso, setProgreso, setEndTopic, updateCurso, setCalificado } = useContext(
+		DashboardContext
+	);
 	const slugCourse = props.match.params.url;
 	const [ loading, setLoading ] = useState(false);
 	const [ snackbar, setSnackbar ] = useState({
@@ -73,6 +75,11 @@ function DashboarUsuario(props) {
 					setCurso(res.data);
 					setProgreso(res.data.inscriptionStudent.studentAdvance);
 					setEndTopic(res.data.endTopicView);
+					if (res.data.commentStudentQualification !== null) {
+						setCalificado(true);
+					}else{
+						setCalificado(false);
+					}
 				})
 				.catch((err) => {
 					setLoading(false);
@@ -91,17 +98,17 @@ function DashboarUsuario(props) {
 					}
 				});
 		},
-		[ slugCourse, token, setCurso, user._id, setProgreso, setEndTopic ]
-	);	
+		[ slugCourse, token, setCurso, user._id, setProgreso, setEndTopic, setCalificado ]
+	);
 
 	useEffect(
 		() => {
 			obtenerCursoBD();
 		},
-		[ obtenerCursoBD ]
+		[ obtenerCursoBD, updateCurso ]
 	);
 
-	if (loading){
+	if (loading) {
 		return <Spin loading={loading} />;
 	}
 	if (curso.length === 0) {

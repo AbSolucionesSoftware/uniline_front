@@ -32,7 +32,8 @@ const theme = createMuiTheme({
         divider: 'rgba(0, 0, 0, 0.12)',
 		background: {
 			paper: '#fff',
-			default: '#fafafa'
+			default: '#fafafa',
+			selected: '#f5f5f5',
 		},
 		action: {
 			active: 'rgba(0, 0, 0, 0.54)',

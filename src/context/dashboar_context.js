@@ -6,6 +6,8 @@ export const DashProvider = ({ children }) => {
 	const [ curso, setCurso ] = useState([]);
 	const [ topics, setTopics ] = useState([]);
 	const [ update, setUpdate ] = useState(false);
+	const [ calificado, setCalificado ] = useState(false);
+	const [ updateCurso, setUpdateCurso ] = useState(false);
 	const [ temaActual, setTemaActual ] = useState({ id: '', video: '', index: 0 });
 	const [ progreso, setProgreso ] = useState(0);
     const [ endTopic, setEndTopic ] = useState('');
@@ -27,7 +29,11 @@ export const DashProvider = ({ children }) => {
                 endTopic, 
                 setEndTopic,
                 action, 
-                setAction
+                setAction,
+				updateCurso,
+				setUpdateCurso,
+				calificado,
+				 setCalificado
 			}}
 		>
 			{children}

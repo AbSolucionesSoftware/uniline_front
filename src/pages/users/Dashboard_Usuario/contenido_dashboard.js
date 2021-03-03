@@ -17,6 +17,7 @@ import { Fragment } from 'react';
 import { DashboardContext } from '../../../context/dashboar_context';
 import clienteAxios from '../../../config/axios';
 import Calificacion from './calificacion';
+import ProyectoFinal from './proyecto_final';
 
 const useStyles = makeStyles((theme) => ({
 	itemIcon: {
@@ -37,16 +38,13 @@ const useStyles = makeStyles((theme) => ({
 			height: '100%',
 			width: '100%'
 		}
-	} /* , 
-	stars: {
-		dis
-	} */
+	}
 }));
 
 export default function ContenidoDashboard({ user }) {
 	const classes = useStyles();
 	const token = localStorage.getItem('token');
-	const { curso, temaActual, topics, update, setUpdate, setProgreso, setAction } = useContext(DashboardContext);
+	const { curso, temaActual, topics, update, setUpdate, setProgreso, setAction, calificado } = useContext(DashboardContext);
 
 	const checkTema = async (topic) => {
 		setAction(0);
@@ -121,8 +119,7 @@ export default function ContenidoDashboard({ user }) {
 									precision={0.5}
 								/>
 							</Box>
-							{console.log(curso)}
-							{curso.commentStudentQualification ? (
+							{!calificado ? (
 								<Calificacion curso={curso} update={update} setUpdate={setUpdate} />
 							) : null}
 						</Grid>
@@ -244,17 +241,8 @@ export default function ContenidoDashboard({ user }) {
 									<Grid item>
 										<Box display="flex" justifyContent="center" alignItems="center" height="100%">
 											<div>
-												<Box m={1}>
-													<Button
-														fullWidth
-														variant="outlined"
-														color="primary"
-														disabled={curso.inscriptionStudent.studentAdvance !== '100'}
-													>
-														Proyecto final
-													</Button>
-												</Box>
-												<Box m={1}>
+												<ProyectoFinal curso={curso} update={update} user={user} />
+												<Box mt={1}>
 													<Button fullWidth variant="outlined" color="primary" disabled>
 														Certificado
 													</Button>

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, Fragment, useContext } from 'react';
-import { Menu, MenuItem, withStyles, makeStyles, Link, Grid } from '@material-ui/core';
+import { Menu, MenuItem, withStyles, makeStyles, Link, Grid, useTheme } from '@material-ui/core';
 import { Box, Checkbox, Divider, IconButton, LinearProgress, Tooltip, Typography } from '@material-ui/core';
 import { List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
 import Collapse from '@material-ui/core/Collapse';
@@ -131,6 +131,7 @@ const StyledMenu = withStyles({
 ));
 
 const ListaBloques = ({ bloque, curso }) => {
+	const theme = useTheme();
 	const block = bloque.block;
 	const temas = bloque.topics;
 	let user = { _id: '' };
@@ -201,12 +202,12 @@ const ListaBloques = ({ bloque, curso }) => {
 					if (topic.topicCompleted.length > 0 && topic._id === endTopic && action === 0) {
 						setAction(1);
 						setTemaActual({
-							id: topics.length === index + 1 ? topics[index]._id : topics[index + 1]._id,
+							id: topics.length === index + 1 ? topics[index]._id : topics[index]._id,
 							video:
 								topics.length === index + 1
 									? topics[index].keyTopicVideo
-									: topics[index + 1].keyTopicVideo,
-							index: topics.length === index + 1 ? index : index + 1
+									: topics[index].keyTopicVideo,
+							index: topics.length === index + 1 ? index : index 
 						});
 						setEndTopic(topics.length === index + 1 ? topics[index]._id : topics[index + 1]._id);
 						setOpen(true);
@@ -259,7 +260,7 @@ const ListaBloques = ({ bloque, curso }) => {
 										<ListItem
 											button
 											style={{
-												backgroundColor: topic._id === temaActual.id ? '#f5f5f5' : null
+												backgroundColor: topic._id === temaActual.id ? theme.palette.background.selected : null
 											}}
 											onClick={() => {
 												ponerTemaActual(topic);

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import {
 	Box,
 	Button,
@@ -13,6 +13,7 @@ import Rating from '@material-ui/lab/Rating';
 import clienteAxios from '../../../config/axios';
 import Spin from '../../../components/Spin/spin';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
+import { DashboardContext } from '../../../context/dashboar_context';
 
 export default function Calificacion({ curso, update, setUpdate }) {
 	let user = { _id: '' };
@@ -20,6 +21,7 @@ export default function Calificacion({ curso, update, setUpdate }) {
 	const [ open, setOpen ] = useState(false);
 	const [ loading, setLoading ] = useState(false);
 	const [ calificacion, setCalificacion ] = useState({ calificacion: 0, comentario: '' });
+	const { setCalificado } = useContext(DashboardContext);
     const [ snackbar, setSnackbar ] = useState({
 		open: false,
 		mensaje: '',
@@ -52,7 +54,7 @@ export default function Calificacion({ curso, update, setUpdate }) {
 			)
 			.then((res) => {
 				setLoading(false);
-                setUpdate(!update);
+				setCalificado(true);
                 setSnackbar({
                     open: true,
                     mensaje: res.data.message,
