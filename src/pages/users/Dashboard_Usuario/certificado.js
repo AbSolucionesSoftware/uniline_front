@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
-import { Box, Button, makeStyles, Typography } from '@material-ui/core';
+import { Box, Button, Container, makeStyles, Typography } from '@material-ui/core';
 import ImagenCertificado from '../../../images/certificacion.png';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { formatoFechaCertificado } from '../../../config/reuserFunction';
@@ -87,12 +87,12 @@ export default function GenerarCertificado(props) {
 	const printDocument = () => {
 		const input = document.getElementById('divToPrint');
 		html2canvas(input).then((canvas) => {
-			const imgData = canvas.toDataURL('image/png', 2.0);
+			const imgData = canvas.toDataURL('image/png');
 			const pdf = new jsPDF('l', 'mm', 'a4');
 			const imgProps = pdf.getImageProperties(imgData);
 			const pdfWidth = pdf.internal.pageSize.getWidth();
 			const pdfHeight = imgProps.height * pdfWidth / imgProps.width;
-			pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+			pdf.addImage(imgData, 'JPEG', -10, 0, pdfWidth, pdfHeight);
 			// pdf.output('dataurlnewwindow');
 			pdf.save('certificado_uniline.pdf');
 		});
@@ -105,17 +105,17 @@ export default function GenerarCertificado(props) {
 		[ obtenerCursoBD ]
 	);
 
-    if (!token || !user ) {
-        props.history.push('/');
-    }
+	if (!token || !user) {
+		props.history.push('/');
+	}
 
-    if(loading) return <Spin loading={loading} />;
+	if (loading) return <Spin loading={loading} />;
 
 	if (curso.length === 0) return null;
 
 	if (user._id !== curso.inscriptionStudent.idUser) {
-        props.history.push('/');
-    }
+		props.history.push('/');
+	}
 
 	return (
 		<Box mt={1}>
@@ -130,7 +130,10 @@ export default function GenerarCertificado(props) {
 					Descargar
 				</Button>
 			</Box>
-			<Certificado curso={curso} user={user} />
+			<Container>
+				<Certificado curso={curso} user={user} />
+			</Container>
+			
 		</Box>
 	);
 }
@@ -143,23 +146,20 @@ const Certificado = ({ curso, user }) => {
 	}
 
 	return (
-		<Box display='flex' justifyContent='center'>
-			<div id="divToPrint" className={classes.root}>
-				<div className={classes.nombre}>
-					<Typography variant="h4">{user.name}</Typography>
-				</div>
-				<div className={classes.textoSecundario}>
-					<Typography variant="h6" align="justify">
-						Por haber acreditado satisfactoriamente el curso <b>{curso.course.title}</b> en La Escuela
-						Uniline, iniciado el {' '}
-						 {formatoFechaCertificado(curso.inscriptionStudent.createdAt)} y terminado el{' '}
-						{formatoFechaCertificado(curso.inscriptionStudent.endDate)}
-					</Typography>
-				</div>
-				<div className={classes.firma}>
-					<Typography variant="h5">{curso.course.idProfessor.name}</Typography>
-				</div>
+		<div id="divToPrint" className={classes.root}>
+			<div className={classes.nombre}>
+				<Typography variant="h4">{user.name}</Typography>
 			</div>
-		</Box>
+			<div className={classes.textoSecundario}>
+				<Typography variant="h6" align="justify">
+					Por haber acreditado satisfactoriamente el curso <b>{curso.course.title}</b> en La Escuela Uniline,
+					iniciado el  {formatoFechaCertificado(curso.inscriptionStudent.createdAt)} y terminado el{' '}
+					{formatoFechaCertificado(curso.inscriptionStudent.endDate)}
+				</Typography>
+			</div>
+			<div className={classes.firma}>
+				<Typography variant="h5">{curso.course.idProfessor.name}</Typography>
+			</div>
+		</div>
 	);
 };
