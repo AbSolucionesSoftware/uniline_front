@@ -31,10 +31,10 @@ export default function VistaCursoContenidoInfo({ curso }) {
 			<Scroll showBelow={250} />
 			<Box p={5} pb={1}>
 				<Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-					<Link color="inherit" href="/">
+					<Link color="inherit" href={`/busqueda/${curso.course.category}`} target="_blank" rel="noopener">
 						{curso.course.category}
 					</Link>
-					<Link color="inherit" href="/getting-started/installation/">
+					<Link color="inherit" href={`/busqueda/${curso.course.subCategory}`} target="_blank" rel="noopener">
 						{curso.course.subCategory}
 					</Link>
 				</Breadcrumbs>
@@ -187,7 +187,9 @@ export default function VistaCursoContenidoInfo({ curso }) {
 						))
 					) : (
 						<Box display="flex" justifyContent="center">
-							<Typography variant="h5" color="textSecondary">No hay comentarios en este curso</Typography>
+							<Typography variant="h5" color="textSecondary">
+								No hay comentarios en este curso
+							</Typography>
 						</Box>
 					)}
 				</Box>

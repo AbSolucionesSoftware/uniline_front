@@ -20,14 +20,15 @@ const useStyles = makeStyles((theme) => ({
 	},
 	bannerTwo: {
 		height: '65vh',
-		backgroundColor: '#fff',
+		backgroundColor: theme.palette.background.paper,
 		[theme.breakpoints.down('xs')]: {
 			minHeight: '90vh'
 		}
 	},
 	imagen: {
 		maxHeight: '100%',
-		maxWidth: '100%'
+		maxWidth: '100%',
+		borderRadius: '100%'
 	},
 	bannerContainer: {
 		minHeight: '65vh',

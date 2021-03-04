@@ -8,7 +8,7 @@ export const DashProvider = ({ children }) => {
 	const [ update, setUpdate ] = useState(false);
 	const [ calificado, setCalificado ] = useState(false);
 	const [ updateCurso, setUpdateCurso ] = useState(false);
-	const [ temaActual, setTemaActual ] = useState({ id: '', video: '', index: 0 });
+	const [ temaActual, setTemaActual ] = useState({ id: '', video: '', index: 0, tema: '' });
 	const [ progreso, setProgreso ] = useState(0);
     const [ endTopic, setEndTopic ] = useState('');
     const [action, setAction] = useState(0);

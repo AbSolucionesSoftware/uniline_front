@@ -112,7 +112,7 @@ export default function ContenidoDashboard({ user }) {
 				<Box m={2}>
 					<Grid container justify="space-between">
 						<Grid item>
-							<Typography variant="h6">{curso.course.title ? curso.course.title : ''}</Typography>
+							<Typography variant="h6">{temaActual ? temaActual.tema.topicTitle : curso.course.title ? curso.course.title : ''}</Typography>
 						</Grid>
 						<Grid item classes={classes.stars}>
 							<Box display="flex" justifyContent="center">

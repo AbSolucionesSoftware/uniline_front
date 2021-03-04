@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Hidden, IconButton, Divider, Typography, Toolbar, Button } from '@material-ui/core';
-import { Link, withRouter } from 'react-router-dom';
+import { Hidden, IconButton, Divider, Typography, Toolbar, Button, Link } from '@material-ui/core';
+import { withRouter } from 'react-router-dom';
 import { AppBar, Box, MenuItem, Popover, Avatar, CircularProgress, Drawer, List } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core/';
@@ -36,9 +36,7 @@ function DashboarUsuario(props) {
 	const [ anchorEl, setAnchorEl ] = useState(null);
 	const [ open, setOpen ] = useState(false);
 	const [ openSecondary, setOpenSecondary ] = useState(false);
-	const { curso, setCurso, setProgreso, setEndTopic, updateCurso, setCalificado } = useContext(
-		DashboardContext
-	);
+	const { curso, setCurso, setProgreso, setEndTopic, updateCurso, setCalificado } = useContext(DashboardContext);
 	const slugCourse = props.match.params.url;
 	const [ loading, setLoading ] = useState(false);
 	const [ snackbar, setSnackbar ] = useState({
@@ -50,6 +48,10 @@ function DashboarUsuario(props) {
 
 	/* if (!token) props.history.push('/'); */
 	if (token !== null) user = JSON.parse(localStorage.getItem('student'));
+
+	if (!token || !user) {
+		props.history.push('/');
+	}
 
 	const darkModeAction = () => {
 		setDarkTheme(!darkTheme);
@@ -77,7 +79,7 @@ function DashboarUsuario(props) {
 					setEndTopic(res.data.endTopicView);
 					if (res.data.commentStudentQualification !== null) {
 						setCalificado(true);
-					}else{
+					} else {
 						setCalificado(false);
 					}
 				})
@@ -111,12 +113,21 @@ function DashboarUsuario(props) {
 	if (loading) {
 		return <Spin loading={loading} />;
 	}
+
 	if (curso.length === 0) {
 		if (loading) {
 			return <SpinNormal />;
 		} else {
 			return <Error500 />;
 		}
+	}
+
+	if (
+		curso.inscriptionStudent === null ||
+		user._id !== curso.inscriptionStudent.idUser ||
+		!curso.inscriptionStudent
+	) {
+		props.history.push('/');
 	}
 
 	const menuId = 'primary-search-account-menu';
@@ -194,7 +205,15 @@ function DashboarUsuario(props) {
 					</Hidden>
 					<Box ml={2}>
 						<Typography className={classes.title} variant="h6" noWrap>
-							{curso.course.title ? curso.course.title : ''}
+							<Link
+								href={curso.course.slug ? `/curso/${curso.course.slug}` : null}
+								target="_blank"
+								rel="noopener"
+								underline="none"
+								color="inherit"
+							>
+								{curso.course.title ? curso.course.title : ''}
+							</Link>
 						</Typography>
 					</Box>
 					<div className={classes.grow} />

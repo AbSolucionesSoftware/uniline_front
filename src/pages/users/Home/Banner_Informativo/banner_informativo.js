@@ -8,11 +8,12 @@ import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
 const useStyles = makeStyles((theme) => ({
 	color: {
-		backgroundColor: 'white'
+		backgroundColor: theme.palette.background.paper
 	},
 	imagenes: {
 		maxWidth: '100%',
-		maxHeight: '100%'
+		maxHeight: '100%',
+		borderRadius: '10%'
 	},
 	titulos: {
 		fontWeight: 'bold'

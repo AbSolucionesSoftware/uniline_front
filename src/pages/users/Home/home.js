@@ -3,7 +3,7 @@ import Banner from './Banner/banner';
 import BannerInformartivo from './Banner_Informativo/banner_informativo';
 import CursosComprados from './Cursos/cursos_estudiante';
 import CursosDisponibles from './Cursos/cursos';
-import { Box } from '@material-ui/core';
+import { Box, Container } from '@material-ui/core';
 
 export default function Home() {
 	useEffect(() => {
@@ -12,8 +12,10 @@ export default function Home() {
 	return (
 		<Box>
 			<Banner />
-			<CursosComprados />
-			<CursosDisponibles />
+			<Container maxWidth="xl">
+				<CursosComprados />
+				<CursosDisponibles />
+			</Container>
 			<BannerInformartivo />
 
 			{/* 

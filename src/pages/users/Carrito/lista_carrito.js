@@ -68,7 +68,7 @@ export default function ListaCarrito({ articulo, setLoading, setSnackbar, user }
 				<Grid item lg={6} sm={6} xs={12}>
 					<Box>
 						<Link
-							href={`/curso/${curso._id}`}
+							href={`/curso/${curso.slug}`}
 							target="_blank"
 							rel="noopener"
 							color="inherit"

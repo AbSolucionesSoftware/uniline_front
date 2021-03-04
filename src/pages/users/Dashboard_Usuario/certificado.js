@@ -19,7 +19,8 @@ const useStyles = makeStyles((theme) => ({
 		width: '297mm',
 		minHeight: '210mm',
 		backgroundPosition: 'center',
-		backgroundSize: 'cover'
+		backgroundSize: 'cover',
+		border: 'solid 1px black'
 		/* display: 'none' */
 	},
 	nombre: {
@@ -92,7 +93,7 @@ export default function GenerarCertificado(props) {
 			const imgProps = pdf.getImageProperties(imgData);
 			const pdfWidth = pdf.internal.pageSize.getWidth();
 			const pdfHeight = imgProps.height * pdfWidth / imgProps.width;
-			pdf.addImage(imgData, 'JPEG', -10, 0, pdfWidth, pdfHeight);
+			pdf.addImage(imgData, 'JPEG', -2, 0, pdfWidth, pdfHeight);
 			// pdf.output('dataurlnewwindow');
 			pdf.save('certificado_uniline.pdf');
 		});
@@ -113,7 +114,11 @@ export default function GenerarCertificado(props) {
 
 	if (curso.length === 0) return null;
 
-	if (user._id !== curso.inscriptionStudent.idUser) {
+	if (
+		curso.inscriptionStudent === null ||
+		user._id !== curso.inscriptionStudent.idUser ||
+		!curso.inscriptionStudent
+	) {
 		props.history.push('/');
 	}
 
@@ -133,7 +138,6 @@ export default function GenerarCertificado(props) {
 			<Container>
 				<Certificado curso={curso} user={user} />
 			</Container>
-			
 		</Box>
 	);
 }
@@ -152,8 +156,8 @@ const Certificado = ({ curso, user }) => {
 			</div>
 			<div className={classes.textoSecundario}>
 				<Typography variant="h6" align="justify">
-					Por haber acreditado satisfactoriamente el curso <b>{curso.course.title}</b> en La Escuela Uniline,
-					iniciado el  {formatoFechaCertificado(curso.inscriptionStudent.createdAt)} y terminado el{' '}
+					Por haber acreditado satisfactoriamente el curso <b>"{curso.course.title}"</b> en La Escuela
+					Uniline, iniciado el {formatoFechaCertificado(curso.inscriptionStudent.createdAt)} y terminado el{' '}
 					{formatoFechaCertificado(curso.inscriptionStudent.endDate)}
 				</Typography>
 			</div>

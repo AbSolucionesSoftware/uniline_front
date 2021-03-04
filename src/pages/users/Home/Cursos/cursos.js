@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Box, makeStyles, Typography } from '@material-ui/core';
+import { Box, Grid, Hidden, makeStyles, Typography } from '@material-ui/core';
 import CardsCursos from '../../CardCurso/card_curso';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
@@ -20,12 +20,12 @@ export default function CursosDisponibles() {
 	const classes = useStyles();
 	const [ cursos, setCursos ] = useState([]);
 	const [ loading, setLoading ] = useState(false);
-	const [ error, setError ] = useState({error: false, message: ''});
+	const [ error, setError ] = useState({ error: false, message: '' });
 
 	const responsive = {
 		superLargeDesktop: {
 			// the naming can be any, depends on you.
-			breakpoint: { max: 3000, min: 1365},
+			breakpoint: { max: 3000, min: 1365 },
 			items: 4
 		},
 		desktop: {
@@ -42,10 +42,9 @@ export default function CursosDisponibles() {
 		}
 	};
 
-	const obtenerCursosBD = useCallback(
-		async () => {
-			setLoading(true);
-			await clienteAxios
+	const obtenerCursosBD = useCallback(async () => {
+		setLoading(true);
+		await clienteAxios
 			.get(`/course/`)
 			.then((res) => {
 				setLoading(false);
@@ -54,38 +53,51 @@ export default function CursosDisponibles() {
 			.catch((err) => {
 				setLoading(false);
 				if (err.response) {
-					setError({error: true, message: err.response.data.message});
+					setError({ error: true, message: err.response.data.message });
 				} else {
-					setError({error: true, message: 'Al parecer no se a podido conectar al servidor.'});
+					setError({ error: true, message: 'Al parecer no se a podido conectar al servidor.' });
 				}
 			});
+	}, []);
+
+	const render_cursos = cursos.map((curso, index) => <CardsCursos key={index} curso={curso} />);
+	const render_cursos_lg = cursos.map((curso, index) => (
+		<Grid item xl={3}>
+			<CardsCursos key={index} curso={curso} />
+		</Grid>
+	));
+
+	useEffect(
+		() => {
+			obtenerCursosBD();
 		},
-		[ ],
-	)
+		[ obtenerCursosBD ]
+	);
 
-	const render_cursos = cursos.map((curso, index) => (<CardsCursos key={index} curso={curso} />))
-
-	useEffect(() => {
-		obtenerCursosBD();
-	}, [ obtenerCursosBD ]);
-
-	if(loading){
-		return (
-			<SpinNormal />
-		)
+	if (loading) {
+		return <SpinNormal />;
 	}
-	if(error.error){
-		return (
-			<Error500 error={error.message} />
-		)
+	if (error.error) {
+		return <Error500 error={error.message} />;
 	}
 
 	return (
 		<Box className={classes.margin}>
 			<Typography variant="h4">¡Nuestros cursos!</Typography>
-			<Box py={2}>
-				<Carousel swipeable responsive={responsive}>{render_cursos}</Carousel>
-			</Box>
+			<Hidden smUp>
+				<Box py={2}>
+					<Carousel swipeable responsive={responsive}>
+						{render_cursos}
+					</Carousel>
+				</Box>
+			</Hidden>
+			<Hidden xsDown>
+				<Box py={2}>
+					<Grid container spacing={2}>
+						{render_cursos_lg}
+					</Grid>
+				</Box>
+			</Hidden>
 		</Box>
 	);
 }

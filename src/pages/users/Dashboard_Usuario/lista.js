@@ -199,7 +199,8 @@ const ListaBloques = ({ bloque, curso }) => {
 						setTemaActual({
 							id: topics[index]._id,
 							video: topics[index].keyTopicVideo,
-							index: index
+							index: index,
+							tema: topic
 						});
 						setEndTopic(topics.length === index + 1 ? topics[index]._id : topics[index + 1]._id);
 						setOpen(true);
@@ -213,14 +214,15 @@ const ListaBloques = ({ bloque, curso }) => {
 							id: topics.length === index + 1 ? topics[index]._id : topics[index]._id,
 							video:
 								topics.length === index + 1 ? topics[index].keyTopicVideo : topics[index].keyTopicVideo,
-							index: topics.length === index + 1 ? index : index
+							index: topics.length === index + 1 ? index : index,
+							tema: topic
 						});
 						setEndTopic(topics.length === index + 1 ? topics[index]._id : topics[index + 1]._id);
 						setOpen(true);
 					} else {
 						if (topic.topicCompleted.length === 0 && topic._id === endTopic && action === 0) {
 							setAction(1);
-							setTemaActual({ id: topic._id, video: topic.keyTopicVideo, index: index });
+							setTemaActual({ id: topic._id, video: topic.keyTopicVideo, index: index, tema: topic });
 							setEndTopic(topics.length === index + 1 ? topics[index]._id : topics[index + 1]._id);
 							setOpen(true);
 						}
