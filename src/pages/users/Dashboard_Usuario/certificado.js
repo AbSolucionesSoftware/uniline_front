@@ -105,13 +105,17 @@ export default function GenerarCertificado(props) {
 		[ obtenerCursoBD ]
 	);
 
-    if (!token || !user || user._id !== curso.inscriptionStudent.idUser) {
+    if (!token || !user ) {
         props.history.push('/');
     }
 
     if(loading) return <Spin loading={loading} />;
 
 	if (curso.length === 0) return null;
+
+	if (user._id !== curso.inscriptionStudent.idUser) {
+        props.history.push('/');
+    }
 
 	return (
 		<Box mt={1}>
