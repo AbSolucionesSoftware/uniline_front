@@ -130,12 +130,12 @@ export default function GenerarCertificado(props) {
 					Descargar
 				</Button>
 			</Box>
-			<Certificado curso={curso} />
+			<Certificado curso={curso} user={user} />
 		</Box>
 	);
 }
 
-const Certificado = ({ curso }) => {
+const Certificado = ({ curso, user }) => {
 	const classes = useStyles();
 
 	if (!curso) {
@@ -146,7 +146,7 @@ const Certificado = ({ curso }) => {
 		<Box display='flex' justifyContent='center'>
 			<div id="divToPrint" className={classes.root}>
 				<div className={classes.nombre}>
-					<Typography variant="h4">Aldo Francisco Chagollan Padilla</Typography>
+					<Typography variant="h4">{user.name}</Typography>
 				</div>
 				<div className={classes.textoSecundario}>
 					<Typography variant="h6" align="justify">
