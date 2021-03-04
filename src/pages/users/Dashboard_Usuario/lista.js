@@ -73,6 +73,14 @@ export default function ListaContenido({ curso }) {
 		[ obtenerListaBD, update ]
 	);
 
+	if (lista.length === 0 && !curso.endTopicView) {
+		return (
+			<Box minHeight="80vh" display="flex" justifyContent="center" alignItems="center">
+				<Typography variant="h4">Aun no hay bloques</Typography>
+			</Box>
+		);
+	}
+
 	if (lista.length === 0) {
 		if (loading) {
 			return (
@@ -204,10 +212,8 @@ const ListaBloques = ({ bloque, curso }) => {
 						setTemaActual({
 							id: topics.length === index + 1 ? topics[index]._id : topics[index]._id,
 							video:
-								topics.length === index + 1
-									? topics[index].keyTopicVideo
-									: topics[index].keyTopicVideo,
-							index: topics.length === index + 1 ? index : index 
+								topics.length === index + 1 ? topics[index].keyTopicVideo : topics[index].keyTopicVideo,
+							index: topics.length === index + 1 ? index : index
 						});
 						setEndTopic(topics.length === index + 1 ? topics[index]._id : topics[index + 1]._id);
 						setOpen(true);
@@ -260,7 +266,10 @@ const ListaBloques = ({ bloque, curso }) => {
 										<ListItem
 											button
 											style={{
-												backgroundColor: topic._id === temaActual.id ? theme.palette.background.selected : null
+												backgroundColor:
+													topic._id === temaActual.id
+														? theme.palette.background.selected
+														: null
 											}}
 											onClick={() => {
 												ponerTemaActual(topic);

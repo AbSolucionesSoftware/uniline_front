@@ -75,6 +75,7 @@ export default function SubirCursoMaestro(props) {
 	const [ loading, setLoading ] = useState(false);
 	const [ datos, setDatos ] = useState({
 		title: '',
+		slug: '',
 		category: '',
 		subCategory: '',
 		idProfessor: JSON.parse(localStorage.getItem('student'))._id
@@ -108,6 +109,13 @@ export default function SubirCursoMaestro(props) {
 
 	const obtenerCampos = (e) => {
 		setValidate(false);
+		if (e.target.name === 'slug') {
+			setDatos({
+				...datos,
+				slug: e.target.value.replace(' ', '-')
+			});
+			return;
+		}
 		setDatos({
 			...datos,
 			[e.target.name]: e.target.value
@@ -205,18 +213,27 @@ export default function SubirCursoMaestro(props) {
 							Este titulo no es definitivo, lo puedes editar mas tarde.
 						</Typography>
 						<Box my={5}>
-							<div className={classes.input} autoComplete="off">
-								<Box display="flex" justifyContent="center">
-									<TextField
-										error={validate && !datos.title ? true : false}
-										defaultValue={datos.title}
-										name="title"
-										label="Titulo curso"
-										helperText="Este campo es obligatorio"
-										onChange={obtenerCampos}
-									/>
-								</Box>
-							</div>
+							<Container maxWidth="sm">
+								<TextField
+									error={validate && !datos.title ? true : false}
+									defaultValue={datos.title}
+									name="title"
+									label="Titulo curso"
+									helperText="Este campo es obligatorio"
+									onChange={obtenerCampos}
+									fullWidth
+								/>
+								<TextField
+									error={validate && !datos.slug ? true : false}
+									value={datos.slug}
+									name="slug"
+									label="Slug"
+									placeholder="Ejemplo: Excel-basico-avanzado"
+									helperText="Este campo es obligatorio"
+									onChange={obtenerCampos}
+									fullWidth
+								/>
+							</Container>
 						</Box>
 					</Box>
 				);
@@ -285,7 +302,7 @@ export default function SubirCursoMaestro(props) {
 													<MenuItem key="otros" value="Otro">
 														<em>Otro</em>
 													</MenuItem>
-												)
+												);
 											})
 										) : (
 											<MenuItem value="">
@@ -320,17 +337,19 @@ export default function SubirCursoMaestro(props) {
 			</div>
 			<Container maxWidth="md">
 				<div className={classes.root}>
-					<Stepper activeStep={activeStep}>
-						{steps.map((label, index) => {
-							const stepProps = {};
-							const labelProps = {};
-							return (
-								<Step key={label} {...stepProps}>
-									<StepLabel {...labelProps}>{label}</StepLabel>
-								</Step>
-							);
-						})}
-					</Stepper>
+					<Container maxWidth="xs">
+						<Stepper activeStep={activeStep}>
+							{steps.map((label, index) => {
+								const stepProps = {};
+								const labelProps = {};
+								return (
+									<Step key={label} {...stepProps}>
+										<StepLabel {...labelProps}>{label}</StepLabel>
+									</Step>
+								);
+							})}
+						</Stepper>
+					</Container>
 					<div>
 						<div>
 							<div className={classes.content}>{getStepContent(activeStep)}</div>

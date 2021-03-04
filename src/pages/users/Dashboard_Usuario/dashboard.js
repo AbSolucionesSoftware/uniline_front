@@ -73,7 +73,7 @@ function DashboarUsuario(props) {
 				.then((res) => {
 					setLoading(false);
 					setCurso(res.data);
-					setProgreso(res.data.inscriptionStudent.studentAdvance);
+					setProgreso(res.data.inscriptionStudent ? res.data.inscriptionStudent.studentAdvance : 0);
 					setEndTopic(res.data.endTopicView);
 					if (res.data.commentStudentQualification !== null) {
 						setCalificado(true);

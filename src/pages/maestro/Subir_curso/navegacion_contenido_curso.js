@@ -22,6 +22,7 @@ import {
 } from './verificar_contenido';
 
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import AssignmentOutlinedIcon from '@material-ui/icons/AssignmentOutlined';
 import ErrorIcon from '@material-ui/icons/Error';
 import useStyles from './styleContenidoCurso';
 
@@ -32,7 +33,6 @@ export default function NavegacionContenidoCurso(props) {
 	const { window } = props;
 	const [ darkTheme, setDarkTheme ] = props.tema;
 	const [ mobileOpen, setMobileOpen ] = useState(false);
-	const [ title, setTitle ] = useState('Información del curso');
 	const { datos, setDatos, update, setUpdate, setPreview } = useContext(CursoContext);
 	const idcurso = props.props.match.params.curso;
 	const ruta_actual = props.props.location.pathname.split('/');
@@ -43,6 +43,17 @@ export default function NavegacionContenidoCurso(props) {
 		status: ''
 	});
 	const [ blocks, setBlocks ] = useState([]);
+	const [ title, setTitle ] = useState(
+		ruta_actual[4] === 'general'
+			? 'Información del curso'
+			: ruta_actual[4] === 'learn'
+				? 'Que enseñarás'
+				: ruta_actual[4] === 'contenido'
+					? 'Bloques y temas del curso'
+					: ruta_actual[4] === 'precio'
+						? 'Precio del curso'
+						: ruta_actual[4] === 'tareas' ? 'Tareas de tus estuidantes' : ''
+	);
 
 	const darkModeAction = () => {
 		setDarkTheme(!darkTheme);
@@ -222,7 +233,7 @@ export default function NavegacionContenidoCurso(props) {
 					</ListItem>
 				</List>
 			</Box>
-			<Box mt={2} ml={3}>
+			<Box mt={1} ml={3}>
 				<Typography variant="button">Contenido del curso</Typography>
 				<Divider />
 				<List className={classes.root}>
@@ -243,7 +254,7 @@ export default function NavegacionContenidoCurso(props) {
 					</ListItem>
 				</List>
 			</Box>
-			<Box mt={2} ml={3}>
+			<Box mt={1} ml={3}>
 				<Typography variant="button">Publicación del curso</Typography>
 				<Divider />
 				<List className={classes.root}>
@@ -266,7 +277,26 @@ export default function NavegacionContenidoCurso(props) {
 					</List>
 				</List>
 			</Box>
-			<Box display="flex" justifyContent="center" mt={4}>
+			<Box mt={1} ml={3}>
+				<Typography variant="button">Tareas y Proyectos</Typography>
+				<Divider />
+				<List className={classes.root}>
+					<List className={classes.root}>
+						<ListItem
+							button
+							component={Link}
+							to={`/instructor/contenido_curso/${idcurso}/tareas`}
+							onClick={() => setTitle('Tareas de tus estudiantes')}
+						>
+							<ListItemIcon>
+								<AssignmentOutlinedIcon />
+							</ListItemIcon>
+							<ListItemText primary="Tareas finales" />
+						</ListItem>
+					</List>
+				</List>
+			</Box>
+			<Box display="flex" justifyContent="center" mt={2}>
 				<Box width={250}>
 					<Button
 						size="large"
@@ -316,7 +346,7 @@ export default function NavegacionContenidoCurso(props) {
 						color="inherit"
 						variant="outlined"
 						target="_blank"
-						href={ruta_actual[4] !== 'contenido' ? `/curso/${datos._id}` : `/dashboard/${datos._id}`}
+						href={ruta_actual[4] !== 'contenido' ? `/curso/${datos.slug}` : `/dashboard/${datos.slug}`}
 					>
 						Vista previa
 					</Button>

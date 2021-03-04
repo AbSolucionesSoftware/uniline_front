@@ -362,6 +362,7 @@ export default function PerfilUsuario(props) {
 										</InputAdornment>
 									)
 								}}
+								disabled
 							/>
 						</Grid>
 						<Grid item xs={12}>

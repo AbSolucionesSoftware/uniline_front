@@ -1,5 +1,5 @@
 import React, { Fragment, useCallback, useContext, useEffect, useState } from 'react';
-import { Box, Button, CircularProgress, LinearProgress, makeStyles } from '@material-ui/core';
+import { Box, Button, CircularProgress, LinearProgress, makeStyles, Typography } from '@material-ui/core';
 import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
 import clienteAxios from '../../../config/axios';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
@@ -13,15 +13,15 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ProyectoFinal({ curso, user }) {
 	const classes = useStyles();
-    const token = localStorage.getItem('token');
-    const { progreso } = useContext(DashboardContext);
+	const token = localStorage.getItem('token');
+	const { progreso } = useContext(DashboardContext);
 	const [ file, setFile ] = useState(null);
-    const [ homework, setHomework ] = useState(null);
-    const [ loadingHomework, setLoadingHomework ] = useState(false);
+	const [ homework, setHomework ] = useState(null);
+	const [ loadingHomework, setLoadingHomework ] = useState(false);
 	const [ loading, setLoading ] = useState(false);
-    const [ update, setUpdate ] = useState(false);
+	const [ update, setUpdate ] = useState(false);
 	const [ validacionFile, setValidacionFile ] = useState(false);
-    const [ snackbar, setSnackbar ] = useState({
+	const [ snackbar, setSnackbar ] = useState({
 		open: false,
 		mensaje: '',
 		status: ''
@@ -35,26 +35,26 @@ export default function ProyectoFinal({ curso, user }) {
 		}
 	};
 
-    const obtenerHomework = useCallback(
-        async () => {
-            setLoadingHomework(true);
-            await clienteAxios
-			.get(`/homework/${curso.course._id}/user/${user._id}`, {
-				headers: {
-					Authorization: `bearer ${token}`
-				}
-			})
-			.then((res) => {
-                setLoadingHomework(false);
-                setHomework(res.data);
-			})
-			.catch((err) => {
-                setLoadingHomework(false);
-				console.log(err);
-			});
-        },
-        [ curso.course._id, token, user._id ],
-    )
+	const obtenerHomework = useCallback(
+		async () => {
+			setLoadingHomework(true);
+			await clienteAxios
+				.get(`/homework/${curso.course._id}/user/${user._id}`, {
+					headers: {
+						Authorization: `bearer ${token}`
+					}
+				})
+				.then((res) => {
+					setLoadingHomework(false);
+					setHomework(res.data);
+				})
+				.catch((err) => {
+					setLoadingHomework(false);
+					console.log(err);
+				});
+		},
+		[ curso.course._id, token, user._id ]
+	);
 
 	const subirArchivo = async () => {
 		if (!file) {
@@ -72,7 +72,7 @@ export default function ProyectoFinal({ curso, user }) {
 			})
 			.then((res) => {
 				setUpdate(!update);
-                setFile(null);
+				setFile(null);
 				setLoading(false);
 				setSnackbar({
 					open: true,
@@ -97,8 +97,8 @@ export default function ProyectoFinal({ curso, user }) {
 				}
 			});
 	};
-    
-    const eliminarArchivo = async () => {
+
+	const eliminarArchivo = async () => {
 		setLoading(true);
 		await clienteAxios
 			.delete(`/homework/delete/${homework._id}`, {
@@ -133,27 +133,35 @@ export default function ProyectoFinal({ curso, user }) {
 			});
 	};
 
-    useEffect(() => {
-        obtenerHomework();
-    }, [ obtenerHomework, update ])
+	useEffect(
+		() => {
+			obtenerHomework();
+		},
+		[ obtenerHomework, update ]
+	);
 
-    if(loadingHomework){
-        return (
-            <Box display="flex" justifyContent="center" alignItems="center">
-                <CircularProgress />
-            </Box>
-        )
-    }
+	if (loadingHomework) {
+		return (
+			<Box display="flex" justifyContent="center" alignItems="center">
+				<CircularProgress />
+			</Box>
+		);
+	}
 
 	return (
 		<Fragment>
-            <MessageSnackbar
+			<MessageSnackbar
 				open={snackbar.open}
 				mensaje={snackbar.mensaje}
 				status={snackbar.status}
 				setSnackbar={setSnackbar}
 			/>
 			<Box mt={1}>
+				{homework && homework.qualificationHomework ? (
+					<Typography align="center">Calificacion: {homework.qualificationHomework}</Typography>
+				) : (
+					<Typography align="center">Calificacion: En revisión</Typography>
+				)}
 				<Box className={classes.root} my={1}>
 					<input
 						name="urlTopicVideo"
@@ -187,14 +195,25 @@ export default function ProyectoFinal({ curso, user }) {
 						</Button>
 					</Box>
 				) : null}
-                {homework !== null && !homework.qualification ? (
+				{homework !== null && !homework.qualificationHomework ? (
 					<Box my={1} display="flex" justifyContent="flex-end">
-						<Button fullWidth variant="contained" color="secondary" onClick={eliminarArchivo}>
+						<Button fullWidth variant="outlined" color="secondary" onClick={eliminarArchivo}>
 							Eliminar archivo
 						</Button>
 					</Box>
 				) : null}
 			</Box>
+			<Button
+				fullWidth
+				variant="outlined"
+				color="primary"
+				disabled={!homework || !homework.qualificationHomework ? true : false}
+				target="_blank"
+				href={`/certificado/${curso.course.slug}`}
+			>
+				Certificado
+			</Button>
+			{/* <GenerarCertificado curso={curso} homework={homework} /> */}
 		</Fragment>
 	);
 }

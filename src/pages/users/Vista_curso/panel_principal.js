@@ -150,7 +150,7 @@ function VistaCursoPanelPrincipal(props) {
 			</Box>
 			<CardContent>
 				<Box>
-					{curso.course.priceCourse.free ? (
+					{curso.course.priceCourse ? curso.course.priceCourse.free ? (
 						<Chip
 							className={classes.free}
 							label={
@@ -174,10 +174,20 @@ function VistaCursoPanelPrincipal(props) {
 						<Typography variant="h5" color="textPrimary">
 							<b>{formatoMexico(curso.course.priceCourse.price)} MX$</b>
 						</Typography>
+					) : (
+						<Typography variant="h5" color="textPrimary">
+							<b>0 MX$</b>
+						</Typography>
 					)}
 				</Box>
 				<Box my={1}>
-					<Button color="primary" variant="contained" fullWidth size="large">
+					<Button
+						color="primary"
+						variant="contained"
+						fullWidth
+						size="large"
+						disabled={!curso.course.priceCourse ? true : false}
+					>
 						Comprar ahora
 					</Button>
 				</Box>
@@ -197,6 +207,7 @@ function VistaCursoPanelPrincipal(props) {
 						<Button
 							color="secondary"
 							variant="outlined"
+							disabled={!curso.course.priceCourse ? true : false}
 							fullWidth
 							size="large"
 							startIcon={

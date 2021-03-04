@@ -323,6 +323,8 @@ export default function CursosProfesor({ curso, update, setUpdate }) {
 												fullWidth
 												color="primary"
 												variant="outlined"
+												target="_blank"
+												href={`/dashboard/${curso.slug}`}
 											>
 												Ver curso
 											</Button>

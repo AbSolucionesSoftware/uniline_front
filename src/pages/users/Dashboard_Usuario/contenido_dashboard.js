@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Avatar, Box, Divider, Grid, Typography, Button, CircularProgress } from '@material-ui/core';
+import { Avatar, Box, Divider, Grid, Typography, CircularProgress } from '@material-ui/core';
 import { List, ListItem, ListItemAvatar, ListItemIcon, ListItemText } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
 import DOMPurify from 'dompurify';
@@ -44,7 +44,9 @@ const useStyles = makeStyles((theme) => ({
 export default function ContenidoDashboard({ user }) {
 	const classes = useStyles();
 	const token = localStorage.getItem('token');
-	const { curso, temaActual, topics, update, setUpdate, setProgreso, setAction, calificado } = useContext(DashboardContext);
+	const { curso, temaActual, topics, update, setUpdate, setProgreso, setAction, calificado } = useContext(
+		DashboardContext
+	);
 
 	const checkTema = async (topic) => {
 		setAction(0);
@@ -92,7 +94,9 @@ export default function ContenidoDashboard({ user }) {
 				justifyContent="center"
 				alignItems="center"
 			>
-				{!temaActual.video ? (
+				{!curso.endTopicView || temaActual.video === undefined ? (
+					<Typography variant="h4" style={{color: '#FFFF'}}>No hay video</Typography>
+				) : temaActual.video === '' ? (
 					<CircularProgress style={{ color: '#FFFF' }} />
 				) : (
 					<Vimeo
@@ -119,9 +123,7 @@ export default function ContenidoDashboard({ user }) {
 									precision={0.5}
 								/>
 							</Box>
-							{!calificado ? (
-								<Calificacion curso={curso} update={update} setUpdate={setUpdate} />
-							) : null}
+							{!calificado ? <Calificacion curso={curso} update={update} setUpdate={setUpdate} /> : null}
 						</Grid>
 					</Grid>
 				</Box>
@@ -242,11 +244,6 @@ export default function ContenidoDashboard({ user }) {
 										<Box display="flex" justifyContent="center" alignItems="center" height="100%">
 											<div>
 												<ProyectoFinal curso={curso} update={update} user={user} />
-												<Box mt={1}>
-													<Button fullWidth variant="outlined" color="primary" disabled>
-														Certificado
-													</Button>
-												</Box>
 											</div>
 										</Box>
 									</Grid>

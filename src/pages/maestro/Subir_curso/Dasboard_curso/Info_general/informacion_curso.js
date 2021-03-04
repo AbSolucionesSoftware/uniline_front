@@ -247,7 +247,7 @@ export default function RegistroInformacionCurso() {
 				</Box>
 				<Box my={2}>
 					<Grid container spacing={2}>
-						<Grid item lg={2} md={4} xs={12}>
+						<Grid item lg={3} md={4} xs={12}>
 							<TextField
 								fullWidth
 								required
@@ -265,7 +265,7 @@ export default function RegistroInformacionCurso() {
 								}}
 							/>
 						</Grid>
-						<Grid item lg={10} md={8} xs={12}>
+						<Grid item lg={9} md={8} xs={12}>
 							<TextField
 								fullWidth
 								required

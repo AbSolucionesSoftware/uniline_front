@@ -14,6 +14,7 @@ import RegistroInformacionCurso from '../pages/maestro/Subir_curso/Dasboard_curs
 import QueAprenderaEstudiante from '../pages/maestro/Subir_curso/Dasboard_curso/Info_general/Learnings/vista_learnings';
 import RegistroContenido from '../pages/maestro/Subir_curso/Dasboard_curso/Contenido_curso/contenido';
 import PrecioCurso from '../pages/maestro/Subir_curso/Dasboard_curso/Publicacion_curso/precio';
+import TareasEstudiantes from '../pages/maestro/Subir_curso/Tareas/tareas';
 
 //Users pages
 import Home from '../pages/users/Home/home';
@@ -21,6 +22,7 @@ import ResultadoBusqueda from '../pages/users/Busqueda/resultados_busqueda';
 import Carrito from '../pages/users/Carrito/carrito';
 import PagarCurso from '../pages/users/Compra_curso/pagar_curso';
 import MisCursos from '../pages/users/Cursos_usuario/mis_cursos';
+import GenerarCertificado from '../pages/users/Dashboard_Usuario/certificado';
 /* import DashboardUsuario from '../pages/users/Dashboard_Usuario/dashboard'; */
 import PerfilUsuario from '../pages/users/Perfil_usuario/perfil';
 import Politicas from '../pages/users/Politicas/politicas';
@@ -41,6 +43,11 @@ const routes = [
 	{
 		path: '/dashboard/:url',
 		component: LayoutDashboardUser,
+		exact: true
+	},
+	{
+		path: '/certificado/:url',
+		component: GenerarCertificado,
 		exact: true
 	},
 	{
@@ -66,6 +73,11 @@ const routes = [
 			{
 				path: '/instructor/contenido_curso/:curso/precio',
 				component: PrecioCurso,
+				exact: true,
+			},
+			{
+				path: '/instructor/contenido_curso/:curso/tareas',
+				component: TareasEstudiantes,
 				exact: true,
 			},
 			{
