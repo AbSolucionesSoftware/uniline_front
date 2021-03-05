@@ -44,7 +44,8 @@ export default function PerfilUsuario(props) {
 	const { update, setUpdate } = useContext(NavContext);
 	let user = { _id: '' };
 
-	if (!token) props.history.push('/');
+	if (!token || !user) props.history.push('/');
+	
 	if (token !== null) user = JSON.parse(localStorage.getItem('student'));
 
 	const onDrop = useCallback(

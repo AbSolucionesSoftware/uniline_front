@@ -126,7 +126,12 @@ const routes = [
 				exact: true
             },
             {
-				path: '/compra',
+				path: '/compra/:url',
+				component: PagarCurso,
+				exact: true
+            },
+            {
+				path: '/carrito/compra/:url',
 				component: PagarCurso,
 				exact: true
             },

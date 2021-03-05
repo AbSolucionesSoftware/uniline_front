@@ -197,7 +197,7 @@ function CardsCursos(props) {
 							</Box>
 						) : (
 							<Box display="flex" justifyContent="space-around" alignItems="center">
-								<Button variant="contained" color="primary">
+								<Button variant="contained" color="primary" component={Link} to={`/compra/${curso.slug}`}>
 									Comprar ahora
 								</Button>
 								{loading ? (

@@ -9,6 +9,7 @@ import { formatoMexico } from '../../../config/reuserFunction';
 import Spin from '../../../components/Spin/spin';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
 import clienteAxios from '../../../config/axios';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
 	imagen: {
@@ -32,7 +33,8 @@ export default function Carrito(props) {
 	});
 	let user = { _id: '' };
 
-	if (!token) props.history.push('/');
+	if (!token || !user) props.history.push('/');
+	
 	if (token !== null) user = JSON.parse(localStorage.getItem('student'));
 
 	if (carrito.length === 0) {
@@ -168,7 +170,7 @@ export default function Carrito(props) {
 								<Box my={2}>
 									<Divider />
 								</Box>
-								<Button fullWidth color="secondary" size="large" variant="contained">
+								<Button fullWidth color="secondary" size="large" variant="contained" component={Link} to={`/carrito/compra/${carrito._id}`}>
 									Pagar ahora
 								</Button>
 							</Box>

@@ -75,8 +75,8 @@ export default function CursosComprados() {
 
 	const render_cursos = cursos.map((curso, index) => <CardsCursosEstudiantes key={index} curso={curso} />);
 	const render_cursos_lg = cursos.map((curso, index) => (
-		<Grid item xl={3} lg={3}>
-			<CardsCursosEstudiantes key={index} curso={curso} />
+		<Grid key={index} item xl={3} lg={3}>
+			<CardsCursosEstudiantes curso={curso} />
 		</Grid>
 	));
 

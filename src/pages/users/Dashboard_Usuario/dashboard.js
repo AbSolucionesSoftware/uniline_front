@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Hidden, IconButton, Divider, Typography, Toolbar, Button, Link } from '@material-ui/core';
-import { withRouter } from 'react-router-dom';
+import { Hidden, IconButton, Divider, Typography, Toolbar, Button } from '@material-ui/core';
+import LinkMaterial from '@material-ui/core/Link';
+import { withRouter, Link } from 'react-router-dom';
 import { AppBar, Box, MenuItem, Popover, Avatar, CircularProgress, Drawer, List } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core/';
@@ -46,7 +47,6 @@ function DashboarUsuario(props) {
 	});
 	const isMenuOpen = Boolean(anchorEl);
 
-	/* if (!token) props.history.push('/'); */
 	if (token !== null) user = JSON.parse(localStorage.getItem('student'));
 
 	if (!token || !user) {
@@ -205,7 +205,7 @@ function DashboarUsuario(props) {
 					</Hidden>
 					<Box ml={2}>
 						<Typography className={classes.title} variant="h6" noWrap>
-							<Link
+							<LinkMaterial
 								href={curso.course.slug ? `/curso/${curso.course.slug}` : null}
 								target="_blank"
 								rel="noopener"
@@ -213,7 +213,7 @@ function DashboarUsuario(props) {
 								color="inherit"
 							>
 								{curso.course.title ? curso.course.title : ''}
-							</Link>
+							</LinkMaterial>
 						</Typography>
 					</Box>
 					<div className={classes.grow} />

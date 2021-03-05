@@ -1,8 +1,10 @@
 import React, { useContext } from 'react';
-import { Box, makeStyles, Grid, Typography, Button, Link } from '@material-ui/core';
+import { Box, makeStyles, Grid, Typography, Button } from '@material-ui/core';
+import LinkMaterial from '@material-ui/core/Link';
 import { formatoMexico } from '../../../config/reuserFunction';
 import { NavContext } from '../../../context/context_nav';
 import clienteAxios from '../../../config/axios';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
 	imagen: {
@@ -67,7 +69,7 @@ export default function ListaCarrito({ articulo, setLoading, setSnackbar, user }
 				</Grid>
 				<Grid item lg={6} sm={6} xs={12}>
 					<Box>
-						<Link
+						<LinkMaterial
 							href={`/curso/${curso.slug}`}
 							target="_blank"
 							rel="noopener"
@@ -75,7 +77,7 @@ export default function ListaCarrito({ articulo, setLoading, setSnackbar, user }
 							underline="none"
 						>
 							<Typography variant="h5">{curso.title}</Typography>
-						</Link>
+						</LinkMaterial>
 						<Typography variant="subtitle1" color="textSecondary">
 							{`Por ${curso.idProfessor.name}`}
 							{curso.idProfessor.profession ? `, ${curso.idProfessor.profession}` : ''}
@@ -106,7 +108,7 @@ export default function ListaCarrito({ articulo, setLoading, setSnackbar, user }
 						</Box>
 						<Box display="flex" justifyContent="flex-end">
 							<div>
-								<Button color="primary" className={classes.buttons} size="small">
+								<Button color="primary" className={classes.buttons} size="small" component={Link} to={`/compra/${curso.slug}`}>
 									Comprar
 								</Button>
 								<Button

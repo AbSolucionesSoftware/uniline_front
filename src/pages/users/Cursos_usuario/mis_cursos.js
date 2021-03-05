@@ -48,13 +48,15 @@ const BorderLinearProgress = withStyles((theme) => ({
 	}
 }))(LinearProgress);
 
-export default function MisCursos() {
+export default function MisCursos(props) {
 	const classes = useStyles();
 	let token = localStorage.getItem('token');
 	const [ cursos, setCursos ] = useState([]);
 	const [ loading, setLoading ] = useState(false);
 	const [ error, setError ] = useState({ error: false, message: '' });
 	let user = { _id: '' };
+
+	if (!token || !user) props.history.push('/');
 
 	if (token !== null) user = JSON.parse(localStorage.getItem('student'));
 
