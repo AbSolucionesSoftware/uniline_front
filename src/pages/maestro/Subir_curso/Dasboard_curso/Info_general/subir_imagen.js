@@ -83,13 +83,9 @@ function SubirImagen(props) {
 	const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
 	const subirImagen = async () => {
-		console.log(preview);
-		console.log(datos.urlPromotionalImage);
 		if (!datos.urlPromotionalImage || !preview) {
-			console.log("emtra1");
 			return;
-		} else if (preview && preview.includes('https')) {
-			console.log("emtra2");
+		} else if (preview && preview.includes('https://cursos-uniline.s3.us-west-1.amazonaws.com')) {
 			return;
 		}
 		const formData = new FormData();
