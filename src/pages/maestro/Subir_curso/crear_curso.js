@@ -212,6 +212,9 @@ export default function SubirCursoMaestro(props) {
 						<Typography variant="subtitle1" align="center">
 							Este titulo no es definitivo, lo puedes editar mas tarde.
 						</Typography>
+						<Typography variant="overline" align="center">
+							<b>*Nota:</b> Los slug son palabras clave que se utilizaran en las URL del sitio para resumir el contenido de una página.
+						</Typography>
 						<Box my={5}>
 							<Container maxWidth="sm">
 								<TextField
