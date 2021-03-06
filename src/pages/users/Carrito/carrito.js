@@ -9,7 +9,6 @@ import { formatoMexico } from '../../../config/reuserFunction';
 import Spin from '../../../components/Spin/spin';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
 import clienteAxios from '../../../config/axios';
-import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
 	imagen: {
@@ -72,6 +71,7 @@ export default function Carrito(props) {
 	let totalAnterior = 0;
 	let descuento = 0;
 	let promocion = false;
+	let cursos = [];
 	carrito.courses.forEach((articulo) => {
 		if (articulo.course.priceCourse.free) {
 			total += 0;
@@ -79,8 +79,22 @@ export default function Carrito(props) {
 			if (articulo.course.priceCourse.promotionPrice) {
 				total += articulo.course.priceCourse.promotionPrice;
 				promocion = true;
+				cursos.push({
+					priceCourse: articulo.course.priceCourse.price,
+					pricePromotionCourse: articulo.course.priceCourse.promotionPrice,
+					persentagePromotion: articulo.course.priceCourse.persentagePromotion,
+					idCourse: articulo.course,
+					promotion: true,
+				})
 			} else {
 				total += articulo.course.priceCourse.price;
+				cursos.push({
+					priceCourse: articulo.course.priceCourse.price,
+					pricePromotionCourse: 0,
+					persentagePromotion: '',
+					idCourse: articulo.course,
+					promotion: false,
+				})
 			}
 		}
 		totalAnterior += articulo.course.priceCourse.price;
@@ -121,6 +135,16 @@ export default function Carrito(props) {
 				}
 			});
 	};
+
+	const pagarCurso = () => {
+		localStorage.setItem('payment', JSON.stringify({
+			user: user,
+			courses: cursos
+		}))
+		setTimeout(() => {
+			props.history.push(`/compra/${carrito._id}`);
+		}, 500);
+	}
 
 	return (
 		<Container maxWidth="lg">
@@ -170,7 +194,7 @@ export default function Carrito(props) {
 								<Box my={2}>
 									<Divider />
 								</Box>
-								<Button fullWidth color="secondary" size="large" variant="contained" component={Link} to={`/carrito/compra/${carrito._id}`}>
+								<Button fullWidth color="secondary" size="large" variant="contained" onClick={() => pagarCurso()}>
 									Pagar ahora
 								</Button>
 							</Box>

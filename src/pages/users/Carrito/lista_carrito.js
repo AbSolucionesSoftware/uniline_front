@@ -4,7 +4,7 @@ import LinkMaterial from '@material-ui/core/Link';
 import { formatoMexico } from '../../../config/reuserFunction';
 import { NavContext } from '../../../context/context_nav';
 import clienteAxios from '../../../config/axios';
-import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
 	imagen: {
@@ -16,8 +16,9 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function ListaCarrito({ articulo, setLoading, setSnackbar, user }) {
+function ListaCarrito(props) {
 	const classes = useStyles();
+	const { articulo, setLoading, setSnackbar, user } = props
 	let token = localStorage.getItem('token');
 	const curso = articulo.course;
 	const { update, setUpdate } = useContext(NavContext);
@@ -57,6 +58,36 @@ export default function ListaCarrito({ articulo, setLoading, setSnackbar, user }
 					});
 				}
 			});
+	};
+
+	const pagarCurso = (curso) => {
+		let cursos = [];
+
+		if (curso.priceCourse.promotionPrice) {
+			cursos.push({
+				priceCourse: curso.priceCourse.price,
+				pricePromotionCourse: curso.priceCourse.promotionPrice,
+				persentagePromotion: curso.priceCourse.persentagePromotion,
+				idCourse: curso,
+				promotion: true
+			});
+		} else {
+			cursos.push({
+				priceCourse: curso.priceCourse.price,
+				pricePromotionCourse: 0,
+				persentagePromotion: '',
+				idCourse: curso,
+				promotion: false
+			});
+		}
+		
+		localStorage.setItem('payment', JSON.stringify({
+			user: user,
+			courses: cursos
+		}))
+		setTimeout(() => {
+			props.history.push(`/compra/${curso.slug}`);
+		}, 500);
 	};
 
 	return (
@@ -108,7 +139,7 @@ export default function ListaCarrito({ articulo, setLoading, setSnackbar, user }
 						</Box>
 						<Box display="flex" justifyContent="flex-end">
 							<div>
-								<Button color="primary" className={classes.buttons} size="small" component={Link} to={`/compra/${curso.slug}`}>
+								<Button color="primary" className={classes.buttons} size="small" onClick={() => pagarCurso(curso)}>
 									Comprar
 								</Button>
 								<Button
@@ -127,3 +158,5 @@ export default function ListaCarrito({ articulo, setLoading, setSnackbar, user }
 		</Box>
 	);
 }
+
+export default withRouter(ListaCarrito)

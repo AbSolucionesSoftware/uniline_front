@@ -35,7 +35,7 @@ function FormRegistroUsuario(props) {
 	const [ checked, setChecked ] = useState(false);
 	const [ validate, setValidate ] = useState(false);
 	const [ loading, setLoading ] = useState(false);
-	const { setError, carrito, misCursos } = useContext(NavContext);
+	const { setError } = useContext(NavContext);
 	const [ snackbar, setSnackbar ] = useState({
 		open: false,
 		mensaje: '',
@@ -76,10 +76,13 @@ function FormRegistroUsuario(props) {
 				/* redireccion en caso de ser comprado un curso o aplicar cupon */
 				let cuponItem = JSON.parse(localStorage.getItem('coupon'));
 				let cartItem = JSON.parse(localStorage.getItem('cart'));
+				let buyItem = JSON.parse(localStorage.getItem('buy'));
 				if (cuponItem) {
 					canjearCupon(cuponItem);
 				} else if (cartItem) {
 					agregarCarrito(cartItem);
+				} else if (buyItem) {
+					comprarCurso(buyItem);
 				} else {
 					props.history.push('/');
 				}
@@ -125,37 +128,6 @@ function FormRegistroUsuario(props) {
 		let token = localStorage.getItem('token');
 		let user = JSON.parse(localStorage.getItem('student'));
 
-		let course = false;
-		let cart = false;
-
-		/* verificar si ya tienes el curso */
-		misCursos.forEach((res) => {
-			if (res.idCourse._id === curso) {
-				course = true;
-			}
-			return;
-		});
-
-		/* verificar si esta en carrito */
-		if (carrito && carrito.courses) {
-			carrito.courses.forEach((res) => {
-				cart = true;
-				return;
-			});
-		}
-		if (course) {
-			setLoading(false);
-			localStorage.removeItem('cart');
-			props.history.push(`/dashboard/${curso}`);
-			return;
-		}
-		if (cart) {
-			setLoading(false);
-			localStorage.removeItem('cart');
-			props.history.push('/carrito');
-			return;
-		}
-
 		const result = await AgregarCarritoBD(token, user, curso);
 		if (!result.status || result.status !== 200) {
 			setLoading(false);
@@ -167,6 +139,23 @@ function FormRegistroUsuario(props) {
 		setLoading(false);
 		localStorage.removeItem('cart');
 		props.history.push('/carrito');
+	};
+
+	const comprarCurso = async ({ curso, urlActual }) => {
+		setLoading(true);
+		let user = JSON.parse(localStorage.getItem('student'));
+		
+		localStorage.removeItem('buy');
+		localStorage.setItem(
+			'payment',
+			JSON.stringify({
+				user: user,
+				courses: curso
+			})
+		);
+		setTimeout(() => {
+			props.history.push(`/compra/${curso[0].idCourse.slug}`);
+		}, 500);
 	};
 
 	return (

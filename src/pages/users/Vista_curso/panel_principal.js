@@ -92,11 +92,11 @@ function VistaCursoPanelPrincipal(props) {
 	const agregarCarrito = async () => {
 		if (!token || !user._id) {
 			handleModal();
-			localStorage.setItem('cart', JSON.stringify({ curso: curso.course._id, urlActual }));
+			localStorage.setItem('cart', JSON.stringify({ curso: curso.course, urlActual }));
 			return;
 		}
 
-		const result = await AgregarCarritoBD(token, user, curso.course._id);
+		const result = await AgregarCarritoBD(token, user, curso.course);
 		setLoadingCart(true);
 		if (result.status && result.status === 200) {
 			setLoadingCart(false);
@@ -122,6 +122,45 @@ function VistaCursoPanelPrincipal(props) {
 				});
 			}
 		}
+	};
+
+	const adquirirCursoGratis = (curso) => {
+		console.log("curso gratis");
+	}
+
+	const pagarCurso = (curso) => {
+		let cursos = [];
+		if (curso.priceCourse.promotionPrice) {
+			cursos.push({
+				priceCourse: curso.priceCourse.price,
+				pricePromotionCourse: curso.priceCourse.promotionPrice,
+				persentagePromotion: curso.priceCourse.persentagePromotion,
+				idCourse: curso,
+				promotion: true
+			});
+		} else {
+			cursos.push({
+				priceCourse: curso.priceCourse.price,
+				pricePromotionCourse: 0,
+				persentagePromotion: '',
+				idCourse: curso,
+				promotion: false
+			});
+		}
+
+		if (!token || !user._id) {
+			handleModal();
+			localStorage.setItem('buy', JSON.stringify({ curso: cursos, urlActual }));
+			return;
+		}
+		
+		localStorage.setItem('payment', JSON.stringify({
+			user: user,
+			courses: cursos
+		}))
+		setTimeout(() => {
+			props.history.push(`/compra/${curso.slug}`);
+		}, 500);
 	};
 
 	/* verificar si esta en carrito */
@@ -181,15 +220,28 @@ function VistaCursoPanelPrincipal(props) {
 					)}
 				</Box>
 				<Box my={1}>
-					<Button
+					{curso.course.promotionPrice && curso.course.promotionPrice.free ? (
+						<Button
+						color="primary"
+						variant="contained"
+						fullWidth
+						size="large"
+						onClick={() => adquirirCursoGratis(curso)}
+					>
+						¡Adquirir ahora!
+					</Button>
+					) : (
+						<Button
 						color="primary"
 						variant="contained"
 						fullWidth
 						size="large"
 						disabled={!curso.course.priceCourse ? true : false}
+						onClick={() => pagarCurso(curso.course)}
 					>
 						Comprar ahora
 					</Button>
+					)}
 				</Box>
 				<Box my={1}>
 					{cart ? (
@@ -269,6 +321,7 @@ const ModalRegistro = ({ handleModal, open, error, setError }) => {
 		handleModal();
 		localStorage.removeItem('coupon');
 		localStorage.removeItem('cart');
+		localStorage.removeItem('buy');
 		setError({ error: false, message: '' });
 	};
 	return (

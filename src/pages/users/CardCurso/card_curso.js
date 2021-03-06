@@ -8,9 +8,9 @@ import {
 	CardActions,
 	Chip,
 	CircularProgress,
-	Dialog
+	Dialog,
 } from '@material-ui/core';
-import { Avatar, Box, Button, IconButton, Typography } from '@material-ui/core';
+import { Avatar, Box, Button, Typography } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
 import { red } from '@material-ui/core/colors';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
@@ -21,6 +21,7 @@ import MessageSnackbar from '../../../components/Snackbar/snackbar';
 import { NavContext } from '../../../context/context_nav';
 import { AgregarCarritoBD } from '../PeticionesCompras/peticiones_compras';
 import RegistroAlterno from '../RegistroAlterno/registro_alterno';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import { Fragment } from 'react';
 
 const useStyles = makeStyles((theme) => ({
@@ -110,6 +111,49 @@ function CardsCursos(props) {
 		}
 	};
 
+	const adquirirCursoGratis = (curso) => {
+		console.log('curso gratis');
+	};
+
+	const pagarCurso = (curso) => {
+		let cursos = [];
+
+		if (curso.priceCourse.promotionPrice) {
+			cursos.push({
+				priceCourse: curso.priceCourse.price,
+				pricePromotionCourse: curso.priceCourse.promotionPrice,
+				persentagePromotion: curso.priceCourse.persentagePromotion,
+				idCourse: curso,
+				promotion: true
+			});
+		} else {
+			cursos.push({
+				priceCourse: curso.priceCourse.price,
+				pricePromotionCourse: 0,
+				persentagePromotion: '',
+				idCourse: curso,
+				promotion: false
+			});
+		}
+
+		if (!token || !user._id) {
+			handleModal();
+			localStorage.setItem('buy', JSON.stringify({ curso: cursos, urlActual }));
+			return;
+		}
+
+		localStorage.setItem(
+			'payment',
+			JSON.stringify({
+				user: user,
+				courses: cursos
+			})
+		);
+		setTimeout(() => {
+			props.history.push(`/compra/${curso.slug}`);
+		}, 500);
+	};
+
 	/* verificar si esta en carrito */
 	let cart = false;
 	if (carrito && carrito.courses) {
@@ -190,30 +234,47 @@ function CardsCursos(props) {
 							Ver descripción completa
 						</Button>
 						{course ? (
-							<Box my={1}>
-								<Button fullWidth variant="contained" color="primary" component={Link} to={`/dashboard/${curso.slug}`}>
+							<Box display="flex" justifyContent="space-around" alignItems="center">
+								<Button
+									fullWidth
+									variant="contained"
+									color="primary"
+									component={Link}
+									to={`/dashboard/${curso.slug}`}
+								>
 									Ver curso
 								</Button>
 							</Box>
 						) : (
 							<Box display="flex" justifyContent="space-around" alignItems="center">
-								<Button variant="contained" color="primary" component={Link} to={`/compra/${curso.slug}`}>
-									Comprar ahora
-								</Button>
-								{loading ? (
-									<CircularProgress color="secondary" size={30} />
-								) : cart ? (
-									<Button size="large" color="secondary">
-										Ir a carrito
+								{curso.priceCourse.free ? (
+									<Button
+										variant="contained"
+										color="primary"
+										onClick={() => adquirirCursoGratis(curso)}
+										fullWidth
+									>
+										¡Adquirir ahora!
 									</Button>
 								) : (
-									<IconButton
-										variant="contained"
+									<Button variant="contained" color="primary" onClick={() => pagarCurso(curso)}>
+										Comprar ahora
+									</Button>
+								)}
+								{curso.priceCourse.free ? null : loading ? (
+									<CircularProgress color="secondary" size={30} />
+								) : cart ? (
+									<Button color="secondary" size="large" >
+										<ShoppingCartOutlinedIcon /><ArrowForwardIcon />
+									</Button>
+								) : (
+									<Button
 										color="secondary"
-										onClick={() => agregarCarrito(curso._id)}
+										onClick={() => agregarCarrito(curso)}
+										size="large"
 									>
-										<ShoppingCartOutlinedIcon style={{ fontSize: 30 }} />
-									</IconButton>
+										<ShoppingCartOutlinedIcon style={{ fontSize: 25 }} />
+									</Button>
 								)}
 							</Box>
 						)}
