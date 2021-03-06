@@ -13,7 +13,7 @@ function FormLoginUsuario(props) {
 	const [ datos, setDatos ] = useState([]);
 	const [ validate, setValidate ] = useState(false);
 	const [ loading, setLoading ] = useState(false);
-	const { setError, carrito, misCursos } = useContext(NavContext);
+	const { setError, carrito, update, setUpdate } = useContext(NavContext);
 	const [ snackbar, setSnackbar ] = useState({
 		open: false,
 		mensaje: '',
@@ -25,6 +25,21 @@ function FormLoginUsuario(props) {
 			...datos,
 			[e.target.name]: e.target.value
 		});
+	};
+
+	const obtenerMisCursos = async (user, token) => {
+		return await clienteAxios
+			.get(`/course/user/${user._id}`, {
+				headers: {
+					Authorization: `bearer ${token}`
+				}
+			})
+			.then((res) => {
+				return res.data
+			})
+			.catch((err) => {
+				return err
+			});
 	};
 
 	const enviarDatosBD = async () => {
@@ -41,14 +56,17 @@ function FormLoginUsuario(props) {
 				const token = res.data.token;
 				localStorage.setItem('token', token);
 				localStorage.setItem('student', JSON.stringify(decoded));
-
+				setUpdate(!update);
 				/* redireccion en caso de ser comprado un curso o aplicar cupon */
 				let cuponItem = JSON.parse(localStorage.getItem('coupon'));
 				let cartItem = JSON.parse(localStorage.getItem('cart'));
+				let buyItem = JSON.parse(localStorage.getItem('buy'));
 				if (cuponItem) {
 					canjearCupon(cuponItem);
 				} else if (cartItem) {
 					agregarCarrito(cartItem);
+				} else if (buyItem) {
+					comprarCurso(buyItem);
 				} else {
 					props.history.push('/');
 				}
@@ -97,9 +115,11 @@ function FormLoginUsuario(props) {
 		let course = false;
 		let cart = false;
 
+		const misCursos = await obtenerMisCursos(user, token);
+
 		/* verificar si ya tienes el curso */
 		misCursos.forEach((res) => {
-			if (res.idCourse._id === curso) {
+			if (res.idCourse._id === curso._id) {
 				course = true;
 			}
 			return;
@@ -115,7 +135,7 @@ function FormLoginUsuario(props) {
 		if (course) {
 			setLoading(false);
 			localStorage.removeItem('cart');
-			props.history.push(`/dashboard/${curso}`);
+			props.history.push(`/dashboard/${curso.slug}`);
 			return;
 		}
 		if (cart) {
@@ -136,6 +156,49 @@ function FormLoginUsuario(props) {
 		setLoading(false);
 		localStorage.removeItem('cart');
 		props.history.push('/carrito');
+	};
+
+	const comprarCurso = async ({ curso, urlActual }) => {
+		setLoading(true);
+		let token = localStorage.getItem('token');
+		let user = JSON.parse(localStorage.getItem('student'));
+		let course = false;
+
+		const misCursos = await obtenerMisCursos(user, token);
+
+		/* verificar si ya tienes el curso */
+		misCursos.forEach((res) => {
+			if (res.idCourse._id === curso[0].idCourse._id) {
+				course = true;
+			}
+			return;
+		});
+		setLoading(false);
+		if (course) {
+			localStorage.removeItem('buy');
+			localStorage.setItem(
+				'payment',
+				JSON.stringify({
+					user: user,
+					courses: curso
+				})
+			);
+			setTimeout(() => {
+				props.history.push(`/dashboard/${curso[0].idCourse.slug}`);
+			}, 500);
+			return;
+		}
+		localStorage.removeItem('buy');
+		localStorage.setItem(
+			'payment',
+			JSON.stringify({
+				user: user,
+				courses: curso
+			})
+		);
+		setTimeout(() => {
+			props.history.push(`/compra/${curso[0].idCourse.slug}`);
+		}, 500);
 	};
 
 	return (

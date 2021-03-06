@@ -24,7 +24,7 @@ export const AgregarCarritoBD = async (token, user, idCourse) => {
 		.post(
 			`/cart/${user._id}`,
 			{
-				idCourse: idCourse
+				idCourse: idCourse._id
 			},
 			{
 				headers: {
