@@ -4,13 +4,13 @@ const darkMode = createMuiTheme({
 	palette: {
 		type: 'dark',
 		navbar: '#424242!important',
-		/* primary: {
-			main: '#2196f3'
-		}, */
-		/* secondary: {
+		primary: {
+			main: '#008cff'
+		},/* 
+		secondary: {
 			main: '#666666'
-		},
-		error: {
+		}, */
+		/* error: {
 			main: '#f44336'
 		},
 		warning: {

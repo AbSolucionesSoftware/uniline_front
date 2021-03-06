@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
-import { Avatar, Card, CardContent, CardHeader, makeStyles, Typography } from '@material-ui/core';
+import { Avatar, Box, Card, CardContent, CardHeader, Grid, makeStyles, Typography } from '@material-ui/core';
+import Rating from '@material-ui/lab/Rating';
 import { formatoFechaCurso } from '../../../config/reuserFunction';
 import { red } from '@material-ui/core/colors';
 
@@ -12,12 +13,13 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function ComentariosDelCurso({comentario, curso}) {
-    const classes = useStyles();
+export default function ComentariosDelCurso({ comentario, curso }) {
+	const classes = useStyles();
 
 	return (
 		<Fragment>
 			<Card className={classes.respuestas} variant="outlined">
+				<Grid container>
 				<CardHeader
 					avatar={
 						comentario.idUser.urlImage ? (
@@ -33,6 +35,15 @@ export default function ComentariosDelCurso({comentario, curso}) {
 						: ''}`}
 					subheader={formatoFechaCurso(comentario.createdAt)}
 				/>
+				<Box display="flex" mt={2}>
+					<Rating name="read-only" value={comentario.qualification} readOnly precision={.5} />
+					<Box ml={2}>
+						<Typography variant="subtitle1">
+							<b>{comentario.qualification}</b>
+						</Typography>
+					</Box>
+				</Box>
+				</Grid>
 				<CardContent>
 					<Typography variant="body2" color="textSecondary" component="p">
 						{comentario.comment}

@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 		minHeight: '210mm',
 		backgroundPosition: 'center',
 		backgroundSize: 'cover',
-		border: 'solid 1px black'
+		/* border: 'solid 1px black' */
 		/* display: 'none' */
 	},
 	nombre: {
@@ -35,6 +35,14 @@ const useStyles = makeStyles((theme) => ({
 	firma: {
 		marginTop: theme.spacing(12),
 		marginLeft: theme.spacing(76)
+	},
+	intructor: {
+		marginTop: theme.spacing(1),
+		marginLeft: theme.spacing(85)
+	},
+	codigo: {
+		marginTop: theme.spacing(1),
+		marginLeft: theme.spacing(126)
 	}
 }));
 
@@ -135,7 +143,7 @@ export default function GenerarCertificado(props) {
 					Descargar
 				</Button>
 			</Box>
-			<Container>
+			<Container >
 				<Certificado curso={curso} user={user} />
 			</Container>
 		</Box>
@@ -163,6 +171,12 @@ const Certificado = ({ curso, user }) => {
 			</div>
 			<div className={classes.firma}>
 				<Typography variant="h5">{curso.course.idProfessor.name}</Typography>
+			</div>
+			<div className={classes.intructor}>
+				<Typography variant="h6">Instructor del curso</Typography>
+			</div>
+			<div className={classes.codigo}>
+				<Typography variant="button">N° {curso.inscriptionStudent.numCertificate}</Typography>
 			</div>
 		</div>
 	);

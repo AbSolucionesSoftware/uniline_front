@@ -142,6 +142,8 @@ export default function VistaCurso(props) {
 				isOpen={open}
 				videoId={cursos.course.urlCourseVideo}
 				onClose={handleVideoModal}
+				callback={(e) => console.log(e)}
+				
 			/>
 			<MessageSnackbar
 				open={snackbar.open}

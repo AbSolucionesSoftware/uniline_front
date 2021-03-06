@@ -106,7 +106,7 @@ export default function DashboardMaestro(props) {
 		obtenerCursosBD();
 	}, [ obtenerCursosBD, update ]);
 
-	const render_cursos = datos.map((curso) => (<CursosProfesor key={curso._id} curso={curso} update={update} setUpdate={setUpdate} />))
+	const render_cursos = datos.map((curso, index) => (<CursosProfesor key={index} datos={curso} update={update} setUpdate={setUpdate} />))
 
 	if (!datos) {
 		return (

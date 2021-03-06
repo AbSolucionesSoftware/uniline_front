@@ -59,9 +59,10 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function CursosProfesor({ curso, update, setUpdate }) {
+export default function CursosProfesor({ datos, update, setUpdate }) {
 	const classes = useStyles();
 	const theme = useTheme();
+	const curso = datos.course;
 	const token = localStorage.getItem('token');
 	const [ loading, setLoading ] = useState(false);
 	const [ snackbar, setSnackbar ] = useState({
@@ -70,6 +71,8 @@ export default function CursosProfesor({ curso, update, setUpdate }) {
 		status: ''
 	});
 	const [ blocks, setBlocks ] = useState([]);
+
+	console.log(datos);
 
 	const obtenerBloquesBD = useCallback(
 		async () => {
@@ -201,13 +204,13 @@ export default function CursosProfesor({ curso, update, setUpdate }) {
 										<Grid item>
 											<Box component="fieldset" borderColor="transparent">
 												<Typography component="legend">Ventas</Typography>
-												<Typography>$0</Typography>
+												<Typography>${formatoMexico(datos.sales)}</Typography>
 											</Box>
 										</Grid>
 										<Grid item>
 											<Box component="fieldset" borderColor="transparent">
 												<Typography component="legend">Alumnos inscritos</Typography>
-												<Typography>0</Typography>
+												<Typography>{datos.numInscription}</Typography>
 											</Box>
 										</Grid>
 										<Grid item>
@@ -217,7 +220,7 @@ export default function CursosProfesor({ curso, update, setUpdate }) {
 												</Box>
 											) : (
 												<Box component="fieldset" borderColor="transparent">
-													<Typography component="legend">1 calificaciones</Typography>
+													<Typography component="legend">{datos.numCalification === 1 ? `1 calificacion` :`${datos.numCalification} calificaciones`}</Typography>
 													<Rating
 														name="read-only"
 														value={curso.qualification}

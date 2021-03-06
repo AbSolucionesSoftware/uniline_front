@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useState } from 'react';
-import { Box, CardContent, Divider, Button, TextField, Chip, Dialog } from '@material-ui/core';
+import { Box, CardContent, Divider, Button, TextField, Chip, Dialog, Grid } from '@material-ui/core';
 import { makeStyles, Typography, IconButton, CircularProgress } from '@material-ui/core';
 import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 import FacebookIcon from '@material-ui/icons/Facebook';
@@ -13,6 +13,8 @@ import { NavContext } from '../../../context/context_nav';
 import { AgregarCarritoBD, CanjearCupon } from '../PeticionesCompras/peticiones_compras';
 import { FacebookShareButton, WhatsappShareButton } from 'react-share';
 import urlPage from '../../../config/url';
+import { Link } from 'react-router-dom';
+import clienteAxios from '../../../config/axios';
 
 const useStyles = makeStyles((theme) => ({
 	background: {
@@ -46,8 +48,9 @@ function VistaCursoPanelPrincipal(props) {
 	const [ cupon, setCupon ] = useState('');
 	const [ loading, setLoading ] = useState(false);
 	const [ loadingCart, setLoadingCart ] = useState(false);
+	const [ loadingBuy, setLoadingBuy ] = useState(false);
 	const [ open, setOpen ] = useState(false);
-	const { error, setError, update, setUpdate, carrito } = useContext(NavContext);
+	const { error, setError, update, setUpdate, carrito, misCursos } = useContext(NavContext);
 	let user = { _id: '' };
 	const urlActual = props.match.url;
 
@@ -124,8 +127,38 @@ function VistaCursoPanelPrincipal(props) {
 		}
 	};
 
-	const adquirirCursoGratis = (curso) => {
-		console.log('curso gratis');
+	const adquirirCursoGratis = async (curso) => {
+		setLoadingBuy(true);
+		await clienteAxios
+			.post(
+				`/course/${curso.course._id}/inscription/course/free/user/${user._id}`,
+				{ jalaporfa: 'jalaporfa2' },
+				{
+					headers: {
+						Authorization: `bearer ${token}`
+					}
+				}
+			)
+			.then((res) => {
+				setLoadingBuy(false);
+				props.history.push('/mis_cursos');
+			})
+			.catch((err) => {
+				setLoadingBuy(false);
+				if (err.response) {
+					setSnackbar({
+						open: true,
+						mensaje: err.response.data.message,
+						status: 'error'
+					});
+				} else {
+					setSnackbar({
+						open: true,
+						mensaje: 'Al parecer no se a podido conectar al servidor.',
+						status: 'error'
+					});
+				}
+			});
 	};
 
 	const pagarCurso = (curso) => {
@@ -171,6 +204,17 @@ function VistaCursoPanelPrincipal(props) {
 	if (carrito && carrito.courses) {
 		carrito.courses.forEach((res) => {
 			if (res.course._id === curso.course._id) cart = true;
+		});
+	}
+	/* verificar si ya tiene el curso */
+	let course = false;
+
+	if (misCursos) {
+		misCursos.forEach((res) => {
+			if (res.idCourse._id === curso.course._id) {
+				course = true;
+			}
+			return;
 		});
 	}
 
@@ -222,96 +266,125 @@ function VistaCursoPanelPrincipal(props) {
 						</Typography>
 					)}
 				</Box>
-				<Box my={1}>
-					{curso.course.priceCourse && curso.course.priceCourse.free ? (
+				{course ? (
+					<Box my={5}>
 						<Button
+							fullWidth
+							size="large"
+							variant="contained"
 							color="primary"
-							variant="contained"
-							fullWidth
-							size="large"
-							onClick={() => adquirirCursoGratis(curso)}
+							component={Link}
+							to={`/dashboard/${curso.slug}`}
 						>
-							¡Adquirir ahora!
-						</Button>
-					) : (
-						<Button
-							color="primary"
-							variant="contained"
-							fullWidth
-							size="large"
-							disabled={!curso.course.priceCourse ? true : false}
-							onClick={() => pagarCurso(curso.course)}
-						>
-							Comprar ahora
-						</Button>
-					)}
-				</Box>
-				<Box my={1}>
-					{curso.course.priceCourse && curso.course.priceCourse.free ? null : cart ? (
-						<Button
-							color="secondary"
-							variant="outlined"
-							fullWidth
-							size="large"
-							startIcon={<ShoppingCartOutlinedIcon />}
-							onClick={() => props.history.push('/carrito')}
-						>
-							Ir al carrito
-						</Button>
-					) : (
-						<Button
-							color="secondary"
-							variant="outlined"
-							disabled={!curso.course.priceCourse ? true : false}
-							fullWidth
-							size="large"
-							startIcon={
-								loadingCart ? (
-									<CircularProgress size={20} color="inherit" />
-								) : (
-									<ShoppingCartOutlinedIcon />
-								)
-							}
-							onClick={() => agregarCarrito()}
-						>
-							Agregar a carrito
-						</Button>
-					)}
-				</Box>
-				<Divider />
-				<Box my={2}>
-					<Typography variant="subtitle1" align="center" color="textSecondary">
-						<b>¡Canjea tu cupón aquí!</b>
-					</Typography>
-					<Box display="flex" justifyContent="space-around">
-						<TextField variant="outlined" label="código de cupon" size="small" onChange={obtenerCupon} />
-						<Button
-							variant="contained"
-							color="secondary"
-							endIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
-							onClick={() => canjearCupon()}
-						>
-							Canjear
+							Ver curso
 						</Button>
 					</Box>
-				</Box>
+				) : (
+					<Fragment>
+						<Box my={1}>
+							{curso.course.priceCourse && curso.course.priceCourse.free ? (
+								<Button
+									color="primary"
+									variant="contained"
+									fullWidth
+									size="large"
+									startIcon={
+										loadingBuy ? (
+											<CircularProgress size={20} color="inherit" />
+										) : (
+											<ShoppingCartOutlinedIcon />
+										)
+									}
+									onClick={() => adquirirCursoGratis(curso)}
+								>
+									¡Adquirir ahora!
+								</Button>
+							) : (
+								<Button
+									color="primary"
+									variant="contained"
+									fullWidth
+									size="large"
+									disabled={!curso.course.priceCourse ? true : false}
+									onClick={() => pagarCurso(curso.course)}
+								>
+									Comprar ahora
+								</Button>
+							)}
+						</Box>
+						<Box my={1}>
+							{curso.course.priceCourse && curso.course.priceCourse.free ? null : cart ? (
+								<Button
+									color="secondary"
+									variant="outlined"
+									fullWidth
+									size="large"
+									startIcon={<ShoppingCartOutlinedIcon />}
+									onClick={() => props.history.push('/carrito')}
+								>
+									Ir al carrito
+								</Button>
+							) : (
+								<Button
+									color="secondary"
+									variant="outlined"
+									disabled={!curso.course.priceCourse ? true : false}
+									fullWidth
+									size="large"
+									startIcon={
+										loadingCart ? (
+											<CircularProgress size={20} color="inherit" />
+										) : (
+											<ShoppingCartOutlinedIcon />
+										)
+									}
+									onClick={() => agregarCarrito()}
+								>
+									Agregar a carrito
+								</Button>
+							)}
+						</Box>
+						<Divider />
+						<Box my={2}>
+							<Typography variant="subtitle1" align="center" color="textSecondary">
+								<b>¡Canjea tu cupón aquí!</b>
+							</Typography>
+							<Box display="flex" justifyContent="space-around">
+								<TextField
+									variant="outlined"
+									label="código de cupon"
+									size="small"
+									onChange={obtenerCupon}
+								/>
+								<Button
+									variant="contained"
+									color="secondary"
+									endIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
+									onClick={() => canjearCupon()}
+								>
+									Canjear
+								</Button>
+							</Box>
+						</Box>
+					</Fragment>
+				)}
 				<Divider />
 				<Box mt={2}>
 					<Typography variant="subtitle1" align="center" color="textSecondary">
 						<b>Comparte este curso con tus amigos</b>
 					</Typography>
-					<Box display="flex" justifyContent="space-around">
-						<FacebookShareButton url={urlPage + urlActual} quote={curso.course.title}>
-							<Button variant="outlined" color="primary" startIcon={<FacebookIcon />}>
-								Facebook
-							</Button>
-						</FacebookShareButton>
-						<WhatsappShareButton url={urlPage + urlActual} title={curso.course.title} separator=":: ">
-							<Button variant="outlined" color="primary" startIcon={<WhatsAppIcon />}>
-								WhatsApp
-							</Button>
-						</WhatsappShareButton>
-					</Box>
+					<Grid container spacing={3} justify="center">
+						<Grid item>
+							<FacebookShareButton url={urlPage + urlActual} quote={curso.course.title}>
+								<FacebookIcon style={{ fontSize: 50, color: '#3b5998' }} />
+							</FacebookShareButton>
+						</Grid>
+						<Grid item>
+							<WhatsappShareButton url={urlPage + urlActual} title={curso.course.title} separator=":: ">
+								<WhatsAppIcon style={{ fontSize: 50, color: '#00bb2d' }} />
+							</WhatsappShareButton>
+						</Grid>
+					</Grid>
 				</Box>
 			</CardContent>
 			<ModalRegistro handleModal={handleModal} open={open} error={error} setError={setError} />

@@ -102,7 +102,7 @@ export default function NavbarMaestro(props) {
 	const classes = useStyles();
 	const theme = useTheme();
 	const [ anchorEl, setAnchorEl ] = useState(null);
-	const [ open, setOpen ] = React.useState(true);
+	const [ open, setOpen ] = useState(false);
 	const isMenuOpen = Boolean(anchorEl);
 	let user = { _id: '', name: '', imagen: '' };
 

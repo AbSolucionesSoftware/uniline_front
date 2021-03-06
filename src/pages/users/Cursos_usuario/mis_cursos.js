@@ -24,7 +24,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 	root: {
 		display: 'flex',
-		minHeight: 200
+		minHeight: 200,
+		marginBottom: theme.spacing(3)
 	},
 	button: {
 		[theme.breakpoints.down('xs')]: {
@@ -71,7 +72,6 @@ export default function MisCursos(props) {
 					}
 				})
 				.then((res) => {
-					console.log(res);
 					setLoading(false);
 					setCursos(res.data);
 				})
