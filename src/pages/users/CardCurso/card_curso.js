@@ -8,7 +8,7 @@ import {
 	CardActions,
 	Chip,
 	CircularProgress,
-	Dialog,
+	Dialog
 } from '@material-ui/core';
 import { Avatar, Box, Button, Typography } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
@@ -264,15 +264,12 @@ function CardsCursos(props) {
 								{curso.priceCourse.free ? null : loading ? (
 									<CircularProgress color="secondary" size={30} />
 								) : cart ? (
-									<Button color="secondary" size="large" >
-										<ShoppingCartOutlinedIcon /><ArrowForwardIcon />
+									<Button color="secondary" size="large">
+										<ShoppingCartOutlinedIcon />
+										<ArrowForwardIcon />
 									</Button>
 								) : (
-									<Button
-										color="secondary"
-										onClick={() => agregarCarrito(curso)}
-										size="large"
-									>
+									<Button color="secondary" onClick={() => agregarCarrito(curso)} size="large">
 										<ShoppingCartOutlinedIcon style={{ fontSize: 25 }} />
 									</Button>
 								)}

@@ -125,8 +125,8 @@ function VistaCursoPanelPrincipal(props) {
 	};
 
 	const adquirirCursoGratis = (curso) => {
-		console.log("curso gratis");
-	}
+		console.log('curso gratis');
+	};
 
 	const pagarCurso = (curso) => {
 		let cursos = [];
@@ -153,11 +153,14 @@ function VistaCursoPanelPrincipal(props) {
 			localStorage.setItem('buy', JSON.stringify({ curso: cursos, urlActual }));
 			return;
 		}
-		
-		localStorage.setItem('payment', JSON.stringify({
-			user: user,
-			courses: cursos
-		}))
+
+		localStorage.setItem(
+			'payment',
+			JSON.stringify({
+				user: user,
+				courses: cursos
+			})
+		);
 		setTimeout(() => {
 			props.history.push(`/compra/${curso.slug}`);
 		}, 500);
@@ -220,31 +223,31 @@ function VistaCursoPanelPrincipal(props) {
 					)}
 				</Box>
 				<Box my={1}>
-					{curso.course.promotionPrice && curso.course.promotionPrice.free ? (
+					{curso.course.priceCourse && curso.course.priceCourse.free ? (
 						<Button
-						color="primary"
-						variant="contained"
-						fullWidth
-						size="large"
-						onClick={() => adquirirCursoGratis(curso)}
-					>
-						¡Adquirir ahora!
-					</Button>
+							color="primary"
+							variant="contained"
+							fullWidth
+							size="large"
+							onClick={() => adquirirCursoGratis(curso)}
+						>
+							¡Adquirir ahora!
+						</Button>
 					) : (
 						<Button
-						color="primary"
-						variant="contained"
-						fullWidth
-						size="large"
-						disabled={!curso.course.priceCourse ? true : false}
-						onClick={() => pagarCurso(curso.course)}
-					>
-						Comprar ahora
-					</Button>
+							color="primary"
+							variant="contained"
+							fullWidth
+							size="large"
+							disabled={!curso.course.priceCourse ? true : false}
+							onClick={() => pagarCurso(curso.course)}
+						>
+							Comprar ahora
+						</Button>
 					)}
 				</Box>
 				<Box my={1}>
-					{cart ? (
+					{curso.course.priceCourse && curso.course.priceCourse.free ? null : cart ? (
 						<Button
 							color="secondary"
 							variant="outlined"
