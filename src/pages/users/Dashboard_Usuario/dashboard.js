@@ -21,6 +21,7 @@ import 'firebase/firestore';
 import ListaContenido from './lista';
 import ContenidoDashboard from './contenido_dashboard';
 import ImagenLogo from '../../../images/uniline2.png';
+import ImagenLogoDark from '../../../images/unilineDark.png';
 import { useStyles } from './styles';
 import Spin from '../../../components/Spin/spin';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
@@ -154,7 +155,7 @@ function DashboarUsuario(props) {
 			</MenuItem>
 			<ListItem button onClick={darkModeAction}>
 				<ListItemIcon>{darkTheme ? <Brightness5Icon /> : <BrightnessMediumIcon />}</ListItemIcon>
-				<ListItemText primary={`tema: ${darkTheme === true ? 'Oscuro' : 'Por defecto'}`} />
+				<ListItemText primary={`tema: ${darkTheme === true ? 'Oscuro' : 'Claro'}`} />
 			</ListItem>
 			<MenuItem
 				onClick={() => {
@@ -198,7 +199,7 @@ function DashboarUsuario(props) {
 					<Hidden smDown>
 						<Button color="inherit" component={Link} to="/">
 							<Box className={classes.logo}>
-								<img alt="logo navbar" src={ImagenLogo} className={classes.imagen} />
+								<img alt="logo navbar" src={darkTheme ? ImagenLogoDark : ImagenLogo} className={classes.imagen} />
 							</Box>
 						</Button>
 						{/* <Divider orientation="vertical" className={classes.divider} /> */}
@@ -305,7 +306,7 @@ function DashboarUsuario(props) {
 					<Box display="flex" justifyContent="space-between" alignItems="center">
 						<Button color="inherit" component={Link} to="/">
 							<Box className={classes.logoResponsive}>
-								<img alt="logo navbar" src={ImagenLogo} className={classes.imagen} />
+								<img alt="logo navbar" src={darkTheme ? ImagenLogoDark : ImagenLogo} className={classes.imagen} />
 							</Box>
 						</Button>
 						<IconButton onClick={handleDrawerSecondary}>
@@ -346,7 +347,7 @@ function DashboarUsuario(props) {
 						</ListItem>
 						<ListItem button onClick={darkModeAction}>
 							<ListItemIcon>{darkTheme ? <Brightness5Icon /> : <BrightnessMediumIcon />}</ListItemIcon>
-							<ListItemText primary={`tema: ${darkTheme === true ? 'Oscuro' : 'Por defecto'}`} />
+							<ListItemText primary={`tema: ${darkTheme === true ? 'Oscuro' : 'Claro'}`} />
 						</ListItem>
 						<ListItem
 							button

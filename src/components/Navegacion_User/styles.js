@@ -93,6 +93,10 @@ const useStyles = makeStyles((theme) => ({
 	imagen: {
 		maxHeight: '100%',
 		maxWidth: '100%'
+	},
+	session: {
+		backgroundColor: theme.palette.session.main,
+		color: '#ffff'
 	}
 }));
 

@@ -6,9 +6,7 @@ import { Grid, Box, Hidden, Typography, Button } from '@material-ui/core';
 
 import FacebookIcon from '@material-ui/icons/Facebook';
 import InstagramIcon from '@material-ui/icons/Instagram';
-import TwitterIcon from '@material-ui/icons/Twitter';
 import CallIcon from '@material-ui/icons/Call';
-import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import HomeIcon from '@material-ui/icons/Home';
 
 import { Link } from 'react-router-dom';
@@ -68,17 +66,16 @@ export default function Footer() {
 
 				<Grid item sm={4} xs={12} align="center">
 					<Typography className={classes.marginText} variant="h6">
-						Contactanos: <br />
+						Contáctanos: <br />
 					</Typography>
 					<Typography>
-						<MailOutlineIcon /> atencionaclientes@escuelaalreves.com <br />
+						{/* <MailOutlineIcon /> atencionaclientes@escuelaalreves.com <br /> */}
 						<CallIcon /> 3171035768 <br />
 					</Typography>
 					<Box className={classes.marginText}>
 						{/* <a href="https://www.facebook.com/cafi.tutiendaenlinea" target="_blank" rel="noreferrer"> </a> */}
 						<FacebookIcon id="is" style={{ fontSize: 40 }} />
 						<InstagramIcon id="is" style={{ fontSize: 40 }} />
-						<TwitterIcon id="is" style={{ fontSize: 40 }} />
 					</Box>
 				</Grid>
 				<Grid item sm={12}>

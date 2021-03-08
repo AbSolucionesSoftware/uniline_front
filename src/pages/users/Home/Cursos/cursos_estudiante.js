@@ -99,7 +99,7 @@ export default function CursosComprados() {
 
 	return (
 		<Box className={classes.margin}>
-			<Typography variant="h4">¡Continua viendo tus cursos!</Typography>
+			<Typography variant="h4">¡Continua donde te quedaste!</Typography>
 			<Hidden smUp>
 				<Box py={2} width="auto">
 					<Carousel swipeable responsive={responsive}>
