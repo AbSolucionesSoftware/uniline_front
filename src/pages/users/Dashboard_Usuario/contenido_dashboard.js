@@ -263,7 +263,7 @@ export default function ContenidoDashboard({ user }) {
 							}}
 						/>
 					</Box>
-					<Typography variant="h6">¿Qué aprenderas en este curso?</Typography>
+					<Typography variant="h6">¿Qué aprenderás?</Typography>
 					<Box px={5} py={2}>
 						<ul>
 							{curso.course.learnings ? (
@@ -277,7 +277,7 @@ export default function ContenidoDashboard({ user }) {
 							) : null}
 						</ul>
 					</Box>
-					<Typography variant="h6">Requisitos para realizar este curso</Typography>
+					<Typography variant="h6">Requisitos</Typography>
 					<Box px={5} py={2}>
 						<ul>
 							{curso.course.requirements ? (

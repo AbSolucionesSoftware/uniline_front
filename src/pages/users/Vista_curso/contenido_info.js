@@ -75,7 +75,7 @@ export default function VistaCursoContenidoInfo({ curso }) {
 								</ListItem>
 								<ListItem>
 									<ListItemIcon>{<MobileFriendlyIcon />}</ListItemIcon>
-									<ListItemText primary="Acceso desde dispositivos moviles" />
+									<ListItemText primary="Acceso desde dispositivos móviles" />
 								</ListItem>
 							</List>
 						</Grid>
@@ -103,7 +103,7 @@ export default function VistaCursoContenidoInfo({ curso }) {
 				</Box>
 			</Box>
 			<Box minHeight="50vh" p={5}>
-				<Typography variant="h6">¿Qué aprenderas en este curso?</Typography>
+				<Typography variant="h6">¿Qué aprenderás en este curso?</Typography>
 				<Box px={5}>
 					<ul>
 						{curso.course.learnings.map((res) => {
@@ -158,8 +158,8 @@ export default function VistaCursoContenidoInfo({ curso }) {
 							return (
 								<Accordion key={index} variant="outlined">
 									<AccordionSummary expandIcon={<ExpandMoreIcon />}>
-										<Typography variant="h6">{`Bloque ${index + 1}: ${res.block
-											.blockTitle}`}</Typography>
+										<Typography variant="h6">{res.block
+											.blockTitle}</Typography>
 									</AccordionSummary>
 									<AccordionDetails className={classes.acordionDetails}>
 										<ol>

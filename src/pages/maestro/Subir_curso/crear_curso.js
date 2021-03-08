@@ -112,7 +112,7 @@ export default function SubirCursoMaestro(props) {
 		if (e.target.name === 'slug') {
 			setDatos({
 				...datos,
-				slug: e.target.value.replace(' ', '-')
+				slug: e.target.value.replace(' ', '-').toLowerCase()
 			});
 			return;
 		}

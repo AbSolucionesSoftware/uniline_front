@@ -4,6 +4,9 @@ const darkMode = createMuiTheme({
 	palette: {
 		type: 'dark',
 		navbar: '#424242!important',
+		session: {
+			main: '#D82B2B'
+		},
 		/* primary: {
 			main: '#2196f3'
 		}, */

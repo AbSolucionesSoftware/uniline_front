@@ -32,7 +32,7 @@ export default function BannerInformativo() {
 			<Container maxWidth="lg">
 				<Box mt={5}>
 					<Typography align="center" variant="h3" className={classes.titulos}>
-						Uniline, una escuela que nunca para...
+						UNILINE, una escuela que nunca para...
 					</Typography>
 				</Box>
 				<Grid container>

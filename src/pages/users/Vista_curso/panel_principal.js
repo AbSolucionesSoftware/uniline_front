@@ -281,7 +281,7 @@ function VistaCursoPanelPrincipal(props) {
 				<Divider />
 				<Box my={2}>
 					<Typography variant="subtitle1" align="center" color="textSecondary">
-						<b>¡Canjea tu cupón aquí!</b>
+						<b>¡Aplicar cupón!</b>
 					</Typography>
 					<Box display="flex" justifyContent="space-around">
 						<TextField variant="outlined" label="código de cupon" size="small" onChange={obtenerCupon} />

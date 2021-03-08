@@ -1,10 +1,9 @@
 import React, { Fragment } from 'react';
 import QueueAnim from 'rc-queue-anim';
-import { makeStyles, Grid, Box, Button, Typography } from '@material-ui/core';
+import { makeStyles, Grid, Box, Typography } from '@material-ui/core';
 import Carousel from 'react-material-ui-carousel';
 
 import Celular from '../../../../images/Celular.gif';
-import { Link } from 'react-router-dom';
 import imagenBanner from '../../../../images/banner3.jpg';
 import logoUniline from '../../../../images/uniline3.png';
 
@@ -54,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Banner() {
-	const token = localStorage.getItem('token');
+	/* const token = localStorage.getItem('token'); */
 	const classes = useStyles();
 
 	return (
@@ -71,10 +70,9 @@ export default function Banner() {
 											<Typography variant="h4" >
 												<b>APRENDE DESDE CASA EN EL MOMENTO QUE TÚ QUIERAS.</b>
 											</Typography>
-											<Typography variant="h5">Tu salón de clases está en tu casa..</Typography>
 										</Box>
 									</Box>
-									{!token ? (
+									{/* {!token ? (
 										<Box key="b">
 											<Box display="flex" justifyContent="center" my={2}>
 												<Button
@@ -88,7 +86,7 @@ export default function Banner() {
 												</Button>
 											</Box>
 										</Box>
-									) : null}
+									) : null} */}
 								</QueueAnim>
 							</Box>
 						</Box>
@@ -114,10 +112,10 @@ export default function Banner() {
 							<QueueAnim delay={700} className="queue-simple">
 								<Box key="a">
 									<Typography variant="h3" align="center" color="primary">
-										<b>Aprende desde casa en el momento que quieras</b>
+										<b>Accede a nuestros cursos gratis con certificado</b>
 									</Typography>
 								</Box>
-								{!token ? (
+								{/* {!token ? (
 									<Box key="b">
 										<Box display="flex" justifyContent="center" my={2}>
 											<Button
@@ -131,7 +129,7 @@ export default function Banner() {
 											</Button>
 										</Box>
 									</Box>
-								) : null}
+								) : null} */}
 							</QueueAnim>
 						</Box>
 					</Grid>
