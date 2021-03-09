@@ -10,12 +10,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Spin({loading}) {
+export default function Spin({loading, invisible}) {
   const classes = useStyles();
 
   return (
     <div>
-      <Backdrop className={classes.backdrop} open={loading}>
+      <Backdrop className={classes.backdrop} open={loading} invisible={!invisible ? false : invisible}>
         <CircularProgress color="inherit" />
       </Backdrop>
     </div>

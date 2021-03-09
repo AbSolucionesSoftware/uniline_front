@@ -2,6 +2,7 @@
 import LayoutMaestro from '../components/Layout_Maestro/layout_maestro';
 import LayoutContenidoCurso from '../components/Layout_Maestro/layout_contenido';
 import LayoutUsers from '../components/Layout_User/layout_usuario';
+import LayoutDashboardUser from '../components/Layout_User/layout_dashboar';
 
 //Admin pages
 import DashboardMaestro from '../pages/maestro/Dashboard_maestro/dashboard';
@@ -9,11 +10,11 @@ import SubirCursoMaestro from '../pages/maestro/Subir_curso/crear_curso';
 import EstadisticasMaestro from '../pages/maestro/Estadisticas/estadisticas';
 
 //dashboard registro curso pages
-import RegistroInformacionCurso from '../pages/maestro/Subir_curso/Dasboard_curso/informacion_curso';
-import QueAprenderaEstudiante from '../pages/maestro/Subir_curso/Dasboard_curso/learnings';
-import RegistroContenido from '../pages/maestro/Subir_curso/Dasboard_curso/contenido';
-import PrecioCurso from '../pages/maestro/Subir_curso/Dasboard_curso/precio';
-import PromocionCurso from '../pages/maestro/Subir_curso/Dasboard_curso/promocion';
+import RegistroInformacionCurso from '../pages/maestro/Subir_curso/Dasboard_curso/Info_general/informacion_curso';
+import QueAprenderaEstudiante from '../pages/maestro/Subir_curso/Dasboard_curso/Info_general/Learnings/vista_learnings';
+import RegistroContenido from '../pages/maestro/Subir_curso/Dasboard_curso/Contenido_curso/contenido';
+import PrecioCurso from '../pages/maestro/Subir_curso/Dasboard_curso/Publicacion_curso/precio';
+import TareasEstudiantes from '../pages/maestro/Subir_curso/Tareas/tareas';
 
 //Users pages
 import Home from '../pages/users/Home/home';
@@ -21,10 +22,13 @@ import ResultadoBusqueda from '../pages/users/Busqueda/resultados_busqueda';
 import Carrito from '../pages/users/Carrito/carrito';
 import PagarCurso from '../pages/users/Compra_curso/pagar_curso';
 import MisCursos from '../pages/users/Cursos_usuario/mis_cursos';
-import DashboardUsuario from '../pages/users/Dashboard_Usuario/dashboard';
+import GenerarCertificado from '../pages/users/Dashboard_Usuario/certificado';
+/* import DashboardUsuario from '../pages/users/Dashboard_Usuario/dashboard'; */
 import PerfilUsuario from '../pages/users/Perfil_usuario/perfil';
 import Politicas from '../pages/users/Politicas/politicas';
-import RegistroLogin from '../pages/users/Registro_Login/vista_registro_login';
+import ImagenCorporativa from '../pages/users/Imagen_corporativa/imagen_corporativa';
+import LoginUsuario from '../pages/users/Login/login';
+import RegistroUsuario from '../pages/users/Registro/registro';
 import VistaCurso from '../pages/users/Vista_curso/vista_curso';
 
 //other
@@ -37,33 +41,48 @@ const routes = [
 		exact: true
 	},
 	{
-		path: '/instructor/contenido_curso',
+		path: '/dashboard/:url',
+		component: LayoutDashboardUser,
+		exact: true
+	},
+	{
+		path: '/certificado/:url',
+		component: GenerarCertificado,
+		exact: true
+	},
+	{
+		path: '/compra/:url',
+		component: PagarCurso,
+		exact: true
+	},
+	{
+		path: '/instructor/contenido_curso/:curso',
 		component: LayoutContenidoCurso,
 		exact: false,
 		routes: [
 			{
-				path: '/instructor/contenido_curso/general',
+				path: '/instructor/contenido_curso/:curso/general',
 				component: RegistroInformacionCurso,
 				exact: true,
 			},
 			{
-				path: '/instructor/contenido_curso/learn',
+				path: '/instructor/contenido_curso/:curso/learn',
 				component: QueAprenderaEstudiante,
 				exact: true,
 			},
 			{
-				path: '/instructor/contenido_curso/contenido',
+				path: '/instructor/contenido_curso/:curso/contenido',
 				component: RegistroContenido,
 				exact: true,
 			},
 			{
-				path: '/instructor/contenido_curso/precio',
+				path: '/instructor/contenido_curso/:curso/precio',
 				component: PrecioCurso,
 				exact: true,
 			},
 			{
-				path: '/instructor/contenido_curso/promocion',
-				component: PromocionCurso,
+				path: '/instructor/contenido_curso/:curso/tareas',
+				component: TareasEstudiantes,
 				exact: true,
 			},
 			{
@@ -112,18 +131,8 @@ const routes = [
 				exact: true
             },
             {
-				path: '/compra',
-				component: PagarCurso,
-				exact: true
-            },
-            {
 				path: '/mis_cursos',
 				component: MisCursos,
-				exact: true
-            },
-            {
-				path: '/dashboard/:url',
-				component: DashboardUsuario,
 				exact: true
             },
             {
@@ -135,10 +144,20 @@ const routes = [
 				path: '/politicas',
 				component: Politicas,
 				exact: true
+			},
+			{
+				path: '/imagen_corporativa',
+				component: ImagenCorporativa,
+				exact: true
             },
             {
 				path: '/login',
-				component: RegistroLogin,
+				component: LoginUsuario,
+				exact: true
+			},
+			{
+				path: '/registro',
+				component: RegistroUsuario,
 				exact: true
             },
             {
@@ -151,6 +170,7 @@ const routes = [
 			}
 		]
 	}
+	
 ];
 
 export default routes;

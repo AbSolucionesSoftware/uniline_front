@@ -3,7 +3,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 const theme = createMuiTheme({
 	palette: {
 		type: 'light',
-		navbar: '#3f51b5',
+		navbar: '#3f51b5!important',
 		primary: {
 			main: '#2196f3'
 		},
@@ -20,7 +20,8 @@ const theme = createMuiTheme({
 			main: '#2196f3'
 		},
 		success: {
-			main: '#4caf50'
+			main: '#5cb85c',
+			secondary: '#c0ffb5'
 		},
 		text: {
 			primary: 'rgba(0, 0, 0, 0.87)',
@@ -31,7 +32,8 @@ const theme = createMuiTheme({
         divider: 'rgba(0, 0, 0, 0.12)',
 		background: {
 			paper: '#fff',
-			default: '#fafafa'
+			default: '#fafafa',
+			selected: '#f5f5f5',
 		},
 		action: {
 			active: 'rgba(0, 0, 0, 0.54)',

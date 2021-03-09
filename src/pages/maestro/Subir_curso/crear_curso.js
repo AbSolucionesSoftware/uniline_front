@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -20,6 +20,8 @@ import UndoIcon from '@material-ui/icons/Undo';
 import { Link } from 'react-router-dom';
 import Spin from '../../../components/Spin/spin';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
+import Sesion from '../../../components/Verificacion_sesion/verificacion_sesion';
+import clienteAxios from '../../../config/axios';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -40,8 +42,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 	floatButton: {
 		position: 'absolute',
-    	bottom: theme.spacing(3),
-    	right: theme.spacing(3),
+		bottom: theme.spacing(3),
+		right: theme.spacing(3)
 	}
 }));
 
@@ -66,22 +68,31 @@ const FormStyles = makeStyles((theme) => ({
 
 export default function SubirCursoMaestro(props) {
 	const classes = useStyles();
+	const token = localStorage.getItem('token');
 	const [ activeStep, setActiveStep ] = React.useState(0);
 	const steps = getSteps();
 	const [ validate, setValidate ] = useState(false);
 	const [ loading, setLoading ] = useState(false);
-	const [ datos, setDatos ] = useState([
-		{
-			title: '',
-			category: '',
-			subMategory: ''
-		}
-	]);
+	const [ datos, setDatos ] = useState({
+		title: '',
+		slug: '',
+		category: '',
+		subCategory: '',
+		idProfessor: JSON.parse(localStorage.getItem('student'))._id
+	});
 	const [ snackbar, setSnackbar ] = useState({
-        open: false,
-        mensaje: '',
-        status: ''
-    })
+		open: false,
+		mensaje: '',
+		status: ''
+	});
+	const [ categories, setCategories ] = useState([ { categorie: '', subCategories: [ { subcategorie: '' } ] } ]);
+
+	useEffect(
+		() => {
+			Sesion(props);
+		},
+		[ props ]
+	);
 
 	const handleNext = () => {
 		if (!datos.title) {
@@ -98,30 +109,92 @@ export default function SubirCursoMaestro(props) {
 
 	const obtenerCampos = (e) => {
 		setValidate(false);
+		if (e.target.name === 'slug') {
+			setDatos({
+				...datos,
+				slug: e.target.value.replace(' ', '-')
+			});
+			return;
+		}
 		setDatos({
 			...datos,
 			[e.target.name]: e.target.value
 		});
 	};
 
-	const crearCurso = () => {
-		if (!datos.category || !datos.subMategory) {
+	const obtenerCategorias = async () => {
+		await clienteAxios
+			.get('/categories/')
+			.then((res) => {
+				setCategories(res.data);
+			})
+			.catch((err) => {
+				setLoading(false);
+				if (err.response) {
+					setSnackbar({
+						open: true,
+						mensaje: err.response.data.message,
+						status: 'error'
+					});
+				} else {
+					setSnackbar({
+						open: true,
+						mensaje: 'Al parecer no se a podido conectar al servidor.',
+						status: 'error'
+					});
+				}
+			});
+	};
+
+	const crearCurso = async () => {
+		if (!datos.category || !datos.subCategory) {
 			setValidate(true);
 			setSnackbar({
-                open: true,
-                mensaje: "Hubo un error al guardar",
-                status: 'error'
-            })
+				open: true,
+				mensaje: 'Hubo un error al crear curso',
+				status: 'error'
+			});
 			return;
 		}
 		setLoading(true);
-        setTimeout(() => {
-			setLoading(false);
-			setValidate(false);
-			console.log('curso creado');
-			console.log(datos);
-        }, 3000);
+		await clienteAxios
+			.post('/course/', datos, {
+				headers: {
+					Authorization: `bearer ${token}`
+				}
+			})
+			.then((res) => {
+				setLoading(false);
+				setSnackbar({
+					open: true,
+					mensaje: res.data.message,
+					status: 'success'
+				});
+				setLoading(false);
+				setValidate(false);
+				props.history.push(`/instructor/contenido_curso/${res.data.userStored._id}/general`);
+			})
+			.catch((err) => {
+				setLoading(false);
+				if (err.response) {
+					setSnackbar({
+						open: true,
+						mensaje: err.response.data.message,
+						status: 'error'
+					});
+				} else {
+					setSnackbar({
+						open: true,
+						mensaje: 'Al parecer no se a podido conectar al servidor.',
+						status: 'error'
+					});
+				}
+			});
 	};
+
+	useEffect(() => {
+		obtenerCategorias();
+	}, []);
 
 	function getSteps() {
 		return [ 'Titulo', 'Categoria' ];
@@ -139,19 +212,31 @@ export default function SubirCursoMaestro(props) {
 						<Typography variant="subtitle1" align="center">
 							Este titulo no es definitivo, lo puedes editar mas tarde.
 						</Typography>
+						<Typography variant="overline" align="center">
+							<b>*Nota:</b> Los slug son palabras clave que se utilizaran en las URL del sitio para resumir el contenido de una página.
+						</Typography>
 						<Box my={5}>
-							<div className={classes.input} autoComplete="off">
-								<Box display="flex" justifyContent="center">
-									<TextField
-										error={validate && !datos.title ? true : false}
-										defaultValue={datos.title}
-										name="title"
-										label="Titulo curso"
-										helperText="Este campo es obligatorio"
-										onChange={obtenerCampos}
-									/>
-								</Box>
-							</div>
+							<Container maxWidth="sm">
+								<TextField
+									error={validate && !datos.title ? true : false}
+									defaultValue={datos.title}
+									name="title"
+									label="Titulo curso"
+									helperText="Este campo es obligatorio"
+									onChange={obtenerCampos}
+									fullWidth
+								/>
+								<TextField
+									error={validate && !datos.slug ? true : false}
+									value={datos.slug}
+									name="slug"
+									label="Slug"
+									placeholder="Ejemplo: Excel-basico-avanzado"
+									helperText="Este campo es obligatorio"
+									onChange={obtenerCampos}
+									fullWidth
+								/>
+							</Container>
 						</Box>
 					</Box>
 				);
@@ -178,9 +263,13 @@ export default function SubirCursoMaestro(props) {
 										value={!datos.category ? '' : datos.category}
 										onChange={obtenerCampos}
 									>
-										<MenuItem value="Tegnologia">Tegnologia</MenuItem>
-										<MenuItem value="Diseño">Diseño</MenuItem>
-										<MenuItem value="Finanzas">Finanzas</MenuItem>
+										{categories.map((res) => {
+											return (
+												<MenuItem key={res.categorie} value={res.categorie}>
+													{res.categorie}
+												</MenuItem>
+											);
+										})}
 									</Select>
 									{validate ? <FormHelperText>Campo obligatorio</FormHelperText> : null}
 								</FormControl>
@@ -188,19 +277,41 @@ export default function SubirCursoMaestro(props) {
 							<Box display="flex" justifyContent="center">
 								<FormControl
 									className={classes.formControl}
-									error={validate && !datos.subMategory ? true : false}
+									error={validate && !datos.subCategory ? true : false}
 								>
 									<InputLabel id="subcategoria-select-label">Subcategoria</InputLabel>
 									<Select
-										name="subMategory"
+										name="subCategory"
 										labelId="subcategoria-select-label"
 										id="subcategoria-select"
-										value={!datos.subMategory ? '' : datos.subMategory}
+										value={!datos.subCategory ? '' : datos.subCategory}
 										onChange={obtenerCampos}
 									>
-										<MenuItem value="Desarrollo">Desarrollo</MenuItem>
-										<MenuItem value="Informatica">Informatica</MenuItem>
-										<MenuItem value="Desarrollo personal">Desarrollo personal</MenuItem>
+										{datos.category ? (
+											categories.map((categorias) => {
+												if (datos.category === categorias.categorie) {
+													return categorias.subCategories.map((subCategorias) => {
+														return (
+															<MenuItem
+																key={subCategorias._id}
+																value={subCategorias.subCategorie}
+															>
+																{subCategorias.subCategorie}
+															</MenuItem>
+														);
+													});
+												}
+												return (
+													<MenuItem key="otros" value="Otro">
+														<em>Otro</em>
+													</MenuItem>
+												);
+											})
+										) : (
+											<MenuItem value="">
+												<em>Selecciona una categoria</em>
+											</MenuItem>
+										)}
 									</Select>
 									{validate ? <FormHelperText>Campo obligatorio</FormHelperText> : null}
 								</FormControl>
@@ -216,7 +327,12 @@ export default function SubirCursoMaestro(props) {
 	return (
 		<div>
 			<Spin loading={loading} />
-			<MessageSnackbar open={snackbar.open} mensaje={snackbar.mensaje} status={snackbar.status} setSnackbar={setSnackbar} />
+			<MessageSnackbar
+				open={snackbar.open}
+				mensaje={snackbar.mensaje}
+				status={snackbar.status}
+				setSnackbar={setSnackbar}
+			/>
 			<div className={classes.floatButton}>
 				<Fab variant="extended" color="primary" aria-label="add" component={Link} to="/instructor/cursos">
 					<UndoIcon />Dashboard
@@ -224,17 +340,19 @@ export default function SubirCursoMaestro(props) {
 			</div>
 			<Container maxWidth="md">
 				<div className={classes.root}>
-					<Stepper activeStep={activeStep}>
-						{steps.map((label, index) => {
-							const stepProps = {};
-							const labelProps = {};
-							return (
-								<Step key={label} {...stepProps}>
-									<StepLabel {...labelProps}>{label}</StepLabel>
-								</Step>
-							);
-						})}
-					</Stepper>
+					<Container maxWidth="xs">
+						<Stepper activeStep={activeStep}>
+							{steps.map((label, index) => {
+								const stepProps = {};
+								const labelProps = {};
+								return (
+									<Step key={label} {...stepProps}>
+										<StepLabel {...labelProps}>{label}</StepLabel>
+									</Step>
+								);
+							})}
+						</Stepper>
+					</Container>
 					<div>
 						<div>
 							<div className={classes.content}>{getStepContent(activeStep)}</div>

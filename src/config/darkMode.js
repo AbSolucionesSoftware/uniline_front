@@ -3,14 +3,14 @@ import { createMuiTheme } from '@material-ui/core/styles';
 const darkMode = createMuiTheme({
 	palette: {
 		type: 'dark',
-		navbar: '#424242',
-		/* primary: {
-			main: '#2196f3'
-		}, */
-		/* secondary: {
+		navbar: '#424242!important',
+		primary: {
+			main: '#008cff'
+		},/* 
+		secondary: {
 			main: '#666666'
-		},
-		error: {
+		}, */
+		/* error: {
 			main: '#f44336'
 		},
 		warning: {
@@ -30,13 +30,14 @@ const darkMode = createMuiTheme({
 			icon: 'rgba(255, 255, 255, 0.5)'
 		},
 
-		divider: 'rgba(255, 255, 255, 0.12)',
+		divider: 'rgba(255, 255, 255, 0.12)', */
 		background: {
 			paper: '#424242',
-			default: '#303030'
+			default: '#303030',
+			selected: '#303030'
 		},
 
-		action: {
+		/* action: {
 			active: '#fff',
 			hover: 'rgba(255, 255, 255, 0.08)',
 			hoverOpacity: 0.08,
