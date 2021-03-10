@@ -8,6 +8,7 @@ import jwt_decode from 'jwt-decode';
 import { withRouter } from 'react-router-dom';
 import { NavContext } from '../../../context/context_nav';
 import { AgregarCarritoBD, CanjearCupon } from '../PeticionesCompras/peticiones_compras';
+import RecuperarPassModal from './recuperar_passModal';
 
 function FormLoginUsuario(props) {
 	const [ datos, setDatos ] = useState([]);
@@ -35,10 +36,10 @@ function FormLoginUsuario(props) {
 				}
 			})
 			.then((res) => {
-				return res.data
+				return res.data;
 			})
 			.catch((err) => {
-				return err
+				return err;
 			});
 	};
 
@@ -237,6 +238,7 @@ function FormLoginUsuario(props) {
 						onChange={obtenerCampos}
 					/>
 				</Box>
+				<RecuperarPassModal />
 				<Box display="flex" justifyContent="center" mt={5}>
 					<Button variant="contained" color="primary" onClick={() => enviarDatosBD()}>
 						Iniciar sesión

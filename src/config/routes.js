@@ -3,6 +3,7 @@ import LayoutMaestro from '../components/Layout_Maestro/layout_maestro';
 import LayoutContenidoCurso from '../components/Layout_Maestro/layout_contenido';
 import LayoutUsers from '../components/Layout_User/layout_usuario';
 import LayoutDashboardUser from '../components/Layout_User/layout_dashboar';
+import RecuperarPassword from '../components/Layout_User/layout_recovery';
 
 //Admin pages
 import DashboardMaestro from '../pages/maestro/Dashboard_maestro/dashboard';
@@ -23,7 +24,6 @@ import Carrito from '../pages/users/Carrito/carrito';
 import PagarCurso from '../pages/users/Compra_curso/pagar_curso';
 import MisCursos from '../pages/users/Cursos_usuario/mis_cursos';
 import GenerarCertificado from '../pages/users/Dashboard_Usuario/certificado';
-/* import DashboardUsuario from '../pages/users/Dashboard_Usuario/dashboard'; */
 import PerfilUsuario from '../pages/users/Perfil_usuario/perfil';
 import Politicas from '../pages/users/Politicas/politicas';
 import ImagenCorporativa from '../pages/users/Imagen_corporativa/imagen_corporativa';
@@ -53,6 +53,11 @@ const routes = [
 	{
 		path: '/compra/:url',
 		component: PagarCurso,
+		exact: true
+	},
+	{
+		path: '/reset_password/:url',
+		component: RecuperarPassword,
 		exact: true
 	},
 	{

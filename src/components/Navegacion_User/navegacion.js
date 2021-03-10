@@ -21,6 +21,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import useStyles from './styles';
 import ImagenLogo from '../../images/uniline2.png';
+import ImagenLogoDark from '../../images/unilineDark.png';
 import CarritoNavbar from './carrito';
 
 function NavegacionUsuario(props) {
@@ -81,7 +82,7 @@ function NavegacionUsuario(props) {
 			</MenuItem>
 			<ListItem button onClick={darkModeAction}>
 				<ListItemIcon>{darkTheme ? <Brightness5Icon /> : <BrightnessMediumIcon />}</ListItemIcon>
-				<ListItemText primary={`tema: ${darkTheme === true ? 'Oscuro' : 'Por defecto'}`} />
+				<ListItemText primary={`tema: ${darkTheme === true ? 'Oscuro' : 'Claro'}`} />
 			</ListItem>
 			<MenuItem
 				onClick={() => {
@@ -122,7 +123,7 @@ function NavegacionUsuario(props) {
 						<Hidden smDown>
 							<Button color="inherit" component={Link} to="/">
 								<Box className={classes.logo}>
-									<img alt="logo navbar" src={ImagenLogo} className={classes.imagen} />
+									<img alt="logo navbar" src={darkTheme ? ImagenLogoDark : ImagenLogo} className={classes.imagen} />
 								</Box>
 							</Button>
 						</Hidden>
@@ -131,7 +132,7 @@ function NavegacionUsuario(props) {
 								<SearchIcon />
 							</div> */}
 							<InputBase
-								placeholder="Buscar algún curso..."
+								placeholder="¿Qué quieres aprender hoy?"
 								classes={{
 									root: classes.inputRoot,
 									input: classes.inputInput
@@ -147,9 +148,9 @@ function NavegacionUsuario(props) {
 						</div>
 						<div className={classes.grow} />
 						<Hidden smDown>
-							<Button color="inherit" component={Link} to="/" className={classes.marginButton}>
+							{/* <Button color="inherit" component={Link} to="/" className={classes.marginButton}>
 								Inicio
-							</Button>
+							</Button> */}
 							{token ? (
 								<Button
 									color="inherit"
@@ -175,7 +176,7 @@ function NavegacionUsuario(props) {
 								<div />
 							)}
 							{!token ? (
-								<Button color="inherit" component={Link} to="/login" className={classes.marginButton}>
+								<Button color="secondary" variant="contained" component={Link} to="/login" className={`${classes.marginButton} ${classes.session}`}>
 									Iniciar sesión
 								</Button>
 							) : (
@@ -188,7 +189,7 @@ function NavegacionUsuario(props) {
 									to="/registro"
 									className={classes.marginButton}
 								>
-									Registrate
+									Regístrate
 								</Button>
 							) : (
 								<div />
@@ -262,7 +263,7 @@ function NavegacionUsuario(props) {
 					<div className={classes.drawerHeader}>
 						<Button color="inherit" component={Link} to="/">
 							<Box className={classes.logoResponsive}>
-								<img alt="logo navbar" src={ImagenLogo} className={classes.imagen} />
+								<img alt="logo navbar" src={darkTheme ? ImagenLogoDark : ImagenLogo} className={classes.imagen} />
 							</Box>
 						</Button>
 						<div className={classes.grow} />
@@ -353,7 +354,7 @@ function NavegacionUsuario(props) {
 						)}
 						<ListItem button onClick={darkModeAction}>
 							<ListItemIcon>{darkTheme ? <Brightness5Icon /> : <BrightnessMediumIcon />}</ListItemIcon>
-							<ListItemText primary={`tema: ${darkTheme === true ? 'Oscuro' : 'Por defecto'}`} />
+							<ListItemText primary={`tema: ${darkTheme === true ? 'Oscuro' : 'Claro'}`} />
 						</ListItem>
 						{token ? (
 							<ListItem

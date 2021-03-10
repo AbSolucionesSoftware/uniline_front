@@ -4,6 +4,9 @@ const theme = createMuiTheme({
 	palette: {
 		type: 'light',
 		navbar: '#3f51b5!important',
+		session: {
+			main: '#E72F2F'
+		},
 		primary: {
 			main: '#2196f3'
 		},

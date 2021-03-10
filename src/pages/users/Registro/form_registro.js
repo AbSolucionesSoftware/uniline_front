@@ -144,7 +144,7 @@ function FormRegistroUsuario(props) {
 	const comprarCurso = async ({ curso, urlActual }) => {
 		setLoading(true);
 		let user = JSON.parse(localStorage.getItem('student'));
-		
+
 		localStorage.removeItem('buy');
 		localStorage.setItem(
 			'payment',
@@ -169,7 +169,7 @@ function FormRegistroUsuario(props) {
 			/>
 			<div className={classes.root}>
 				<Box p={5} width={500}>
-					<Typography variant="h4">Registro</Typography>
+					<Typography variant="h4">Ingresa tus datos</Typography>
 					<Box my={2}>
 						<TextField
 							error={!datos.name && validate}
@@ -234,12 +234,12 @@ function FormRegistroUsuario(props) {
 								label={
 									<Typography>
 										<LinkMaterial target="_blank" href="/politicas">
-											Acepto politicas y condiciones
+											Acepto políticas y condiciones
 										</LinkMaterial>
 									</Typography>
 								}
 							/>
-							<FormHelperText id="my-helper-text">Acepta las politicas para registrarte.</FormHelperText>
+							<FormHelperText id="my-helper-text">Acepta las políticas para registrarte.</FormHelperText>
 						</FormControl>
 					</Box>
 					<Box display="flex" justifyContent="center" my={5}>

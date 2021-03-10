@@ -248,7 +248,7 @@ export default function NavbarMaestro(props) {
 					</ListItem>
 					<ListItem button onClick={darkModeAction}>
 						<ListItemIcon>{darkTheme ? <Brightness5Icon /> : <BrightnessMediumIcon />}</ListItemIcon>
-						<ListItemText primary={`tema: ${darkTheme === true ? 'Oscuro' : 'Por defecto'}`} />
+						<ListItemText primary={`tema: ${darkTheme === true ? 'Oscuro' : 'Claro'}`} />
 					</ListItem>
 					<ListItem button component={Link} to="/">
 						<ListItemIcon>

@@ -1,7 +1,8 @@
 import React from 'react';
-import { Box, Button, Container, Divider, Grid, Typography } from '@material-ui/core';
+import { Box, Container, Divider, Grid, Typography } from '@material-ui/core';
 import ListaCompra from './lista_items';
 import { formatoMexico } from '../../../config/reuserFunction';
+import MetodosDePago from './metodos_pago';
 
 export default function PagarCurso(props) {
 	let user = { _id: '' };
@@ -65,14 +66,7 @@ export default function PagarCurso(props) {
 						<Box my={2}>
 							<Divider />
 						</Box>
-						<Button
-							fullWidth
-							color="secondary"
-							size="large"
-							variant="contained"
-						>
-							Pagar ahora
-						</Button>
+						<MetodosDePago />
 					</Box>
 				</Grid>
 			</Grid>
