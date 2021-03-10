@@ -169,7 +169,7 @@ function FormLoginUsuario(props) {
 
 		/* verificar si ya tienes el curso */
 		misCursos.forEach((res) => {
-			if (res.idCourse._id === curso[0].idCourse._id) {
+			if (res.idCourse._id === curso[0].idCourse) {
 				course = true;
 			}
 			return;
@@ -185,7 +185,7 @@ function FormLoginUsuario(props) {
 				})
 			);
 			setTimeout(() => {
-				props.history.push(`/dashboard/${curso[0].idCourse.slug}`);
+				props.history.push(`/dashboard/${curso[0].course.slug}`);
 			}, 500);
 			return;
 		}
@@ -198,7 +198,7 @@ function FormLoginUsuario(props) {
 			})
 		);
 		setTimeout(() => {
-			props.history.push(`/compra/${curso[0].idCourse.slug}`);
+			props.history.push(`/compra/${curso[0].course.slug}`);
 		}, 500);
 	};
 
