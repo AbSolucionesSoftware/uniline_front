@@ -54,10 +54,10 @@ export const ClientRequestVimeo = (client, uri) => {
         client.request(
             {
                 method: 'PUT',
-                path: uri + '/privacy/domains/http://localhost:3000'
+                path: uri + '/privacy/domains/https://uniline.online'
             },
             function(error, body, status_code, headers) {
-                console.log(uri + ' will only be embeddable on "http://localhost:3000".');
+                console.log(uri + ' will only be embeddable on "https://uniline.online".');
                 client.request(
                     {
                         method: 'PATCH',

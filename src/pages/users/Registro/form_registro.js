@@ -154,7 +154,7 @@ function FormRegistroUsuario(props) {
 			})
 		);
 		setTimeout(() => {
-			props.history.push(`/compra/${curso[0].idCourse.slug}`);
+			props.history.push(`/compra/${curso[0].course.slug}`);
 		}, 500);
 	};
 

@@ -74,6 +74,7 @@ export default function RegistroInformacionCurso() {
 		if (e.target.name === 'category') {
 			setDatos({
 				...datos,
+				category: e.target.value,
 				subCategory: ''
 			});
 			return;
@@ -378,9 +379,9 @@ export default function RegistroInformacionCurso() {
 									label="categoria"
 									renderValue={(value) => value}
 								>
-									{categories.map((res) => {
+									{categories.map((res, index) => {
 										return (
-											<MenuItem key={res.categorie} value={res.categorie}>
+											<MenuItem key={index} value={res.categorie}>
 												{res.categorie}
 											</MenuItem>
 										);
@@ -410,6 +411,7 @@ export default function RegistroInformacionCurso() {
 								>
 									{datos.category ? (
 										categories.map((categorias) => {
+											console.log();
 											if (datos.category === categorias.categorie) {
 												return categorias.subCategories.map((subCategorias) => {
 													return (
@@ -422,11 +424,7 @@ export default function RegistroInformacionCurso() {
 													);
 												});
 											}
-											return (
-												<MenuItem key="otros" value="">
-													<em>Ninguna</em>
-												</MenuItem>
-											);
+											return null
 										})
 									) : (
 										<MenuItem value="">

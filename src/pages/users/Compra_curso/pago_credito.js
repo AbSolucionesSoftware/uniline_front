@@ -114,6 +114,12 @@ export default function PagoCredito({ compra, total }) {
 					<CheckOutForm compra={compra} total={total} setIdPago={setIdPago} setCard={setCard} />
 				</Elements>
 			)}
+			<MessageSnackbar
+				open={snackbar.open}
+				mensaje={snackbar.mensaje}
+				status={snackbar.status}
+				setSnackbar={setSnackbar}
+			/>
 		</Fragment>
 	);
 }
