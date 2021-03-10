@@ -5,7 +5,7 @@ const theme = createMuiTheme({
 		type: 'light',
 		navbar: '#3f51b5!important',
 		session: {
-			main: '#D82B2B'
+			main: '#E72F2F'
 		},
 		primary: {
 			main: '#2196f3'

@@ -5,11 +5,11 @@ const darkMode = createMuiTheme({
 		type: 'dark',
 		navbar: '#424242!important',
 		session: {
-			main: '#D82B2B'
+			main: '#E72F2F'
 		},
-		/* primary: {
+		primary: {
 			main: '#2196f3'
-		}, */
+		},
 		/* secondary: {
 			main: '#666666'
 		}, */

@@ -144,7 +144,7 @@ function FormRegistroUsuario(props) {
 	const comprarCurso = async ({ curso, urlActual }) => {
 		setLoading(true);
 		let user = JSON.parse(localStorage.getItem('student'));
-		
+
 		localStorage.removeItem('buy');
 		localStorage.setItem(
 			'payment',

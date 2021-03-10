@@ -103,7 +103,7 @@ export default function VistaCursoContenidoInfo({ curso }) {
 				</Box>
 			</Box>
 			<Box minHeight="50vh" p={5}>
-				<Typography variant="h6">¿Qué aprenderás en este curso?</Typography>
+				<Typography variant="h6">¿Qué aprenderás?</Typography>
 				<Box px={5}>
 					<ul>
 						{curso.course.learnings.map((res) => {
@@ -115,7 +115,7 @@ export default function VistaCursoContenidoInfo({ curso }) {
 						})}
 					</ul>
 				</Box>
-				<Typography variant="h6">Requisitos para realizar este curso</Typography>
+				<Typography variant="h6">Requisitos</Typography>
 				<Box px={5}>
 					<ul>
 						{curso.course.requirements.map((res) => {
