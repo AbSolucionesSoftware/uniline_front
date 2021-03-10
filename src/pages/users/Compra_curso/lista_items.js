@@ -11,6 +11,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 	buttons: {
 		display: 'block'
+	},
+	grid: {
+		backgroundColor: theme.palette.background.paper
 	}
 }));
 
@@ -19,7 +22,7 @@ function ListaCompra(props) {
 	const { curso } = props
 
 	return (
-		<Box my={3} boxShadow={3} p={3}>
+		<Box my={3} boxShadow={3} p={3} className={classes.grid}>
 			<Grid container spacing={2}>
 				<Grid item lg={3} sm={3} xs={12}>
 					<Box display="flex" justifyContent="center" alignItems="center" height="100%">

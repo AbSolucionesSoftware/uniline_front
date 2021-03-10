@@ -357,6 +357,7 @@ export default function RegistroInformacionCurso() {
 									<MenuItem value="básico">Básico</MenuItem>
 									<MenuItem value="Intermedio">Intermedio</MenuItem>
 									<MenuItem value="Avanzado">Avanzado</MenuItem>
+									<MenuItem value="Básico-Intermedio-Avanzado">Básico-Intermedio-Avanzado</MenuItem>
 								</Select>
 								{validacion && !datos.level ? <FormHelperText>campo requerido</FormHelperText> : null}
 							</FormControl>

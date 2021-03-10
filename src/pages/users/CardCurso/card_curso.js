@@ -123,7 +123,8 @@ function CardsCursos(props) {
 				priceCourse: curso.priceCourse.price,
 				pricePromotionCourse: curso.priceCourse.promotionPrice,
 				persentagePromotion: curso.priceCourse.persentagePromotion,
-				idCourse: curso,
+				idCourse: curso._id,
+				course: curso,
 				promotion: true
 			});
 		} else {
@@ -131,7 +132,8 @@ function CardsCursos(props) {
 				priceCourse: curso.priceCourse.price,
 				pricePromotionCourse: 0,
 				persentagePromotion: '',
-				idCourse: curso,
+				idCourse: curso._id,
+				course: curso,
 				promotion: false
 			});
 		}

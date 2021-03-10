@@ -83,7 +83,8 @@ export default function Carrito(props) {
 					priceCourse: articulo.course.priceCourse.price,
 					pricePromotionCourse: articulo.course.priceCourse.promotionPrice,
 					persentagePromotion: articulo.course.priceCourse.persentagePromotion,
-					idCourse: articulo.course,
+					idCourse: articulo.course._id,
+					course: articulo.course,
 					promotion: true,
 				})
 			} else {
@@ -92,7 +93,8 @@ export default function Carrito(props) {
 					priceCourse: articulo.course.priceCourse.price,
 					pricePromotionCourse: 0,
 					persentagePromotion: '',
-					idCourse: articulo.course,
+					idCourse: articulo.course._id,
+					course: articulo.course,
 					promotion: false,
 				})
 			}

@@ -4,6 +4,7 @@ import LayoutContenidoCurso from '../components/Layout_Maestro/layout_contenido'
 import LayoutUsers from '../components/Layout_User/layout_usuario';
 import LayoutDashboardUser from '../components/Layout_User/layout_dashboar';
 import RecuperarPassword from '../components/Layout_User/layout_recovery';
+import PagarCurso from '../components/Layout_User/layout_pago';
 
 //Admin pages
 import DashboardMaestro from '../pages/maestro/Dashboard_maestro/dashboard';
@@ -21,7 +22,6 @@ import TareasEstudiantes from '../pages/maestro/Subir_curso/Tareas/tareas';
 import Home from '../pages/users/Home/home';
 import ResultadoBusqueda from '../pages/users/Busqueda/resultados_busqueda';
 import Carrito from '../pages/users/Carrito/carrito';
-import PagarCurso from '../pages/users/Compra_curso/pagar_curso';
 import MisCursos from '../pages/users/Cursos_usuario/mis_cursos';
 import GenerarCertificado from '../pages/users/Dashboard_Usuario/certificado';
 import PerfilUsuario from '../pages/users/Perfil_usuario/perfil';
