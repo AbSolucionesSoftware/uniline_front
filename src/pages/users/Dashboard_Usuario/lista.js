@@ -118,8 +118,8 @@ export default function ListaContenido({ curso }) {
 
 const StyledMenu = withStyles({
 	paper: {
-		border: '1px solid #d3d4d5',
-	/* 	width: 210,
+		border: '1px solid #d3d4d5'
+		/* 	width: 210,
 		maxWidth: 300 */
 	}
 })((props) => (
@@ -279,55 +279,58 @@ const ListaBloques = ({ bloque, curso }) => {
 										>
 											<ListItemText id={labelId} primary={topic.topicTitle} />
 											{topic.resources.length > 0 ? (
-												<ListItemSecondaryAction>
-													<IconButton edge="end" onClick={(e) => handleClickMenu(e)}>
-														<FolderOpenIcon />
-													</IconButton>
-												</ListItemSecondaryAction>
+												<Fragment>
+													<ListItemSecondaryAction>
+														<IconButton edge="end" onClick={(e) => handleClickMenu(e)}>
+															<FolderOpenIcon />
+														</IconButton>
+													</ListItemSecondaryAction>
+													<StyledMenu
+														disableScrollLock={true}
+														id={`customized-menu-${index}`}
+														anchorEl={anchorEl}
+														keepMounted
+														open={Boolean(anchorEl)}
+														onClose={handleCloseMenu}
+													>
+														{topic.resources.length > 0 ? (
+															topic.resources.map((recurso, index) => {
+																return recurso.urlExtern ? (
+																	<Link
+																		/* component="button" */
+																		key={index}
+																		target="_blank"
+																		rel="noopener"
+																		href={recurso.urlExtern}
+																	>
+																		<MenuItem dense /* component="a" */>
+																			<ListItemIcon>
+																				<LinkIcon fontSize="small" />
+																			</ListItemIcon>
+																			<ListItemText primary={recurso.title} />
+																		</MenuItem>
+																	</Link>
+																) : (
+																	<Link
+																		/* component="button" */
+																		key={index}
+																		href={recurso.urlDownloadResource}
+																		download={recurso.title}
+																	>
+																		<MenuItem dense>
+																			<ListItemIcon>
+																				<InsertDriveFileOutlinedIcon fontSize="small" />
+																			</ListItemIcon>
+																			<ListItemText primary={recurso.title} />
+																		</MenuItem>
+																	</Link>
+																);
+															})
+														) : null}
+													</StyledMenu>
+												</Fragment>
 											) : null}
 										</ListItem>
-										<StyledMenu
-											disableScrollLock={true}
-											id={`customized-menu-${index}`}
-											anchorEl={anchorEl}
-											keepMounted
-											open={Boolean(anchorEl)}
-											onClose={handleCloseMenu}
-										>
-											{topic.resources.map((recurso, index) => {
-												console.log(index);
-												return recurso.urlExtern ? (
-													<Link
-														/* component="button" */
-														key={index}
-														target="_blank"
-														rel="noopener"
-														href={recurso.urlExtern}
-													>
-														<MenuItem dense /* component="a" */>
-															<ListItemIcon>
-																<LinkIcon fontSize="small" />
-															</ListItemIcon>
-															<ListItemText primary={recurso.title} />
-														</MenuItem>
-													</Link>
-												) : (
-													<Link
-														/* component="button" */
-														key={index}
-														href={recurso.urlDownloadResource}
-														download={recurso.title}
-													>
-														<MenuItem dense>
-															<ListItemIcon>
-																<InsertDriveFileOutlinedIcon fontSize="small" />
-															</ListItemIcon>
-															<ListItemText primary={recurso.title} />
-														</MenuItem>
-													</Link>
-												);
-											})}
-										</StyledMenu>
 									</Grid>
 								</Grid>
 							);
