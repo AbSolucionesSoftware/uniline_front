@@ -63,7 +63,9 @@ export default function SubirArchivoTema({ tema }) {
 		setResourceDel({ open: !resourceDel.open, resource });
 	};
 
-	const getFile = (e) => setFile({ ...file, urlDownloadResource: e.target.files[0] });
+	const getFile = (e) => {
+		setFile({ ...file, urlDownloadResource: e.target.files[0] })
+	};
 	const getFileTitle = (e) => setFile({ ...file, title: e.target.value });
 
 	const getUrl = (e) => setUrl({ ...url, [e.target.name]: e.target.value });
@@ -154,7 +156,7 @@ export default function SubirArchivoTema({ tema }) {
 	};
 
 	const eliminarRecurso = async (resource) => {
-		setLoading(true);
+		setLoadingFile(true);
 		await clienteAxios
 			.delete(`/course/topic/${tema._id}/delete/resource/${resource}`, {
 				headers: {
@@ -163,7 +165,7 @@ export default function SubirArchivoTema({ tema }) {
 			})
 			.then((res) => {
 				setUpdate(!update);
-				setLoading(false);
+				setLoadingFile(false);
 				setResourceDel({open: false, resource: ''});
 				setSnackbar({
 					open: true,
@@ -172,7 +174,7 @@ export default function SubirArchivoTema({ tema }) {
 				});
 			})
 			.catch((err) => {
-				setLoading(false);
+				setLoadingFile(false);
 				if (err.response) {
 					setSnackbar({
 						open: true,
@@ -233,7 +235,7 @@ export default function SubirArchivoTema({ tema }) {
 							</Box>
 						</form>
 						<input
-							name="urlTopicVideo"
+							name="urlDownloadResource"
 							className={classes.input}
 							id={`topic-file-${tema._id}`}
 							type="file"
