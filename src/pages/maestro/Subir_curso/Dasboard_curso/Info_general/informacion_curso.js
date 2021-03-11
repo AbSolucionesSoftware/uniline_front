@@ -411,7 +411,6 @@ export default function RegistroInformacionCurso() {
 								>
 									{datos.category ? (
 										categories.map((categorias) => {
-											console.log();
 											if (datos.category === categorias.categorie) {
 												return categorias.subCategories.map((subCategorias) => {
 													return (
@@ -424,7 +423,7 @@ export default function RegistroInformacionCurso() {
 													);
 												});
 											}
-											return null
+											return null;
 										})
 									) : (
 										<MenuItem value="">

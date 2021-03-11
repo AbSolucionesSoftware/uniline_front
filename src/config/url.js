@@ -1,4 +1,4 @@
-const urlPage = 'https://priceless-roentgen-d8c7ba.netlify.app';
+const urlPage = 'https://uniline.online';
 
 
 export default urlPage

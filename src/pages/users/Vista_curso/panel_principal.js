@@ -10,11 +10,10 @@ import { formatoMexico } from '../../../config/reuserFunction';
 import { withRouter } from 'react-router-dom';
 import RegistroAlterno from '../RegistroAlterno/registro_alterno';
 import { NavContext } from '../../../context/context_nav';
-import { AgregarCarritoBD, CanjearCupon } from '../PeticionesCompras/peticiones_compras';
+import { AdquirirCursoGratis, AgregarCarritoBD, CanjearCupon } from '../PeticionesCompras/peticiones_compras';
 import { FacebookShareButton, WhatsappShareButton } from 'react-share';
 import urlPage from '../../../config/url';
 import { Link } from 'react-router-dom';
-import clienteAxios from '../../../config/axios';
 
 const useStyles = makeStyles((theme) => ({
 	background: {
@@ -128,37 +127,32 @@ function VistaCursoPanelPrincipal(props) {
 	};
 
 	const adquirirCursoGratis = async (curso) => {
+		if (!token || !user._id) {
+			handleModal();
+			localStorage.setItem('free', JSON.stringify({ curso: curso.course, urlActual }));
+			return;
+		}
 		setLoadingBuy(true);
-		await clienteAxios
-			.post(
-				`/course/${curso.course._id}/inscription/course/free/user/${user._id}`,
-				{ jalaporfa: 'jalaporfa2' },
-				{
-					headers: {
-						Authorization: `bearer ${token}`
-					}
-				}
-			)
-			.then((res) => {
-				setLoadingBuy(false);
-				props.history.push('/mis_cursos');
-			})
-			.catch((err) => {
-				setLoadingBuy(false);
-				if (err.response) {
-					setSnackbar({
-						open: true,
-						mensaje: err.response.data.message,
-						status: 'error'
-					});
-				} else {
-					setSnackbar({
-						open: true,
-						mensaje: 'Al parecer no se a podido conectar al servidor.',
-						status: 'error'
-					});
-				}
-			});
+		const result = await AdquirirCursoGratis(curso.course, user, token);
+		if (result.status && result.status === 200) {
+			setLoadingBuy(false);
+			props.history.push('/mis_cursos');
+		} else {
+			setLoadingBuy(false);
+			if (result.response) {
+				setSnackbar({
+					open: true,
+					mensaje: result.response.data.message,
+					status: 'error'
+				});
+			} else {
+				setSnackbar({
+					open: true,
+					mensaje: 'Al parecer no se a podido conectar al servidor.',
+					status: 'error'
+				});
+			}
+		}
 	};
 
 	const pagarCurso = (curso) => {
@@ -274,7 +268,7 @@ function VistaCursoPanelPrincipal(props) {
 							variant="contained"
 							color="primary"
 							component={Link}
-							to={`/dashboard/${curso.slug}`}
+							to={`/dashboard/${curso.course.slug}`}
 						>
 							Ver curso
 						</Button>
@@ -398,6 +392,7 @@ const ModalRegistro = ({ handleModal, open, error, setError }) => {
 		localStorage.removeItem('coupon');
 		localStorage.removeItem('cart');
 		localStorage.removeItem('buy');
+		localStorage.removeItem('free');
 		setError({ error: false, message: '' });
 	};
 	return (

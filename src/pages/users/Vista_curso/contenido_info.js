@@ -50,7 +50,7 @@ export default function VistaCursoContenidoInfo({ curso }) {
 							<Rating name="read-only" value={curso.course.qualification} precision={0.5} readOnly />
 						</Grid>
 						<Grid item>
-							<Typography>{`${curso.totalInscription} estudiantes compraron este curso`}</Typography>
+							<Typography>{`${curso.totalInscription} estudiantes inscritos`}</Typography>
 						</Grid>
 					</Grid>
 				</Box>
