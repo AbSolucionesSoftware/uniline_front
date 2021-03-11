@@ -11,7 +11,11 @@ import Spin from '../Spin/spin';
 import jwt_decode from 'jwt-decode';
 import { withRouter } from 'react-router-dom';
 import { NavContext } from '../../context/context_nav';
-import { AgregarCarritoBD, CanjearCupon } from '../../pages/users/PeticionesCompras/peticiones_compras';
+import {
+	AdquirirCursoGratis,
+	AgregarCarritoBD,
+	CanjearCupon
+} from '../../pages/users/PeticionesCompras/peticiones_compras';
 /* import * as firebaseui from 'firebaseui'; */
 
 /* var ui = new firebaseui.auth.AuthUI(firebase.auth());
@@ -38,6 +42,21 @@ function Firebase(props) {
 			// Avoid redirects after sign-in.
 			signInSuccessWithAuthResult: () => false
 		}
+	};
+
+	const obtenerMisCursos = async (user, token) => {
+		return await clienteAxios
+			.get(`/course/user/${user._id}`, {
+				headers: {
+					Authorization: `bearer ${token}`
+				}
+			})
+			.then((res) => {
+				return res.data;
+			})
+			.catch((err) => {
+				return err;
+			});
 	};
 
 	const canjearCupon = useCallback(
@@ -113,6 +132,92 @@ function Firebase(props) {
 		[ props.history, setError, carrito, misCursos ]
 	);
 
+	const comprarCurso = useCallback(
+		async ({ curso, urlActual }) => {
+			setLoading(true);
+			let token = localStorage.getItem('token');
+			let user = JSON.parse(localStorage.getItem('student'));
+			let course = false;
+
+			const misCursos = await obtenerMisCursos(user, token);
+
+			/* verificar si ya tienes el curso */
+			misCursos.forEach((res) => {
+				if (res.idCourse._id === curso[0].idCourse) {
+					course = true;
+				}
+				return;
+			});
+			setLoading(false);
+			if (course) {
+				localStorage.removeItem('buy');
+				localStorage.setItem(
+					'payment',
+					JSON.stringify({
+						user: user,
+						courses: curso
+					})
+				);
+				setTimeout(() => {
+					props.history.push(`/dashboard/${curso[0].course.slug}`);
+				}, 500);
+				return;
+			}
+			localStorage.removeItem('buy');
+			localStorage.setItem(
+				'payment',
+				JSON.stringify({
+					user: user,
+					courses: curso
+				})
+			);
+			setTimeout(() => {
+				props.history.push(`/compra/${curso[0].course.slug}`);
+			}, 500);
+		},
+		[ props.history ]
+	);
+
+	const adquirirCursoGratis = useCallback(
+		async ({ curso, urlActual }) => {
+			setLoading(true);
+			let token = localStorage.getItem('token');
+			let user = JSON.parse(localStorage.getItem('student'));
+			let course = false;
+
+			const misCursos = await obtenerMisCursos(user, token);
+
+			/* verificar si ya tienes el curso */
+			misCursos.forEach((res) => {
+				if (res.idCourse._id === curso._id) {
+					course = true;
+				}
+				return;
+			});
+			if (course) {
+				setLoading(false);
+				localStorage.removeItem('free');
+				setTimeout(() => {
+					props.history.push(`/dashboard/${curso.slug}`);
+				}, 500);
+				return;
+			}
+			const result = await AdquirirCursoGratis(curso, user, token);
+			if (result.status && result.status === 200) {
+				setLoading(false);
+				localStorage.removeItem('free');
+				props.history.push('/mis_cursos');
+			} else {
+				localStorage.removeItem('free');
+				setLoading(false);
+				setError({ error: true, message: result });
+				props.history.push(urlActual);
+				return;
+			}
+		},
+		[ props.history, setError ]
+	);
+
 	const onAuthStateChange = useCallback(
 		() => {
 			return firebase.auth().onAuthStateChanged(async (user) => {
@@ -135,10 +240,16 @@ function Firebase(props) {
 							/* redireccion en caso de ser comprado un curso o aplicar cupon */
 							let cuponItem = JSON.parse(localStorage.getItem('coupon'));
 							let cartItem = JSON.parse(localStorage.getItem('cart'));
+							let buyItem = JSON.parse(localStorage.getItem('buy'));
+							let freeItem = JSON.parse(localStorage.getItem('free'));
 							if (cuponItem) {
 								canjearCupon(cuponItem);
 							} else if (cartItem) {
 								agregarCarrito(cartItem);
+							} else if (buyItem) {
+								comprarCurso(buyItem);
+							} else if (freeItem) {
+								adquirirCursoGratis(freeItem);
 							} else {
 								props.history.push('/');
 							}
@@ -164,7 +275,7 @@ function Firebase(props) {
 				}
 			});
 		},
-		[ props.history, canjearCupon, agregarCarrito ]
+		[ props.history, canjearCupon, agregarCarrito, adquirirCursoGratis, comprarCurso ]
 	);
 
 	useEffect(
