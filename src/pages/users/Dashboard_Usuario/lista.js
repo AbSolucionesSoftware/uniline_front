@@ -119,8 +119,8 @@ export default function ListaContenido({ curso }) {
 const StyledMenu = withStyles({
 	paper: {
 		border: '1px solid #d3d4d5',
-		width: 210,
-		maxWidth: 300
+	/* 	width: 210,
+		maxWidth: 300 */
 	}
 })((props) => (
 	<Menu
@@ -288,13 +288,14 @@ const ListaBloques = ({ bloque, curso }) => {
 										</ListItem>
 										<StyledMenu
 											disableScrollLock={true}
-											id="customized-menu"
+											id={`customized-menu-${index}`}
 											anchorEl={anchorEl}
 											keepMounted
 											open={Boolean(anchorEl)}
 											onClose={handleCloseMenu}
 										>
 											{topic.resources.map((recurso, index) => {
+												console.log(index);
 												return recurso.urlExtern ? (
 													<Link
 														/* component="button" */

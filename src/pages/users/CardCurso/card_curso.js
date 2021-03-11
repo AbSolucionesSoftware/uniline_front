@@ -19,7 +19,7 @@ import { Link, withRouter } from 'react-router-dom';
 import WarningIcon from '@material-ui/icons/Warning';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
 import { NavContext } from '../../../context/context_nav';
-import { AgregarCarritoBD } from '../PeticionesCompras/peticiones_compras';
+import { AdquirirCursoGratis, AgregarCarritoBD } from '../PeticionesCompras/peticiones_compras';
 import RegistroAlterno from '../RegistroAlterno/registro_alterno';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import { Fragment } from 'react';
@@ -111,8 +111,31 @@ function CardsCursos(props) {
 		}
 	};
 
-	const adquirirCursoGratis = (curso) => {
-		console.log('curso gratis');
+	const adquirirCursoGratis = async (curso) => {
+		if (!token || !user._id) {
+			handleModal();
+			localStorage.setItem('free', JSON.stringify({ curso: curso, urlActual }));
+			return;
+		}
+
+		const result = await AdquirirCursoGratis(curso, user, token);
+		if (result.status && result.status === 200) {
+			props.history.push('/mis_cursos');
+		} else {
+			if (result.response) {
+				setSnackbar({
+					open: true,
+					mensaje: result.response.data.message,
+					status: 'error'
+				});
+			} else {
+				setSnackbar({
+					open: true,
+					mensaje: 'Al parecer no se a podido conectar al servidor.',
+					status: 'error'
+				});
+			}
+		}
 	};
 
 	const pagarCurso = (curso) => {

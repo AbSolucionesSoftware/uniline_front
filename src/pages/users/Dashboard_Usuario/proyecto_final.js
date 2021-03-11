@@ -159,9 +159,9 @@ export default function ProyectoFinal({ curso, user }) {
 			<Box mt={1}>
 				{homework && homework.qualificationHomework ? (
 					<Typography align="center">Calificacion: {homework.qualificationHomework}</Typography>
-				) : (
+				) : homework !== null && !homework.qualificationHomework ? (
 					<Typography align="center">Calificacion: En revisión</Typography>
-				)}
+				) : null}
 				<Box className={classes.root} my={1}>
 					<input
 						name="urlTopicVideo"
