@@ -21,9 +21,11 @@ export default function PagoCredito({ compra, total }) {
 		status: ''
 	});
 
-	const realizarPago = async (datos) => {
+	const realizarPago = async () => {
 		await clienteAxios
-			.post(`/pay/generate`, datos, {
+			.put(`/pay/confirm/${idPago}`, {
+				idPay: idPago
+			}, {
 				headers: {
 					Authorization: `bearer ${token}`
 				}
@@ -35,6 +37,7 @@ export default function PagoCredito({ compra, total }) {
 			.catch((err) => {
 				setLoading(false);
 				if (err.response) {
+					console.log(err.response);
 					setSnackbar({
 						open: true,
 						mensaje: err.response.data.message,
@@ -188,7 +191,8 @@ const CheckOutForm = ({ compra, total, setIdPago, setCard }) => {
 				username: compra.user.name,
 				idUser: compra.user._id,
 				total: total,
-				typePay: 'stripe'
+				typePay: 'stripe',
+				cart: compra.cart ? true : false
 			};
 			crearPagoBD(datos);
 		}

@@ -94,7 +94,7 @@ export default function Comentar({ curso, update, setUpdate }) {
 						<CircularProgress size={35} />
 					</Box>
 				) : null}
-				<Button variant="contained" color="primary" onClick={() => enviarComentarioBD()}>
+				<Button variant="contained" color="primary" onClick={() => enviarComentarioBD()} disabled={!temaActual.id ? true : false}>
 					Comentar
 				</Button>
 			</Box>

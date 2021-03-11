@@ -2,12 +2,13 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
-import { CardHeader, CardContent, CardActions, Collapse } from '@material-ui/core';
+import { CardHeader, CardContent, CardActions, Collapse, Chip } from '@material-ui/core';
 import { Avatar, IconButton, Typography } from '@material-ui/core';
 import { red } from '@material-ui/core/colors';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { Box, Button, /* CircularProgress, */ Hidden, useTheme } from '@material-ui/core';
+import { Box, Button, Hidden, useTheme } from '@material-ui/core';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
+import DoneIcon from '@material-ui/icons/Done';
 
 import SmsOutlinedIcon from '@material-ui/icons/SmsOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -19,7 +20,6 @@ import { formatoFechaCurso } from '../../../../config/reuserFunction';
 import EditarEliminarComentario from './editar_eliminar';
 import ResponderComentario from './responder';
 import LikesAndDislikes from './likesAndDislikes';
-
 const useStyles = makeStyles((theme) => ({
 	grow: {
 		flexGrow: 1
@@ -194,9 +194,19 @@ const Comentarios = ({ comentario, update, setUpdate }) => {
 							</IconButton>
 						) : null
 					}
-					title={`${comentario.idUser.name} ${comentario.idUser._id === curso.course.idProfessor._id
-						? '[Instructor]'
-						: ''}`}
+					/* title={`${comentario.idUser.name} ${comentario.idUser._id === curso.course.idProfessor._id
+						? ('[Instructor]')
+						: ''}`} */
+					title={
+						<Box display="flex">
+							<Box mr={1}>
+								<Typography>{comentario.idUser.name}</Typography>
+							</Box>
+							{comentario.idUser._id === curso.course.idProfessor._id ? (
+								<Chip size="small" icon={<DoneIcon />} label="INSTRUCTOR" color="primary" />
+							) : null}
+						</Box>
+					}
 					subheader={formatoFechaCurso(comentario.createdAt)}
 				/>
 				<CardContent>

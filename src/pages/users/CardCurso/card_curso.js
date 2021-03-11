@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
 	Card,
@@ -23,6 +23,7 @@ import { AdquirirCursoGratis, AgregarCarritoBD } from '../PeticionesCompras/peti
 import RegistroAlterno from '../RegistroAlterno/registro_alterno';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import { Fragment } from 'react';
+import clienteAxios from '../../../config/axios';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -63,7 +64,8 @@ function CardsCursos(props) {
 	let token = localStorage.getItem('token');
 	const [ loading, setLoading ] = useState(false);
 	const [ open, setOpen ] = useState(false);
-	const { error, setError, update, setUpdate, carrito, misCursos } = useContext(NavContext);
+	const [ course, setCourse ] = useState(false);
+	const { error, setError, update, setUpdate, carrito } = useContext(NavContext);
 	const [ snackbar, setSnackbar ] = useState({
 		open: false,
 		mensaje: '',
@@ -75,6 +77,33 @@ function CardsCursos(props) {
 	if (token !== null) user = JSON.parse(localStorage.getItem('student'));
 
 	const handleModal = () => setOpen(!open);
+
+	const obtenerMisCursos = useCallback(
+		async () => {
+			await clienteAxios
+			.get(`/course/user/${user._id}`, {
+				headers: {
+					Authorization: `bearer ${token}`
+				}
+			})
+			.then((res) => {
+				res.data.forEach((res) => {
+					if (res.idCourse._id === curso._id) {
+						setCourse(true)
+					}
+					return;
+				});
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+		},
+		[ curso._id, token, user._id],
+	)
+
+	useEffect(() => {
+		obtenerMisCursos();
+	}, [ obtenerMisCursos ])
 
 	const agregarCarrito = async (curso) => {
 		if (!token || !user._id) {
@@ -148,7 +177,7 @@ function CardsCursos(props) {
 				persentagePromotion: curso.priceCourse.persentagePromotion,
 				idCourse: curso._id,
 				course: curso,
-				promotion: true
+				promotion: true,
 			});
 		} else {
 			cursos.push({
@@ -187,7 +216,7 @@ function CardsCursos(props) {
 		});
 	}
 	/* verificar si ya tiene el curso */
-	let course = false;
+	/* let course = false;
 	if (misCursos) {
 		misCursos.forEach((res) => {
 			if (res.idCourse._id === curso._id) {
@@ -195,7 +224,7 @@ function CardsCursos(props) {
 			}
 			return;
 		});
-	}
+	} */
 
 	return (
 		<Fragment>
