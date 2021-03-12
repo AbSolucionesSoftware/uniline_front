@@ -141,8 +141,7 @@ export default function Carrito(props) {
 	const pagarCurso = () => {
 		localStorage.setItem('payment', JSON.stringify({
 			user: user,
-			courses: cursos,
-			cart: true
+			courses: cursos
 		}))
 		setTimeout(() => {
 			props.history.push(`/compra/${carrito._id}`);

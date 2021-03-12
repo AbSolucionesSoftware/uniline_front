@@ -30,6 +30,8 @@ import ImagenCorporativa from '../pages/users/Imagen_corporativa/imagen_corporat
 import LoginUsuario from '../pages/users/Login/login';
 import RegistroUsuario from '../pages/users/Registro/registro';
 import VistaCurso from '../pages/users/Vista_curso/vista_curso';
+import PagoSuccess from '../pages/users/Compra_curso/success_page';
+import PagoFailed from '../pages/users/Compra_curso/failed_page';
 
 //other
 import Error404 from '../pages/error404';
@@ -168,6 +170,16 @@ const routes = [
             {
 				path: '/curso/:url',
 				component: VistaCurso,
+				exact: true
+			},
+			{
+				path: '/payment_success/:idPago',
+				component: PagoSuccess,
+				exact: true
+            },
+            {
+				path: '/payment_failed/:idPago/:message',
+				component: PagoFailed,
 				exact: true
 			},
 			{
