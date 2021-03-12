@@ -1,5 +1,17 @@
 import React, { useState } from 'react';
-import { Box, Container, Divider, FormControl, FormControlLabel, FormLabel, Grid, makeStyles, Radio, RadioGroup, Typography } from '@material-ui/core';
+import {
+	Box,
+	Container,
+	Divider,
+	FormControl,
+	FormControlLabel,
+	FormLabel,
+	Grid,
+	makeStyles,
+	Radio,
+	RadioGroup,
+	Typography
+} from '@material-ui/core';
 import ListaCompra from './lista_items';
 import { formatoMexico } from '../../../config/reuserFunction';
 import ImagenMetodosPagoSinOxxo from '../../../images/metodosdepago_sinoxxo.png';
@@ -58,65 +70,70 @@ export default function PagarCurso(props) {
 			}
 		}
 		totalAnterior += articulo.course.priceCourse.price;
-		descuento = ((total * 100 / totalAnterior - 100) * -1);
+		descuento = ((total * 100 / totalAnterior - 100) * -1).toFixed(2);
 	});
 
 	return (
 		<Container maxWidth="lg" className={classes.container}>
-			<Grid container spacing={2}>
-				<Grid item lg={8}>
-					<Box minHeight="70vh" my={7}>
-						{render_lista}
-					</Box>
-				</Grid>
-				<Grid item lg={4}>
-					<Box boxShadow={3} minHeight="80vh" my={7} p={4} className={classes.grid}>
-						<Typography variant="h5">Total:</Typography>
-						<Typography variant="h4">
-							<b>{formatoMexico(total)} $MXN</b>
-						</Typography>
-						{promocion ? (
-							<Grid container spacing={3}>
-								<Grid item>
-									<Typography variant="h6" color="textSecondary">
-										<s>{formatoMexico(totalAnterior)} $MXN</s>
-									</Typography>
+			<Box my={5}>
+				<Grid container spacing={2}>
+					<Grid item lg={8} md={6} xs={12}>
+						<Box >{render_lista}</Box>
+					</Grid>
+					<Grid item lg={4} md={6} xs={12}>
+						<Box boxShadow={3} minHeight="80vh" p={4} className={classes.grid}>
+							<Typography variant="h5">Total:</Typography>
+							<Typography variant="h4">
+								<b>{formatoMexico(total)} $MXN</b>
+							</Typography>
+							{promocion ? (
+								<Grid container spacing={3}>
+									<Grid item>
+										<Typography variant="h6" color="textSecondary">
+											<s>{formatoMexico(totalAnterior)} $MXN</s>
+										</Typography>
+									</Grid>
+									<Grid item>
+										<Typography variant="h6" color="textSecondary">
+											{descuento}% de descuento
+										</Typography>
+									</Grid>
 								</Grid>
-								<Grid item>
-									<Typography variant="h6" color="textSecondary">
-										{descuento}% de descuento
-									</Typography>
-								</Grid>
-							</Grid>
-						) : null}
-						<Box my={2}>
-							<Divider />
+							) : null}
+							<Box my={2}>
+								<Divider />
+							</Box>
+							<Box my={2}>
+								<FormControl component="fieldset">
+									<FormLabel component="legend">Métodos de pago</FormLabel>
+									<Box className={classes.imagenContainer}>
+										<img
+											alt="metodos de pago"
+											src={ImagenMetodosPagoSinOxxo}
+											className={classes.imagen}
+										/>
+									</Box>
+									<RadioGroup
+										aria-label="gender"
+										name="gender1"
+										value={value}
+										onChange={handleChange}
+									>
+										<FormControlLabel
+											value="credit"
+											control={<Radio />}
+											label="Tarjeta de credito"
+										/>
+										<FormControlLabel value="paypal" control={<Radio />} label="Paypal" />
+										{/* <FormControlLabel value="oxxo" control={<Radio />} label="Oxxo" /> */}
+									</RadioGroup>
+								</FormControl>
+							</Box>
+							{value === 'credit' ? <PagoCredito compra={compra} total={total} /> : <PagoPaypal />}
 						</Box>
-						<Box my={2}>
-							<FormControl component="fieldset">
-								<FormLabel component="legend">Métodos de pago</FormLabel>
-								<Box className={classes.imagenContainer}>
-									<img
-										alt="metodos de pago"
-										src={ImagenMetodosPagoSinOxxo}
-										className={classes.imagen}
-									/>
-								</Box>
-								<RadioGroup aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-									<FormControlLabel value="credit" control={<Radio />} label="Tarjeta de credito" />
-									<FormControlLabel value="paypal" control={<Radio />} label="Paypal" />
-									{/* <FormControlLabel value="oxxo" control={<Radio />} label="Oxxo" /> */}
-								</RadioGroup>
-							</FormControl>
-						</Box>
-						{/* {value === 'credit' ? (
-							<PagoCredito compra={compra} total={total} />
-						) : (
-							<PagoPaypal />
-						)} */}
-					</Box>
+					</Grid>
 				</Grid>
-			</Grid>
+			</Box>
 		</Container>
 	);
 }

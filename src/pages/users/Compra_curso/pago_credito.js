@@ -21,6 +21,8 @@ export default function PagoCredito({ compra, total }) {
 		status: ''
 	});
 
+	console.log(compra);
+
 	const realizarPago = async () => {
 		await clienteAxios
 			.put(`/pay/confirm/${idPago}`, {
@@ -31,19 +33,20 @@ export default function PagoCredito({ compra, total }) {
 				}
 			})
 			.then((res) => {
-				console.log(res);
 				setLoading(false);
+				window.location.href = `/payment_success/${idPago}`
 			})
 			.catch((err) => {
 				setLoading(false);
 				if (err.response) {
-					console.log(err.response);
+					window.location.href = `/payment_failed/${idPago}/${err.response.data.message}`
 					setSnackbar({
 						open: true,
 						mensaje: err.response.data.message,
 						status: 'error'
 					});
 				} else {
+					window.location.href = `/payment_failed/${idPago}/error505`
 					setSnackbar({
 						open: true,
 						mensaje: 'Al parecer no se a podido conectar al servidor.',
@@ -192,7 +195,6 @@ const CheckOutForm = ({ compra, total, setIdPago, setCard }) => {
 				idUser: compra.user._id,
 				total: total,
 				typePay: 'stripe',
-				cart: compra.cart ? true : false
 			};
 			crearPagoBD(datos);
 		}
