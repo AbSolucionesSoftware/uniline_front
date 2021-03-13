@@ -17,6 +17,7 @@ import QueAprenderaEstudiante from '../pages/maestro/Subir_curso/Dasboard_curso/
 import RegistroContenido from '../pages/maestro/Subir_curso/Dasboard_curso/Contenido_curso/contenido';
 import PrecioCurso from '../pages/maestro/Subir_curso/Dasboard_curso/Publicacion_curso/precio';
 import TareasEstudiantes from '../pages/maestro/Subir_curso/Tareas/tareas';
+import EstudiantesCurso from '../pages/maestro/Subir_curso/Estudiantes/estudiantes';
 
 //Users pages
 import Home from '../pages/users/Home/home';
@@ -90,6 +91,11 @@ const routes = [
 			{
 				path: '/instructor/contenido_curso/:curso/tareas',
 				component: TareasEstudiantes,
+				exact: true,
+			},
+			{
+				path: '/instructor/contenido_curso/:curso/estudiantes',
+				component: EstudiantesCurso,
 				exact: true,
 			},
 			{
