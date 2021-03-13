@@ -44,7 +44,6 @@ export default function EstudiantesCurso() {
 					setEstudiantes(res.data);
 				})
 				.catch((err) => {
-					console.log(err.response);
 					setLoading(false);
 					if (err.response) {
 						setSnackbar({
