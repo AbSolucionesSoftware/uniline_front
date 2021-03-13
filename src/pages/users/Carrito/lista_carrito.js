@@ -87,8 +87,11 @@ function ListaCarrito(props) {
 			user: user,
 			courses: cursos
 		}))
-		setTimeout(() => {
+		/* setTimeout(() => {
 			props.history.push(`/compra/${curso.slug}`);
+		}, 500); */
+		setTimeout(() => {
+			props.history.push(`/compra`);
 		}, 500);
 	};
 

@@ -14,52 +14,46 @@ export default function PagoCredito({ compra, total }) {
 	const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_LLAVE);
 	const [ idPago, setIdPago ] = useState('');
 	const [ card, setCard ] = useState({});
-	const [ loading, setLoading ] = useState(false);
+	const [ loadingPago, setLoadingPago ] = useState(false);
+	const [ loadingCancel, setLoadingCancel ] = useState(false);
 	const [ snackbar, setSnackbar ] = useState({
 		open: false,
 		mensaje: '',
 		status: ''
 	});
 
-	console.log(compra);
-
 	const realizarPago = async () => {
+		setLoadingPago(true);
 		await clienteAxios
-			.put(`/pay/confirm/${idPago}`, {
-				idPay: idPago
-			}, {
-				headers: {
-					Authorization: `bearer ${token}`
+			.put(
+				`/pay/confirm/${idPago}`,
+				{
+					idPay: idPago
+				},
+				{
+					headers: {
+						Authorization: `bearer ${token}`
+					}
 				}
-			})
+			)
 			.then((res) => {
-				setLoading(false);
-				window.location.href = `/payment_success/${idPago}`
+				setLoadingPago(false);
+				window.location.href = `/payment_success/${idPago}`;
 			})
 			.catch((err) => {
-				setLoading(false);
+				setLoadingPago(false);
 				if (err.response) {
-					window.location.href = `/payment_failed/${idPago}/${err.response.data.message}`
-					setSnackbar({
-						open: true,
-						mensaje: err.response.data.message,
-						status: 'error'
-					});
+					window.location.href = `/payment_failed/${idPago}/${err.response.data.message}`;
 				} else {
-					window.location.href = `/payment_failed/${idPago}/error505`
-					setSnackbar({
-						open: true,
-						mensaje: 'Al parecer no se a podido conectar al servidor.',
-						status: 'error'
-					});
+					window.location.href = `/payment_failed/${idPago}/Al parecer no se a podido conectar al servidor`;
 				}
 			});
 	};
 
 	const cancelarPago = async () => {
-		setLoading(true);
+		setLoadingCancel(true);
 		setTimeout(() => {
-			window.location.href = '/'
+			window.location.href = '/';
 		}, 1000);
 	};
 
@@ -68,6 +62,9 @@ export default function PagoCredito({ compra, total }) {
 			{idPago ? (
 				<Box>
 					<Box my={4}>
+						<Box my={1}>
+							<Typography><b>Se aplicará el cargo a esta tarjeta:</b></Typography>
+						</Box>
 						<Grid container spacing={2}>
 							<Grid item>
 								<FontAwesomeIcon
@@ -96,7 +93,7 @@ export default function PagoCredito({ compra, total }) {
 							color="secondary"
 							size="large"
 							variant="contained"
-							startIcon={loading ? <CircularProgress color="inherit" size={20} /> : null}
+							startIcon={loadingPago ? <CircularProgress color="inherit" size={20} /> : null}
 							onClick={() => realizarPago()}
 						>
 							Realizar Pago
@@ -108,7 +105,7 @@ export default function PagoCredito({ compra, total }) {
 							color="secondary"
 							size="large"
 							variant="outlined"
-							startIcon={loading ? <CircularProgress color="inherit" size={20} /> : null}
+							startIcon={loadingCancel ? <CircularProgress color="inherit" size={20} /> : null}
 							onClick={() => cancelarPago()}
 						>
 							Cancelar
@@ -136,6 +133,7 @@ const CheckOutForm = ({ compra, total, setIdPago, setCard }) => {
 	const elements = useElements();
 	const token = localStorage.getItem('token');
 
+	const [ loadingCancel, setLoadingCancel ] = useState(false);
 	const [ loading, setLoading ] = useState(false);
 	const [ snackbar, setSnackbar ] = useState({
 		open: false,
@@ -179,7 +177,6 @@ const CheckOutForm = ({ compra, total, setIdPago, setCard }) => {
 		});
 
 		if (error) {
-			console.log('[error]', error);
 			setLoading(false);
 			setSnackbar({
 				open: true,
@@ -187,14 +184,13 @@ const CheckOutForm = ({ compra, total, setIdPago, setCard }) => {
 				status: 'error'
 			});
 		} else {
-			console.log('[PaymentMethod]', paymentMethod);
 			const datos = {
 				idStripe: paymentMethod,
 				courses: compra.courses,
 				username: compra.user.name,
 				idUser: compra.user._id,
 				total: total,
-				typePay: 'stripe',
+				typePay: 'stripe'
 			};
 			crearPagoBD(datos);
 		}
@@ -208,7 +204,6 @@ const CheckOutForm = ({ compra, total, setIdPago, setCard }) => {
 				}
 			})
 			.then((res) => {
-				console.log(res);
 				setLoading(false);
 				setIdPago(res.data.idPay);
 				setCard(datos.idStripe.card);
@@ -229,6 +224,13 @@ const CheckOutForm = ({ compra, total, setIdPago, setCard }) => {
 					});
 				}
 			});
+	};
+
+	const cancelarPago = async () => {
+		setLoadingCancel(true);
+		setTimeout(() => {
+			window.location.href = '/';
+		}, 1000);
 	};
 
 	return (
@@ -252,8 +254,20 @@ const CheckOutForm = ({ compra, total, setIdPago, setCard }) => {
 					disabled={!stripe}
 					startIcon={loading ? <CircularProgress color="inherit" size={20} /> : null}
 				>
-					Pagar con tarjeta
+					Comprobar tarjeta
 				</Button>
+				<Box my={1}>
+					<Button
+						fullWidth
+						color="secondary"
+						size="large"
+						variant="outlined"
+						startIcon={loadingCancel ? <CircularProgress color="inherit" size={20} /> : null}
+						onClick={() => cancelarPago()}
+					>
+						Cancelar
+					</Button>
+				</Box>
 			</form>
 		</Fragment>
 	);

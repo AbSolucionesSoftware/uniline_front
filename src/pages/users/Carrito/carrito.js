@@ -143,8 +143,11 @@ export default function Carrito(props) {
 			user: user,
 			courses: cursos
 		}))
-		setTimeout(() => {
+		/* setTimeout(() => {
 			props.history.push(`/compra/${carrito._id}`);
+		}, 500); */
+		setTimeout(() => {
+			props.history.push(`/compra`);
 		}, 500);
 	}
 

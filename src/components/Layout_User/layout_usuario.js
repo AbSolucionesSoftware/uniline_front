@@ -34,10 +34,7 @@ export default function LayoutUsers(props) {
 						<LoadRoutes routes={routes} />
 					</div>
 				</NavProvider>
-
-				<div>
-					<Footer />
-				</div>
+				<Footer darkTheme={darkTheme } />
 			</div>
 		</ThemeProvider>
 	);

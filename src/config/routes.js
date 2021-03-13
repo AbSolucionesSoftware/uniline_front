@@ -53,7 +53,7 @@ const routes = [
 		exact: true
 	},
 	{
-		path: '/compra/:url',
+		path: '/compra',
 		component: PagarCurso,
 		exact: true
 	},
