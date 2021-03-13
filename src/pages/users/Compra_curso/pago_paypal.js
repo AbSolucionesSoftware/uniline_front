@@ -16,7 +16,7 @@ export default function PagoPaypal({ order, compra, total }) {
 
 	const paypalConfig = {
 		currency: 'MXN',
-		env: 'production',
+		env: 'production', //sandbox o production
 		client: {
 			/* sandbox: process.env.REACT_APP_PAYPAL_SANDBOX, */
 			production: process.env.REACT_APP_PAYPAL_LIVE
