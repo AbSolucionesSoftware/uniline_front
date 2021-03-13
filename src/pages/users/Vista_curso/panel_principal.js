@@ -162,7 +162,8 @@ function VistaCursoPanelPrincipal(props) {
 				priceCourse: curso.priceCourse.price,
 				pricePromotionCourse: curso.priceCourse.promotionPrice,
 				persentagePromotion: curso.priceCourse.persentagePromotion,
-				idCourse: curso,
+				idCourse: curso._id,
+				course: curso,
 				promotion: true
 			});
 		} else {
@@ -170,7 +171,8 @@ function VistaCursoPanelPrincipal(props) {
 				priceCourse: curso.priceCourse.price,
 				pricePromotionCourse: 0,
 				persentagePromotion: '',
-				idCourse: curso,
+				idCourse: curso._id,
+				course: curso,
 				promotion: false
 			});
 		}
@@ -188,8 +190,11 @@ function VistaCursoPanelPrincipal(props) {
 				courses: cursos
 			})
 		);
-		setTimeout(() => {
+		/* setTimeout(() => {
 			props.history.push(`/compra/${curso.slug}`);
+		}, 500); */
+		setTimeout(() => {
+			props.history.push(`/compra`);
 		}, 500);
 	};
 

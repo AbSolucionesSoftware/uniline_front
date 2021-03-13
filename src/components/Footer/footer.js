@@ -6,16 +6,17 @@ import { Grid, Box, Hidden, Typography, Button } from '@material-ui/core';
 
 import FacebookIcon from '@material-ui/icons/Facebook';
 import InstagramIcon from '@material-ui/icons/Instagram';
-import CallIcon from '@material-ui/icons/Call';
-import HomeIcon from '@material-ui/icons/Home';
+import WhatsAppIcon from '@material-ui/icons/WhatsApp';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
 
 import { Link } from 'react-router-dom';
 
 import Imagen from '../../images/uniline2.png';
+import ImagenDark from '../../images/unilineDark.png';
 
 const useStyles = makeStyles((theme) => ({
 	background: {
-		backgroundColor: theme.palette.background.default
+		backgroundColor: theme.palette.background.paper
 	},
 	root: {
 		flexGrow: 1
@@ -41,55 +42,57 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function Footer() {
+export default function Footer({ darkTheme }) {
 	const classes = useStyles();
 
 	return (
-		<Box position="relative" zIndex="2" className={classes.background}>
+		<Box position="relative" zIndex="2" className={classes.background} boxShadow={3}>
 			<Grid container>
 				<Grid item sm={4} xs={12}>
 					<Typography className={classes.marginText} align="center" variant="subtitle1">
-						<HomeIcon style={{ fontSize: 45 }} />
+						<LocationOnIcon style={{ fontSize: 50 }} />
 						<br />
 						Javier Mina 450, Interior 22, Privada San Javier <br />
 						Autlan de Navarro, Jalisco, Mex. <br />
 					</Typography>
 				</Grid>
-
-				<Grid item sm={4}>
-					<Hidden xsDown>
+				<Hidden xsDown>
+					<Grid item sm={4}>
 						<Box className={classes.imgContainer}>
-							<img id="is" alt="Uniline" src={Imagen} className={classes.cover} />
+							<img alt="Uniline" src={darkTheme ? ImagenDark : Imagen } className={classes.cover} />
 						</Box>
-					</Hidden>
-				</Grid>
+					</Grid>
+				</Hidden>
 
 				<Grid item sm={4} xs={12} align="center">
 					<Typography className={classes.marginText} variant="h6">
-						Contáctanos: <br />
-					</Typography>
-					<Typography>
-						{/* <MailOutlineIcon /> atencionaclientes@escuelaalreves.com <br /> */}
-						<CallIcon /> 3171035768 <br />
+						Contácto
 					</Typography>
 					<Box className={classes.marginText}>
-						{/* <a href="https://www.facebook.com/cafi.tutiendaenlinea" target="_blank" rel="noreferrer"> </a> */}
 						<FacebookIcon id="is" style={{ fontSize: 40 }} />
 						<InstagramIcon id="is" style={{ fontSize: 40 }} />
+						<WhatsAppIcon id="is" style={{ fontSize: 40 }} />
 					</Box>
-				</Grid>
-				<Grid item sm={12}>
-					<Typography style={{ fontSize: 13 }} align="center">
-						© AB Soluciones Empresariales 2020 All rights reserved. <br />
-						<Button id="is" style={{ fontSize: 12 }} component={Link} to="/politicas">
-							Políticas de Privacidad
-						</Button>
-						<Button id="is" style={{ fontSize: 12 }} component={Link} to="/imagen_corporativa">
-							Imagen corporativa
-						</Button>
-					</Typography>
+					<Typography>O al tel. <b>3171035768</b></Typography>
 				</Grid>
 			</Grid>
+			<Box mt={3}>
+				<Grid container spacing={2} justify="center" alignItems="center" style={{ width: '100%'}}>
+					<Grid item>
+						<Button style={{ fontSize: 12 }} component={Link} to="/politicas">
+							Políticas de Privacidad
+						</Button>
+					</Grid>
+					<Grid item>
+						<Button style={{ fontSize: 12 }} component={Link} to="/imagen_corporativa">
+							Imagen corporativa
+						</Button>
+					</Grid>
+					<Grid item>
+						<Typography>© AB Soluciones Empresariales 2020 All rights reserved.</Typography>
+					</Grid>
+				</Grid>
+			</Box>
 		</Box>
 	);
 }

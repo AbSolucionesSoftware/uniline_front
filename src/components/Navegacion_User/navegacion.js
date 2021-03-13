@@ -54,6 +54,11 @@ function NavegacionUsuario(props) {
 		props.history.push(`/busqueda/${busqueda}`);
 	};
 
+	const pressEnter = (e) => {
+		if(!e.target.defaultValue) return;
+		if(e.key === "Enter") props.history.push(`/busqueda/${e.target.defaultValue}`);
+	};
+
 	useEffect(() => {
 		localStorage.removeItem('urlActual');
 	}, []);
@@ -140,6 +145,7 @@ function NavegacionUsuario(props) {
 								inputProps={{ 'aria-label': 'search' }}
 								value={busqueda}
 								onChange={obtenerBusqueda}
+								onKeyPress={pressEnter}
 							/>
 							<div className={classes.grow} />
 							<IconButton size="small" color="inherit" onClick={() => buscarBD()}>
