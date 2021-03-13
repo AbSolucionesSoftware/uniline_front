@@ -17,7 +17,7 @@ import Brightness5Icon from '@material-ui/icons/Brightness5';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import HomeIcon from '@material-ui/icons/Home';
 import OndemandVideoIcon from '@material-ui/icons/OndemandVideo';
-import EqualizerIcon from '@material-ui/icons/Equalizer';
+/* import EqualizerIcon from '@material-ui/icons/Equalizer'; */
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { Link } from 'react-router-dom';
 import firebase from 'firebase/app';
@@ -240,12 +240,12 @@ export default function NavbarMaestro(props) {
 						</ListItemIcon>
 						<ListItemText primary="Cursos" />
 					</ListItem>
-					<ListItem button component={Link} to="/instructor/estadisticas">
+					{/* <ListItem button component={Link} to="/instructor/estadisticas">
 						<ListItemIcon>
 							<EqualizerIcon />
 						</ListItemIcon>
-						<ListItemText primary="Estadsticas" />
-					</ListItem>
+						<ListItemText primary="Estadisticas" />
+					</ListItem> */}
 					<ListItem button onClick={darkModeAction}>
 						<ListItemIcon>{darkTheme ? <Brightness5Icon /> : <BrightnessMediumIcon />}</ListItemIcon>
 						<ListItemText primary={`tema: ${darkTheme === true ? 'Oscuro' : 'Claro'}`} />
