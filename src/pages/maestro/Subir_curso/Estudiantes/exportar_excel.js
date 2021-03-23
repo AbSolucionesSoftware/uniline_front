@@ -23,12 +23,11 @@ function ExportarExcel({ estudiantes }) {
 		estudiante.name = data.idUser.name;
         estudiante.email = data.idUser.email;
 		estudiante.phone = data.idUser.phone;
+		estudiante.type_access = data.code ? `Cupon - ${data.codeKey}` : data.freeCourse ? 'Gratis' : 'Comprado' ;
         estudiante.scholarship = data.idUser.scholarship;
 
 		return estudiante;
 	});
-
-    console.log(data);
 
 	return (
 		<Fragment>
@@ -46,6 +45,7 @@ function ExportarExcel({ estudiantes }) {
 						<ExcelColumn label="Nombre" value="name" />
 						<ExcelColumn label="Email" value="email" />
 						<ExcelColumn label="Telefono" value="phone" />
+						<ExcelColumn label="Tipo de acceso" value="type_access" />
 						<ExcelColumn label="Escolaridad" value="scholarship" />
 					</ExcelSheet>
 				</ExcelFile>

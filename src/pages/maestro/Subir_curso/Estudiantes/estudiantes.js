@@ -91,6 +91,7 @@ export default function EstudiantesCurso() {
 							<TableCell>Nombre</TableCell>
 							<TableCell>Email</TableCell>
 							<TableCell>Telefono</TableCell>
+							<TableCell>Tipo de acceso</TableCell>
                             <TableCell>Nivel de estudios</TableCell>
 						</TableRow>
 					</TableHead>
@@ -126,6 +127,7 @@ const TableInfoBody = ({ alumno }) => {
 			<TableCell>{user.name}</TableCell>
 			<TableCell>{user.email}</TableCell>
 			<TableCell>{user.phone ? user.phone : '-'}</TableCell>
+			<TableCell>{alumno.code ? `Cupon - ${alumno.codeKey}` : alumno.freeCourse ? 'Gratis' : 'Comprado' }</TableCell>
             <TableCell>{user.scholarship ? user.scholarship : '-'}</TableCell>
 		</TableRow>
 	);
