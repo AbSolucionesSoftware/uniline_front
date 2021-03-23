@@ -73,7 +73,8 @@ function FormRegistroUsuario(props) {
 			});
 	};
 
-	const enviarDatosBD = async () => {
+	const enviarDatosBD = async (e) => {
+		e.preventDefault();
 		if (!datos.name || !datos.email || !datos.password || !datos.repeatPassword || !datos.acceptPolicies) {
 			setValidate(true);
 			return;
@@ -227,84 +228,92 @@ function FormRegistroUsuario(props) {
 			/>
 			<div className={classes.root}>
 				<Box p={5} width={500}>
-					<Typography variant="h4">Ingresa tus datos</Typography>
-					<Box my={2}>
-						<TextField
-							error={!datos.name && validate}
-							helperText={!datos.name && validate ? 'Esta campo es requerido' : null}
-							fullWidth
-							required
-							id="mombre"
-							name="name"
-							label="Nombre"
-							onChange={obtenerCampos}
-						/>
-					</Box>
-					<Box my={2}>
-						<TextField
-							error={!datos.email && validate}
-							helperText={!datos.email && validate ? 'Esta campo es requerido' : null}
-							fullWidth
-							required
-							id="email"
-							name="email"
-							label="Email"
-							onChange={obtenerCampos}
-						/>
-					</Box>
-					<Box my={2}>
-						<TextField
-							error={!datos.password && validate}
-							helperText={!datos.password && validate ? 'Esta campo es requerido' : null}
-							fullWidth
-							required
-							id="password"
-							name="password"
-							label="Contraseña"
-							type="password"
-							onChange={obtenerCampos}
-						/>
-					</Box>
-					<Box my={2}>
-						<TextField
-							error={!datos.repeatPassword && validate}
-							helperText={!datos.repeatPassword && validate ? 'Esta campo es requerido' : null}
-							fullWidth
-							required
-							id="repeatPassword"
-							name="repeatPassword"
-							label="Repite tu contraseña"
-							type="password"
-							onChange={obtenerCampos}
-						/>
-					</Box>
-					<Box my={2}>
-						<FormControl error={!datos.acceptPolicies && validate}>
-							<FormControlLabel
-								control={
-									<Checkbox
-										checked={checked}
-										name="acceptPolicies"
-										color="primary"
-										onChange={obtenerCampos}
-									/>
-								}
-								label={
-									<Typography>
-										<LinkMaterial target="_blank" href="/politicas">
-											Acepto políticas y condiciones
-										</LinkMaterial>
-									</Typography>
-								}
+					<form onSubmit={enviarDatosBD}>
+						<Typography variant="h4">Ingresa tus datos</Typography>
+						<Box my={2}>
+							<TextField
+								error={!datos.name && validate}
+								helperText={!datos.name && validate ? 'Esta campo es requerido' : null}
+								fullWidth
+								required
+								id="mombre"
+								name="name"
+								label="Nombre"
+								onChange={obtenerCampos}
 							/>
-							<FormHelperText id="my-helper-text">Acepta las políticas para registrarte.</FormHelperText>
-						</FormControl>
-					</Box>
-					<Box display="flex" justifyContent="center" my={5}>
-						<Button variant="contained" color="primary" onClick={() => enviarDatosBD()}>
-							Crear cuenta
-						</Button>
-					</Box>
+						</Box>
+						<Box my={2}>
+							<TextField
+								error={!datos.email && validate}
+								helperText={!datos.email && validate ? 'Esta campo es requerido' : null}
+								fullWidth
+								required
+								id="email"
+								name="email"
+								label="Email"
+								onChange={obtenerCampos}
+							/>
+						</Box>
+						<Box my={2}>
+							<TextField
+								error={!datos.password && validate}
+								helperText={!datos.password && validate ? 'Esta campo es requerido' : null}
+								fullWidth
+								required
+								id="password"
+								name="password"
+								label="Contraseña"
+								type="password"
+								onChange={obtenerCampos}
+							/>
+						</Box>
+						<Box my={2}>
+							<TextField
+								error={!datos.repeatPassword && validate}
+								helperText={!datos.repeatPassword && validate ? 'Esta campo es requerido' : null}
+								fullWidth
+								required
+								id="repeatPassword"
+								name="repeatPassword"
+								label="Repite tu contraseña"
+								type="password"
+								onChange={obtenerCampos}
+							/>
+						</Box>
+						<Box my={2}>
+							<FormControl error={!datos.acceptPolicies && validate}>
+								<FormControlLabel
+									control={
+										<Checkbox
+											checked={checked}
+											name="acceptPolicies"
+											color="primary"
+											onChange={obtenerCampos}
+										/>
+									}
+									label={
+										<Typography>
+											<LinkMaterial target="_blank" href="/politicas">
+												Acepto políticas y condiciones
+											</LinkMaterial>
+										</Typography>
+									}
+								/>
+								<FormHelperText id="my-helper-text">
+									Acepta las políticas para registrarte.
+								</FormHelperText>
+							</FormControl>
+						</Box>
+						<Box display="flex" justifyContent="center" my={5}>
+							<Button
+								type="submit"
+								variant="contained"
+								color="primary" /* onClick={() => enviarDatosBD()} */
+							>
+								Crear cuenta
+							</Button>
+						</Box>
+					</form>
 
 					{url[1] === 'registro' ? (
 						<Fragment>

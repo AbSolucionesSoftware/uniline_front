@@ -43,7 +43,8 @@ function FormLoginUsuario(props) {
 			});
 	};
 
-	const enviarDatosBD = async () => {
+	const enviarDatosBD = async (e) => {
+		e.preventDefault();
 		if (!datos.email || !datos.password) {
 			setValidate(true);
 			return;
@@ -58,7 +59,7 @@ function FormLoginUsuario(props) {
 				localStorage.setItem('token', token);
 				localStorage.setItem('student', JSON.stringify(decoded));
 				setUpdate(!update);
-				/* redireccion en caso de ser comprado un curso o aplicar cupon */
+				
 				let cuponItem = JSON.parse(localStorage.getItem('coupon'));
 				let cartItem = JSON.parse(localStorage.getItem('cart'));
 				let buyItem = JSON.parse(localStorage.getItem('buy'));
@@ -254,40 +255,42 @@ function FormLoginUsuario(props) {
 				status={snackbar.status}
 				setSnackbar={setSnackbar}
 			/>
-			<Box p={5}>
-				<Typography variant="h4">Inicia sesión</Typography>
-				<Box my={2}>
-					<TextField
-						error={!datos.email && validate}
-						helperText={!datos.email && validate ? 'Esta campo es requerido' : null}
-						fullWidth
-						required
-						id="email"
-						name="email"
-						label="Email"
-						onChange={obtenerCampos}
-					/>
+			<form onSubmit={enviarDatosBD}>
+				<Box p={5}>
+					<Typography variant="h4">Inicia sesión</Typography>
+					<Box my={2}>
+						<TextField
+							error={!datos.email && validate}
+							helperText={!datos.email && validate ? 'Esta campo es requerido' : null}
+							fullWidth
+							required
+							id="email"
+							name="email"
+							label="Email"
+							onChange={obtenerCampos}
+						/>
+					</Box>
+					<Box my={2}>
+						<TextField
+							error={!datos.password && validate}
+							helperText={!datos.password && validate ? 'Esta campo es requerido' : null}
+							fullWidth
+							required
+							id="password"
+							name="password"
+							label="Contraseña"
+							type="password"
+							onChange={obtenerCampos}
+						/>
+					</Box>
+					<RecuperarPassModal />
+					<Box display="flex" justifyContent="center" mt={5}>
+						<Button type="submit" variant="contained" color="primary" /* onClick={() => enviarDatosBD()} */>
+							Iniciar sesión
+						</Button>
+					</Box>
 				</Box>
-				<Box my={2}>
-					<TextField
-						error={!datos.password && validate}
-						helperText={!datos.password && validate ? 'Esta campo es requerido' : null}
-						fullWidth
-						required
-						id="password"
-						name="password"
-						label="Contraseña"
-						type="password"
-						onChange={obtenerCampos}
-					/>
-				</Box>
-				<RecuperarPassModal />
-				<Box display="flex" justifyContent="center" mt={5}>
-					<Button variant="contained" color="primary" onClick={() => enviarDatosBD()}>
-						Iniciar sesión
-					</Button>
-				</Box>
-			</Box>
+			</form>
 			<Divider />
 			<Box p={5} textAlign="center">
 				<Typography variant="h6">Inicia sesión con Google o Facebook</Typography>

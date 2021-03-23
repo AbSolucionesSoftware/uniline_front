@@ -41,6 +41,7 @@
     "react-document-meta": "^3.0.0-beta.2",
     "react-dom": "^17.0.1",
     "react-dropzone": "^11.2.4",
+    "react-export-excel": "^0.5.3",
     "react-firebaseui": "^4.1.0",
     "react-head": "^3.4.0",
     "react-helmet": "^6.1.0",

@@ -5,6 +5,7 @@ import clienteAxios from '../../../../config/axios';
 import { CursoContext } from '../../../../context/curso_context';
 import Spin from '../../../../components/Spin/spin';
 import MessageSnackbar from '../../../../components/Snackbar/snackbar';
+import ExportarExcel from './exportar_excel';
 
 export default function EstudiantesCurso() {
 	const token = localStorage.getItem('token');
@@ -79,6 +80,9 @@ export default function EstudiantesCurso() {
 				status={snackbar.status}
 				setSnackbar={setSnackbar}
 			/>
+			<Box display="flex" justifyContent="flex-end" my={2}>
+				<ExportarExcel estudiantes={estudiantes} />
+			</Box>
 			<TableContainer component={Paper}>
 				<Table stickyHeader aria-label="simple table">
 					<TableHead>
