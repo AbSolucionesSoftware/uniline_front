@@ -21,10 +21,10 @@ function PagoPaypalMovil(props) {
 
 	const paypalConfig = {
 		currency: 'MXN',
-		env: 'production', //sandbox o production
+		env: 'sandbox', //sandbox o production
 		client: {
-			/* sandbox: process.env.REACT_APP_PAYPAL_SANDBOX */
-			production: process.env.REACT_APP_PAYPAL_LIVE
+			sandbox: process.env.REACT_APP_PAYPAL_SANDBOX
+			/* production: process.env.REACT_APP_PAYPAL_LIVE */
 		}
 	};
 
