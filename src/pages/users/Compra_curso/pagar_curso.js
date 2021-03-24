@@ -151,7 +151,7 @@ export default function PagarCurso(props) {
 									</RadioGroup>
 								</FormControl>
 							</Box>
-							{value === 'credit' ? <PagoCredito compra={compra} total={total} /> : <PagoPaypal order={order} compra={compra} total={total} />}
+							{/* {value === 'credit' ? <PagoCredito compra={compra} total={total} /> : <PagoPaypal order={order} compra={compra} total={total} />} */}
 						</Box>
 					</Grid>
 				</Grid>

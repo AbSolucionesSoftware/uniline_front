@@ -5,11 +5,13 @@ import LayoutUsers from '../components/Layout_User/layout_usuario';
 import LayoutDashboardUser from '../components/Layout_User/layout_dashboar';
 import RecuperarPassword from '../components/Layout_User/layout_recovery';
 import PagarCurso from '../components/Layout_User/layout_pago';
+/* import LayoutPagoMovil from '../components/Layout_User/layout_pago_movil'; */
 
 //Admin pages
 import DashboardMaestro from '../pages/maestro/Dashboard_maestro/dashboard';
 import SubirCursoMaestro from '../pages/maestro/Subir_curso/crear_curso';
 import EstadisticasMaestro from '../pages/maestro/Estadisticas/estadisticas';
+import VistaRegistroInstructores from '../pages/maestro/Registro_instructores/vista_registro';
 
 //dashboard registro curso pages
 import RegistroInformacionCurso from '../pages/maestro/Subir_curso/Dasboard_curso/Info_general/informacion_curso';
@@ -58,6 +60,11 @@ const routes = [
 		component: PagarCurso,
 		exact: true
 	},
+/* 	{
+		path: '/compra_movil/:amount',
+		component: LayoutPagoMovil,
+		exact: true
+	}, */
 	{
 		path: '/reset_password/:url',
 		component: RecuperarPassword,
@@ -116,6 +123,11 @@ const routes = [
 			{
 				path: '/instructor/estadisticas',
 				component: EstadisticasMaestro,
+				exact: true,
+			},
+			{
+				path: '/instructor/registro_instructores',
+				component: VistaRegistroInstructores,
 				exact: true,
 			},
 			{

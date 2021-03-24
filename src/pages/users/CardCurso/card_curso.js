@@ -8,7 +8,8 @@ import {
 	CardActions,
 	Chip,
 	CircularProgress,
-	Dialog
+	Dialog,
+	Hidden
 } from '@material-ui/core';
 import { Avatar, Box, Button, Typography } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
@@ -21,15 +22,22 @@ import MessageSnackbar from '../../../components/Snackbar/snackbar';
 import { NavContext } from '../../../context/context_nav';
 import { AdquirirCursoGratis, AgregarCarritoBD } from '../PeticionesCompras/peticiones_compras';
 import RegistroAlterno from '../RegistroAlterno/registro_alterno';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+/* import ArrowForwardIcon from '@material-ui/icons/ArrowForward'; */
 import { Fragment } from 'react';
 import clienteAxios from '../../../config/axios';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
+		minHeight: 565,
+		/* margin: '8px 16px!important', */
 		width: 300,
-		minHeight: 512,
-		margin: '8px 16px!important'
+		[theme.breakpoints.only('sm')]: {
+			width: 240,
+		},
+		[theme.breakpoints.down('xs')]: {
+			width: 160,
+			minHeight: 520
+		}
 	},
 	media: {
 		height: 170
@@ -81,29 +89,32 @@ function CardsCursos(props) {
 	const obtenerMisCursos = useCallback(
 		async () => {
 			await clienteAxios
-			.get(`/course/user/${user._id}`, {
-				headers: {
-					Authorization: `bearer ${token}`
-				}
-			})
-			.then((res) => {
-				res.data.forEach((res) => {
-					if (res.idCourse._id === curso._id) {
-						setCourse(true)
+				.get(`/course/user/${user._id}`, {
+					headers: {
+						Authorization: `bearer ${token}`
 					}
-					return;
+				})
+				.then((res) => {
+					res.data.forEach((res) => {
+						if (res.idCourse._id === curso._id) {
+							setCourse(true);
+						}
+						return;
+					});
+				})
+				.catch((err) => {
+					console.log(err);
 				});
-			})
-			.catch((err) => {
-				console.log(err);
-			});
 		},
-		[ curso._id, token, user._id],
-	)
+		[ curso._id, token, user._id ]
+	);
 
-	useEffect(() => {
-		obtenerMisCursos();
-	}, [ obtenerMisCursos ])
+	useEffect(
+		() => {
+			obtenerMisCursos();
+		},
+		[ obtenerMisCursos ]
+	);
 
 	const agregarCarrito = async (curso) => {
 		if (!token || !user._id) {
@@ -177,7 +188,7 @@ function CardsCursos(props) {
 				persentagePromotion: curso.priceCourse.persentagePromotion,
 				idCourse: curso._id,
 				course: curso,
-				promotion: true,
+				promotion: true
 			});
 		} else {
 			cursos.push({
@@ -238,26 +249,32 @@ function CardsCursos(props) {
 				setSnackbar={setSnackbar}
 			/>
 			<Card className={classes.root}>
-				<CardHeader
-					avatar={
-						curso.idProfessor.urlImage ? (
-							<Avatar aria-label="recipe" className={classes.avatar} src={curso.idProfessor.urlImage} />
-						) : (
-							<Avatar aria-label="recipe" className={classes.avatar}>
-								{curso.idProfessor.name.charAt(0)}
-							</Avatar>
-						)
-					}
-					title={curso.idProfessor.name}
-					subheader={`Creado el ${formatoFechaCurso(curso.createdAt)}`}
-				/>
+				<Hidden xsDown>
+					<CardHeader
+						avatar={
+							curso.idProfessor.urlImage ? (
+								<Avatar
+									aria-label="recipe"
+									className={classes.avatar}
+									src={curso.idProfessor.urlImage}
+								/>
+							) : (
+								<Avatar aria-label="recipe" className={classes.avatar}>
+									{curso.idProfessor.name.charAt(0)}
+								</Avatar>
+							)
+						}
+						title={curso.idProfessor.name}
+						subheader={`Creado el ${formatoFechaCurso(curso.createdAt)}`}
+					/>
+				</Hidden>
 				<CardMedia className={classes.media} image={curso.urlPromotionalImage} />
 				<CardContent>
 					<Typography variant="h6" color="textPrimary" className={classes.title}>
 						{curso.title}
 					</Typography>
 					<Rating name="read-only" value={curso.qualification} precision={0.5} readOnly />
-					<Box>
+					<Box height={50}>
 						{curso.priceCourse.free ? (
 							<Chip
 								className={classes.free}
@@ -303,7 +320,7 @@ function CardsCursos(props) {
 								</Button>
 							</Box>
 						) : (
-							<Box display="flex" justifyContent="space-around" alignItems="center">
+							<Box display='flex' flexDirection="column" justifyContent="space-around" height={90}>
 								{curso.priceCourse.free ? (
 									<Button
 										variant="contained"
@@ -311,25 +328,67 @@ function CardsCursos(props) {
 										onClick={() => adquirirCursoGratis(curso)}
 										fullWidth
 									>
-										¡Adquirir ahora!
+										Adquirir
 									</Button>
 								) : (
-									<Button variant="contained" color="primary" onClick={() => pagarCurso(curso)}>
-										Comprar ahora
+									<Button
+										fullWidth
+										variant="contained"
+										color="primary"
+										onClick={() => pagarCurso(curso)}
+									>
+										Comprar
 									</Button>
 								)}
+								<Hidden xsDown>
 								{curso.priceCourse.free ? null : loading ? (
 									<CircularProgress color="secondary" size={30} />
 								) : cart ? (
-									<Button color="secondary" size="large">
-										<ShoppingCartOutlinedIcon />
-										<ArrowForwardIcon />
+									<Button
+										fullWidth
+										color="primary"
+										variant="outlined"
+										onClick={() => props.history.push('/carrito')}
+										startIcon={<ShoppingCartOutlinedIcon style={{ fontSize: 25 }} />}
+									>
+										Ir al Carrito
 									</Button>
 								) : (
-									<Button color="secondary" onClick={() => agregarCarrito(curso)} size="large">
-										<ShoppingCartOutlinedIcon style={{ fontSize: 25 }} />
+									<Button
+										fullWidth
+										color="primary"
+										variant="outlined"
+										onClick={() => agregarCarrito(curso)}
+										startIcon={<ShoppingCartOutlinedIcon style={{ fontSize: 25 }} />}
+									>
+										Agregar al carrito
 									</Button>
 								)}
+								</Hidden>
+								<Hidden smUp>
+								{curso.priceCourse.free ? null : loading ? (
+									<CircularProgress color="secondary" size={30} />
+								) : cart ? (
+									<Button
+										fullWidth
+										color="primary"
+										variant="outlined"
+										onClick={() => props.history.push('/carrito')}
+									>
+										Ir al Carrito
+									</Button>
+								) : (
+									<Button
+										fullWidth
+										color="primary"
+										variant="outlined"
+										onClick={() => agregarCarrito(curso)}
+										startIcon={<ShoppingCartOutlinedIcon style={{ fontSize: 25 }} />}
+									>
+										Agregar
+									</Button>
+								)}
+								</Hidden>
 							</Box>
 						)}
 					</Box>

@@ -19,8 +19,14 @@ const BorderLinearProgress = withStyles((theme) => ({
 
 const useStyles = makeStyles((theme) => ({
 	root: {
-		maxWidth: 300,
-		margin: '8px 16px!important'
+		width: 270,
+		/* margin: '8px 16px!important' */
+		[theme.breakpoints.only('sm')]: {
+			width: 220
+		},
+		[theme.breakpoints.down('xs')]: {
+			width: 160
+		}
 	},
 	media: {
 		height: 170

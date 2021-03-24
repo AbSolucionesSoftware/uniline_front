@@ -110,7 +110,7 @@ export default function EstudiantesCurso() {
 				page={page}
 				onChangePage={handleChangePage}
 				onChangeRowsPerPage={handleChangeRowsPerPage}
-				labelDisplayedRows={({ from, to, count }) => `${from} de ${count !== -1 ? count : to}`}
+				labelDisplayedRows={({ from, to, count }) => `${to} de ${count !== -1 ? count : to}`}
 			/>
 		</Box>
 	);
