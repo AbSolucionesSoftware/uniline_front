@@ -11,7 +11,8 @@ import { faCcVisa, faCcMastercard } from '@fortawesome/free-brands-svg-icons';
 export default function PagoCredito({ compra, total }) {
 	const theme = useTheme();
 	const token = localStorage.getItem('token');
-	const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_LLAVE);
+	/* const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_LLAVE); */
+	const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_LLAVE_TEST);
 	const [ idPago, setIdPago ] = useState('');
 	const [ card, setCard ] = useState({});
 	const [ loadingPago, setLoadingPago ] = useState(false);
