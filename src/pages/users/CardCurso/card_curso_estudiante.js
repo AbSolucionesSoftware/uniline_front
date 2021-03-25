@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { Card, CardMedia, CardContent, CardActions, LinearProgress } from '@material-ui/core';
 import { Button, Typography } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 const BorderLinearProgress = withStyles((theme) => ({
 	root: {
@@ -19,6 +19,7 @@ const BorderLinearProgress = withStyles((theme) => ({
 
 const useStyles = makeStyles((theme) => ({
 	root: {
+		cursor: 'pointer',
 		width: 270,
 		/* margin: '8px 16px!important' */
 		[theme.breakpoints.only('sm')]: {
@@ -48,11 +49,12 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function CardsCursosEstudiantes({ curso }) {
+function CardsCursosEstudiantes(props) {
+	const { curso } = props;
 	const classes = useStyles();
 
 	return (
-		<Card className={classes.root}>
+		<Card className={classes.root} onClick={() => props.history.push(`/dashboard/${curso.idCourse.slug}`)}>
 			<CardMedia className={classes.media} image={curso.idCourse.urlPromotionalImage} />
 			<BorderLinearProgress variant="determinate" value={parseInt(curso.studentAdvance)} />
 			<CardContent className={classes.cardContent}>
@@ -74,3 +76,4 @@ export default function CardsCursosEstudiantes({ curso }) {
 		</Card>
 	);
 }
+export default withRouter(CardsCursosEstudiantes);
