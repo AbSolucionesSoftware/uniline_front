@@ -1,11 +1,13 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { makeStyles, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@material-ui/core';
+import React, { Fragment, useCallback, useContext, useEffect, useState } from 'react';
+import { TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogTitle, IconButton, makeStyles } from '@material-ui/core';
 import { Box, Paper, Avatar, Table } from '@material-ui/core';
 import clienteAxios from '../../../../config/axios';
 import { CursoContext } from '../../../../context/curso_context';
 import Spin from '../../../../components/Spin/spin';
 import MessageSnackbar from '../../../../components/Snackbar/snackbar';
 import ExportarExcel from './exportar_excel';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles((theme) => ({
 	table: {
@@ -23,6 +25,7 @@ export default function EstudiantesCurso() {
 	const [ estudiantes, setEstudiantes ] = useState([]);
 	const [ loading, setLoading ] = useState(false);
 	const { datos } = useContext(CursoContext);
+	const [ reload, setReload ] = useState(false);
 	const [ snackbar, setSnackbar ] = useState({
 		open: false,
 		mensaje: '',
@@ -79,7 +82,7 @@ export default function EstudiantesCurso() {
 		() => {
 			obtenerEstudiantesInscritos();
 		},
-		[ obtenerEstudiantesInscritos ]
+		[ obtenerEstudiantesInscritos, reload ]
 	);
 
 	return (
@@ -103,13 +106,23 @@ export default function EstudiantesCurso() {
 							<TableCell>Email</TableCell>
 							<TableCell>Telefono</TableCell>
 							<TableCell>Tipo de acceso</TableCell>
-                            <TableCell>Nivel de estudios</TableCell>
+							<TableCell>Nivel de estudios</TableCell>
+							<TableCell align="right">Eliminar</TableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
 						{estudiantes
 							.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-							.map((alumno, index) => <TableInfoBody key={index} alumno={alumno} />)}
+							.map((alumno, index) => (
+								<TableInfoBody
+									key={index}
+									alumno={alumno}
+									setLoading={setLoading}
+									setSnackbar={setSnackbar}
+									reload={reload}
+									setReload={setReload}
+								/>
+							))}
 					</TableBody>
 				</Table>
 			</TableContainer>
@@ -127,19 +140,85 @@ export default function EstudiantesCurso() {
 	);
 }
 
-const TableInfoBody = ({ alumno }) => {
+const TableInfoBody = ({ alumno, setLoading, setSnackbar, reload, setReload }) => {
+	const token = localStorage.getItem('token');
 	const user = alumno.idUser;
+	const [ open, setOpen ] = useState(false);
+
+	const handleClickModal = () => setOpen(!open);
+
+	const eliminarEstudiante = async (user) => {
+		setLoading(true);
+		await clienteAxios
+			.delete(`/user/inscription/remove/${user}`, {
+				headers: {
+					Authorization: `bearer ${token}`
+				}
+			})
+			.then((res) => {
+				setSnackbar({
+					open: true,
+					mensaje: res.data.message,
+					status: 'success'
+				});
+				setLoading(false);
+				setReload(!reload);
+				handleClickModal();
+			})
+			.catch((err) => {
+				setLoading(false);
+				handleClickModal();
+				if (err.response) {
+					setSnackbar({
+						open: true,
+						mensaje: err.response.data.message,
+						status: 'error'
+					});
+				} else {
+					setSnackbar({
+						open: true,
+						mensaje: 'Al parecer no se a podido conectar al servidor.',
+						status: 'error'
+					});
+				}
+			});
+	};
 
 	return (
-		<TableRow>
-			<TableCell align="left">
-				<Avatar alt="imagen usuario" src={user.urlImage} />
-			</TableCell>
-			<TableCell>{user.name}</TableCell>
-			<TableCell>{user.email}</TableCell>
-			<TableCell>{user.phone ? user.phone : '-'}</TableCell>
-			<TableCell>{alumno.code ? `Cupon - ${alumno.codeKey}` : alumno.freeCourse ? 'Gratis' : 'Comprado' }</TableCell>
-            <TableCell>{user.scholarship ? user.scholarship : '-'}</TableCell>
-		</TableRow>
+		<Fragment>
+			<TableRow>
+				<TableCell align="left">
+					<Avatar alt="imagen usuario" src={user.urlImage} />
+				</TableCell>
+				<TableCell>{user.name}</TableCell>
+				<TableCell>{user.email}</TableCell>
+				<TableCell>{user.phone ? user.phone : '-'}</TableCell>
+				<TableCell>
+					{alumno.code ? `Cupon - ${alumno.codeKey}` : alumno.freeCourse ? 'Gratis' : 'Comprado'}
+				</TableCell>
+				<TableCell>{user.scholarship ? user.scholarship : '-'}</TableCell>
+				<TableCell align="right">
+					<IconButton aria-label="delete" onClick={() => handleClickModal()}>
+						<DeleteIcon color="error" />
+					</IconButton>
+				</TableCell>
+			</TableRow>
+			<Dialog
+				open={open}
+				onClose={handleClickModal}
+				aria-labelledby="alert-dialog-title"
+				aria-describedby="alert-dialog-description"
+			>
+				<DialogTitle id="alert-dialog-title">{`¿Deseas dar de baja a este estudiante?`}</DialogTitle>
+				<DialogActions>
+					<Button onClick={handleClickModal} color="primary">
+						No, cancelar
+					</Button>
+					<Button onClick={() => eliminarEstudiante(alumno._id)} color="primary" autoFocus>
+						Si, aceptar
+					</Button>
+				</DialogActions>
+			</Dialog>
+		</Fragment>
 	);
 };
