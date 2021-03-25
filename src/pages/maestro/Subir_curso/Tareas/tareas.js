@@ -10,15 +10,19 @@ import Spin from '../../../../components/Spin/spin';
 import RevisarTarea from './revisar_tarea';
 import MessageSnackbar from '../../../../components/Snackbar/snackbar';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
 	table: {
-		width: '100%'
+		[theme.breakpoints.only('xs')]: {
+			display: 'block',
+			width: 370,
+			overflowX: 'auto'
+		}
 	},
 	download: {
 		display: 'flex',
 		alignItems: 'center'
 	}
-});
+}));
 
 export default function TareasEstudiantes() {
 	const classes = useStyles();
@@ -95,7 +99,7 @@ export default function TareasEstudiantes() {
 				status={snackbar.status}
 				setSnackbar={setSnackbar}
 			/>
-			<TableContainer component={Paper}>
+			<TableContainer component={Paper} className={classes.table}>
 				<Table stickyHeader className={classes.table} aria-label="simple table">
 					<TableHead>
 						<TableRow>

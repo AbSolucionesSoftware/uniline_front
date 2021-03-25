@@ -79,6 +79,10 @@ function FormRegistroUsuario(props) {
 			setValidate(true);
 			return;
 		}
+		if (datos.password !== datos.repeatPassword) {
+			setValidate(true);
+			return;
+		}
 		setLoading(true);
 		await clienteAxios
 			.post('/user', datos)
@@ -233,7 +237,7 @@ function FormRegistroUsuario(props) {
 						<Box my={2}>
 							<TextField
 								error={!datos.name && validate}
-								helperText={!datos.name && validate ? 'Esta campo es requerido' : null}
+								helperText={!datos.name && validate ? 'Este campo es requerido' : null}
 								fullWidth
 								required
 								id="mombre"
@@ -245,7 +249,7 @@ function FormRegistroUsuario(props) {
 						<Box my={2}>
 							<TextField
 								error={!datos.email && validate}
-								helperText={!datos.email && validate ? 'Esta campo es requerido' : null}
+								helperText={!datos.email && validate ? 'Este campo es requerido' : null}
 								fullWidth
 								required
 								id="email"
@@ -256,8 +260,8 @@ function FormRegistroUsuario(props) {
 						</Box>
 						<Box my={2}>
 							<TextField
-								error={!datos.password && validate}
-								helperText={!datos.password && validate ? 'Esta campo es requerido' : null}
+								error={validate ? !datos.password ? true : datos.password !== datos.repeatPassword  ? true : false : false}
+								helperText={validate ? !datos.password ? 'Este campo es requerido' : datos.password !== datos.repeatPassword ? 'Las contraseñas no coinciden' : null : null}
 								fullWidth
 								required
 								id="password"
@@ -269,8 +273,8 @@ function FormRegistroUsuario(props) {
 						</Box>
 						<Box my={2}>
 							<TextField
-								error={!datos.repeatPassword && validate}
-								helperText={!datos.repeatPassword && validate ? 'Esta campo es requerido' : null}
+								error={validate ? !datos.repeatPassword ? true : datos.password !== datos.repeatPassword  ? true : false : false}
+								helperText={!datos.repeatPassword && validate ? 'Este campo es requerido' : datos.password !== datos.repeatPassword ? 'Las contraseñas no coinciden' : null}
 								fullWidth
 								required
 								id="repeatPassword"

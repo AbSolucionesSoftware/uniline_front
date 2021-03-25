@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Slide, Grid, Box } from '@material-ui/core';
-import { Button, AppBar, Toolbar, IconButton, Typography, Dialog } from '@material-ui/core';
+import { Button, AppBar, Toolbar, Typography, Dialog } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import TablaUsuarios from './tabla_usuarios';
@@ -21,17 +21,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function RegistrarInstructor() {
+export default function RegistrarInstructor({ usuarios, reload, setReload }) {
 	const classes = useStyles();
 	const [ open, setOpen ] = React.useState(false);
 
-	const handleClickOpen = () => {
-		setOpen(true);
-	};
-
-	const handleClose = () => {
-		setOpen(false);
-	};
+	const handleClickOpenRegistro = () => setOpen(!open);
 
 	return (
 		<div>
@@ -40,33 +34,47 @@ export default function RegistrarInstructor() {
 				color="primary"
 				size="large"
 				startIcon={<AddCircleOutlinedIcon />}
-				onClick={handleClickOpen}
+				onClick={handleClickOpenRegistro}
 			>
 				Nuevo
 			</Button>
-			<Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+			<Dialog fullScreen open={open} onClose={handleClickOpenRegistro} TransitionComponent={Transition}>
 				<AppBar className={classes.appBar}>
 					<Toolbar>
 						<Typography variant="h6" className={classes.title}>
 							Crear un nuevo instructor
 						</Typography>
-						<Button size="large" color="inherit" onClick={handleClose} startIcon={<CloseIcon />}>
+						<Button
+							size="large"
+							color="inherit"
+							onClick={handleClickOpenRegistro}
+							startIcon={<CloseIcon />}
+						>
 							Cerrar
 						</Button>
 					</Toolbar>
 				</AppBar>
 				<Grid container>
-                    <Grid item lg={6}>
-                        <Box p={5}>
-							<TablaUsuarios />
+					<Grid item md={8} lg={7}>
+						<Box p={5}>
+							<TablaUsuarios
+								usuarios={usuarios}
+								reload={reload}
+								setReload={setReload}
+								handleClickOpenRegistro={handleClickOpenRegistro}
+							/>
 						</Box>
-                    </Grid>
-                    <Grid item lg={6}>
-                        <Box p={5}>
-							<FormRegistroInstructor />
+					</Grid>
+					<Grid item md={4} lg={5}>
+						<Box p={5}>
+							<FormRegistroInstructor
+								reload={reload}
+								setReload={setReload}
+								handleClickOpenRegistro={handleClickOpenRegistro}
+							/>
 						</Box>
-                    </Grid>
-                </Grid>
+					</Grid>
+				</Grid>
 			</Dialog>
 		</div>
 	);

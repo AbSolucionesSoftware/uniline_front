@@ -1,21 +1,11 @@
 import React, { Fragment, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { Box, TextField, Button, Typography } from '@material-ui/core';
 import clienteAxios from '../../../config/axios';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
 import Spin from '../../../components/Spin/spin';
 
-const useStyles = makeStyles((theme) => ({
-	root: {
-		height: '91vh',
-		display: 'flex',
-		justifyContent: 'center',
-		alignItems: 'center'
-	}
-}));
-
-export default function FormRegistroInstructor(props) {
-	const classes = useStyles();
+export default function FormRegistroInstructor({ reload, setReload, handleClickOpenRegistro }) {
+	const token = localStorage.getItem('token');
 	const [ datos, setDatos ] = useState([]);
 	const [ validate, setValidate ] = useState(false);
 	const [ loading, setLoading ] = useState(false);
@@ -38,12 +28,21 @@ export default function FormRegistroInstructor(props) {
 			setValidate(true);
 			return;
 		}
+		if (datos.password !== datos.repeatPassword) {
+			setValidate(true);
+			return;
+		}
 		setLoading(true);
 		await clienteAxios
-			.post('/user', datos)
+			.post(`/user/action/teacher/`, datos, {
+				headers: {
+					Authorization: `bearer ${token}`
+				}
+			})
 			.then((res) => {
 				setLoading(false);
-				console.log(res);
+				setReload(!reload);
+				handleClickOpenRegistro();
 			})
 			.catch((err) => {
 				setLoading(false);
@@ -73,11 +72,11 @@ export default function FormRegistroInstructor(props) {
 				setSnackbar={setSnackbar}
 			/>
 			<form onSubmit={enviarDatosBD}>
-				<Typography variant="h4">Registra un nuevo instructor</Typography>
+				<Typography variant="h5">Registra un nuevo instructor</Typography>
 				<Box my={2}>
 					<TextField
 						error={!datos.name && validate}
-						helperText={!datos.name && validate ? 'Esta campo es requerido' : null}
+						helperText={!datos.name && validate ? 'Este campo es requerido' : null}
 						fullWidth
 						required
 						id="mombre"
@@ -89,7 +88,7 @@ export default function FormRegistroInstructor(props) {
 				<Box my={2}>
 					<TextField
 						error={!datos.email && validate}
-						helperText={!datos.email && validate ? 'Esta campo es requerido' : null}
+						helperText={!datos.email && validate ? 'Este campo es requerido' : null}
 						fullWidth
 						required
 						id="email"
@@ -100,8 +99,24 @@ export default function FormRegistroInstructor(props) {
 				</Box>
 				<Box my={2}>
 					<TextField
-						error={!datos.password && validate}
-						helperText={!datos.password && validate ? 'Esta campo es requerido' : null}
+						error={
+							validate ? !datos.password ? (
+								true
+							) : datos.password !== datos.repeatPassword ? (
+								true
+							) : (
+								false
+							) : (
+								false
+							)
+						}
+						helperText={
+							validate ? !datos.password ? (
+								'Este campo es requerido'
+							) : datos.password !== datos.repeatPassword ? (
+								'Las contraseñas no coinciden'
+							) : null : null
+						}
 						fullWidth
 						required
 						id="password"
@@ -113,8 +128,24 @@ export default function FormRegistroInstructor(props) {
 				</Box>
 				<Box my={2}>
 					<TextField
-						error={!datos.repeatPassword && validate}
-						helperText={!datos.repeatPassword && validate ? 'Esta campo es requerido' : null}
+						error={
+							validate ? !datos.repeatPassword ? (
+								true
+							) : datos.password !== datos.repeatPassword ? (
+								true
+							) : (
+								false
+							) : (
+								false
+							)
+						}
+						helperText={
+							!datos.repeatPassword && validate ? (
+								'Este campo es requerido'
+							) : datos.password !== datos.repeatPassword ? (
+								'Las contraseñas no coinciden'
+							) : null
+						}
 						fullWidth
 						required
 						id="repeatPassword"

@@ -208,7 +208,10 @@ export default function NavegacionContenidoCurso(props) {
 						button
 						component={Link}
 						to={`/instructor/contenido_curso/${idcurso}/general`}
-						onClick={() => setTitle('Información del curso')}
+						onClick={() => {
+							setTitle('Información del curso');
+							handleDrawerToggle();
+						}}
 					>
 						<ListItemIcon>
 							{verificarInformacionCurso(datos) ? (
@@ -223,7 +226,10 @@ export default function NavegacionContenidoCurso(props) {
 						button
 						component={Link}
 						to={`/instructor/contenido_curso/${idcurso}/learn`}
-						onClick={() => setTitle('Que enseñarás')}
+						onClick={() => {
+							setTitle('Que enseñarás');
+							handleDrawerToggle();
+						}}
 					>
 						<ListItemIcon>
 							{verificarLearningsCurso(datos) ? (
@@ -244,7 +250,10 @@ export default function NavegacionContenidoCurso(props) {
 						button
 						component={Link}
 						to={`/instructor/contenido_curso/${idcurso}/contenido`}
-						onClick={() => setTitle('Bloques y temas del curso')}
+						onClick={() => {
+							setTitle('Bloques y temas del curso');
+							handleDrawerToggle();
+						}}
 					>
 						<ListItemIcon>
 							{verificarBloquesCurso(blocks) ? (
@@ -266,7 +275,10 @@ export default function NavegacionContenidoCurso(props) {
 							button
 							component={Link}
 							to={`/instructor/contenido_curso/${idcurso}/precio`}
-							onClick={() => setTitle('Precio del curso')}
+							onClick={() => {
+								setTitle('Precio del curso');
+								handleDrawerToggle();
+							}}
 						>
 							<ListItemIcon>
 								{verificarPrecioCurso(datos) ? (
@@ -288,7 +300,10 @@ export default function NavegacionContenidoCurso(props) {
 						button
 						component={Link}
 						to={`/instructor/contenido_curso/${idcurso}/tareas`}
-						onClick={() => setTitle('Tareas de tus estudiantes')}
+						onClick={() => {
+							setTitle('Tareas de tus estudiantes');
+							handleDrawerToggle();
+						}}
 					>
 						<ListItemIcon>
 							<AssignmentOutlinedIcon />
@@ -299,7 +314,10 @@ export default function NavegacionContenidoCurso(props) {
 						button
 						component={Link}
 						to={`/instructor/contenido_curso/${idcurso}/estudiantes`}
-						onClick={() => setTitle('Tus alumnos')}
+						onClick={() => {
+							setTitle('Tus alumnos');
+							handleDrawerToggle();
+						}}
 					>
 						<ListItemIcon>
 							<AssignmentIndIcon />

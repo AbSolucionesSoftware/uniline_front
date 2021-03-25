@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@material-ui/core';
+import { makeStyles, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@material-ui/core';
 import { Box, Paper, Avatar, Table } from '@material-ui/core';
 import clienteAxios from '../../../../config/axios';
 import { CursoContext } from '../../../../context/curso_context';
@@ -7,7 +7,18 @@ import Spin from '../../../../components/Spin/spin';
 import MessageSnackbar from '../../../../components/Snackbar/snackbar';
 import ExportarExcel from './exportar_excel';
 
+const useStyles = makeStyles((theme) => ({
+	table: {
+		[theme.breakpoints.only('xs')]: {
+			display: 'block',
+			width: 370,
+			overflowX: 'auto'
+		}
+	}
+}));
+
 export default function EstudiantesCurso() {
+	const classes = useStyles();
 	const token = localStorage.getItem('token');
 	const [ estudiantes, setEstudiantes ] = useState([]);
 	const [ loading, setLoading ] = useState(false);
@@ -83,7 +94,7 @@ export default function EstudiantesCurso() {
 			<Box display="flex" justifyContent="flex-end" my={2}>
 				<ExportarExcel estudiantes={estudiantes} />
 			</Box>
-			<TableContainer component={Paper}>
+			<TableContainer component={Paper} className={classes.table}>
 				<Table stickyHeader aria-label="simple table">
 					<TableHead>
 						<TableRow>

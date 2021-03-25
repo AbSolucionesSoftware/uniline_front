@@ -72,8 +72,6 @@ export default function CursosProfesor({ datos, update, setUpdate }) {
 	});
 	const [ blocks, setBlocks ] = useState([]);
 
-	console.log(datos);
-
 	const obtenerBloquesBD = useCallback(
 		async () => {
 			if (curso._id && token) {

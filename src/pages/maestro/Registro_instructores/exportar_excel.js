@@ -18,10 +18,10 @@ function ExportarExcelMaestros({ maestros }) {
             scholarship: '',
         };
 
-		instructor.name = data.name;
-        instructor.email = data.email;
-		instructor.phone = data.phone;
-		/* instructor.courses = data.code ? `Cupon - ${data.codeKey}` : data.freeCourse ? 'Gratis' : 'Comprado' ; */
+		instructor.name = data.teacher.name;
+        instructor.email = data.teacher.email;
+		instructor.phone = data.teacher.phone;
+		instructor.courses = data.courses;
 		return instructor;
 	});
 
@@ -41,7 +41,7 @@ function ExportarExcelMaestros({ maestros }) {
 						<ExcelColumn label="Nombre" value="name" />
 						<ExcelColumn label="Email" value="email" />
 						<ExcelColumn label="Telefono" value="phone" />
-						<ExcelColumn label="Cursos impartidos" value="type_access" />
+						<ExcelColumn label="Cursos impartidos" value="courses" />
 					</ExcelSheet>
 				</ExcelFile>
                 </Grid>

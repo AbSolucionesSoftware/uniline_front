@@ -1,7 +1,18 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { Drawer, AppBar, Toolbar, List, Typography, Divider, IconButton, MenuItem, Popover, Hidden } from '@material-ui/core';
+import {
+	Drawer,
+	AppBar,
+	Toolbar,
+	List,
+	Typography,
+	Divider,
+	IconButton,
+	MenuItem,
+	Popover,
+	Hidden
+} from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -98,10 +109,10 @@ const useStyles = makeStyles((theme) => ({
 	divider: {
 		backgroundColor: theme.palette.background.paper,
 		height: 38,
-		width: .5,
+		width: 0.5,
 		marginLeft: theme.spacing(1),
-		marginRight: theme.spacing(1),
-	},
+		marginRight: theme.spacing(1)
+	}
 }));
 
 export default function NavbarMaestro(props) {
@@ -117,11 +128,7 @@ export default function NavbarMaestro(props) {
 	const [ title, setTitle ] = useState(
 		ruta_actual[2] === 'registro_instructores'
 			? 'Instructores de UNILINE'
-			: ruta_actual[2] === 'cursos'
-				? 'Tus cursos'
-				: ruta_actual[2] === 'estadisticas'
-					? 'Estadisticas'
-					: ''
+			: ruta_actual[2] === 'cursos' ? 'Tus cursos' : ruta_actual[2] === 'estadisticas' ? 'Estadisticas' : ''
 	);
 
 	if (token !== null) user = JSON.parse(localStorage.getItem('student'));
@@ -258,24 +265,50 @@ export default function NavbarMaestro(props) {
 				</div>
 				<Divider />
 				<List>
-					<ListItem button component={Link} to="/instructor/cursos" onClick={() => setTitle('Tus cursos')}>
+					<ListItem
+						button
+						component={Link}
+						to="/instructor/cursos"
+						onClick={() => {
+							setTitle('Tus cursos');
+							handleDrawerClose();
+						}}
+					>
 						<ListItemIcon>
 							<OndemandVideoIcon />
 						</ListItemIcon>
 						<ListItemText primary="Cursos" />
 					</ListItem>
-					{/* <ListItem button component={Link} to="/instructor/estadisticas" onClick={() => setTitle('Estadisticas')}>
+					{/* <ListItem
+						button
+						component={Link}
+						to="/instructor/estadisticas"
+						onClick={() => {
+							setTitle('Estadisticas');
+							handleDrawerClose();
+						}}
+					>
 						<ListItemIcon>
 							<EqualizerIcon />
 						</ListItemIcon>
 						<ListItemText primary="Estadisticas" />
 					</ListItem> */}
-					{/* <ListItem button component={Link} to="/instructor/registro_instructores" onClick={() => setTitle('Instructores de UNILINE')}>
-						<ListItemIcon>
-							<AssignmentIndIcon />
-						</ListItemIcon>
-						<ListItemText primary="Instructores" />
-					</ListItem> */}
+					{user && user.admin === true ? (
+						<ListItem
+							button
+							component={Link}
+							to="/instructor/registro_instructores"
+							onClick={() => {
+								setTitle('Instructores de UNILINE');
+								handleDrawerClose();
+							}}
+						>
+							<ListItemIcon>
+								<AssignmentIndIcon />
+							</ListItemIcon>
+							<ListItemText primary="Instructores" />
+						</ListItem>
+					) : null}
 					<ListItem button onClick={darkModeAction}>
 						<ListItemIcon>{darkTheme ? <Brightness5Icon /> : <BrightnessMediumIcon />}</ListItemIcon>
 						<ListItemText primary={`tema: ${darkTheme === true ? 'Oscuro' : 'Claro'}`} />

@@ -1,23 +1,17 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-	Card,
-	CardHeader,
-	CardMedia,
-	CardContent,
-	CardActions,
-	Chip,
-	CircularProgress,
-	Dialog,
-	Hidden
-} from '@material-ui/core';
-import { Avatar, Box, Button, Typography } from '@material-ui/core';
+import { Card, CardHeader, CardMedia, CardContent, CardActions, Chip } from '@material-ui/core';
+import { Avatar, Box, Button, Typography, CircularProgress, Dialog, Hidden } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
 import { red } from '@material-ui/core/colors';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import { formatoFechaCurso, formatoMexico } from '../../../config/reuserFunction';
 import { Link, withRouter } from 'react-router-dom';
 import WarningIcon from '@material-ui/icons/Warning';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import SchoolIcon from '@material-ui/icons/School';
+import LanguageIcon from '@material-ui/icons/Language';
+import AssessmentOutlinedIcon from '@material-ui/icons/AssessmentOutlined';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
 import { NavContext } from '../../../context/context_nav';
 import { AdquirirCursoGratis, AgregarCarritoBD } from '../PeticionesCompras/peticiones_compras';
@@ -28,15 +22,16 @@ import clienteAxios from '../../../config/axios';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
-		minHeight: 565,
+		minHeight: theme.spacing(83),
 		/* margin: '8px 16px!important', */
 		width: 300,
 		[theme.breakpoints.only('sm')]: {
 			width: 240,
+			minHeight: theme.spacing(88)
 		},
 		[theme.breakpoints.down('xs')]: {
 			width: 160,
-			minHeight: 520
+			minHeight: theme.spacing(58)
 		}
 	},
 	media: {
@@ -63,6 +58,10 @@ const useStyles = makeStyles((theme) => ({
 		whiteSpace: 'normal',
 		overflow: 'hidden',
 		textOverflow: 'ellipsis'
+	},
+	masInfo: {
+		color: '#6F6F6F',
+		minHeight: theme.spacing(17)
 	}
 }));
 
@@ -178,7 +177,7 @@ function CardsCursos(props) {
 		}
 	};
 
-	const pagarCurso = (curso) => {
+	/* const pagarCurso = (curso) => {
 		let cursos = [];
 
 		if (curso.priceCourse.promotionPrice) {
@@ -214,13 +213,10 @@ function CardsCursos(props) {
 				courses: cursos
 			})
 		);
-		/* setTimeout(() => {
-			props.history.push(`/compra/${curso.slug}`);
-		}, 500); */
 		setTimeout(() => {
 			props.history.push(`/compra`);
 		}, 500);
-	};
+	}; */
 
 	/* verificar si esta en carrito */
 	let cart = false;
@@ -273,6 +269,26 @@ function CardsCursos(props) {
 					<Typography variant="h6" color="textPrimary" className={classes.title}>
 						{curso.title}
 					</Typography>
+					<Hidden xsDown>
+						<Box className={classes.masInfo}>
+							<Box display="flex" alignItems="center" style={{ marginBottom: 2 }}>
+								<AccessTimeIcon style={{ marginRight: 5 }} />
+								<Typography>{`${curso.hours} horas de curso`}</Typography>
+							</Box>
+							<Box display="flex" alignItems="center" style={{ marginBottom: 2 }}>
+								<LanguageIcon style={{ marginRight: 5 }} />
+								<Typography>{`Lenguaje en ${curso.language}`}</Typography>
+							</Box>
+							<Box display="flex" alignItems="center" style={{ marginBottom: 2 }}>
+								<AssessmentOutlinedIcon style={{ marginRight: 5 }} />
+								<Typography>{`Nivel ${curso.level}`}</Typography>
+							</Box>
+							<Box display="flex" alignItems="center" style={{ marginBottom: 2 }}>
+								<SchoolIcon style={{ marginRight: 5 }} />
+								<Typography>Certificado al finalizar</Typography>
+							</Box>
+						</Box>
+					</Hidden>
 					<Rating name="read-only" value={curso.qualification} precision={0.5} readOnly />
 					<Box height={50}>
 						{curso.priceCourse.free ? (
@@ -304,11 +320,11 @@ function CardsCursos(props) {
 				</CardContent>
 				<CardActions>
 					<Box width="100%">
-						<Button variant="text" color="primary" fullWidth component={Link} to={`/curso/${curso.slug}`}>
+						{/* <Button variant="text" color="primary" fullWidth component={Link} to={`/curso/${curso.slug}`}>
 							Ver descripción completa
-						</Button>
+						</Button> */}
 						{course ? (
-							<Box display="flex" justifyContent="space-around" alignItems="center">
+							<Box display="flex" justifyContent="space-around" alignItems="center" textAlign="center">
 								<Button
 									fullWidth
 									variant="contained"
@@ -316,11 +332,11 @@ function CardsCursos(props) {
 									component={Link}
 									to={`/dashboard/${curso.slug}`}
 								>
-									Ver curso
+									ver tus clases
 								</Button>
 							</Box>
 						) : (
-							<Box display='flex' flexDirection="column" justifyContent="space-around" height={90}>
+							<Box display="flex" flexDirection="column" justifyContent="space-around" height={90}>
 								{curso.priceCourse.free ? (
 									<Button
 										variant="contained"
@@ -331,63 +347,72 @@ function CardsCursos(props) {
 										Adquirir
 									</Button>
 								) : (
-									<Button
+									/* <Button
 										fullWidth
 										variant="contained"
 										color="primary"
 										onClick={() => pagarCurso(curso)}
 									>
 										Comprar
+									</Button> */
+									<Button
+										fullWidth
+										variant="contained"
+										color="primary"
+										component={Link}
+										to={`/curso/${curso.slug}`}
+									>
+										Ver curso
 									</Button>
 								)}
 								<Hidden xsDown>
-								{curso.priceCourse.free ? null : loading ? (
-									<CircularProgress color="secondary" size={30} />
-								) : cart ? (
-									<Button
-										fullWidth
-										color="primary"
-										variant="outlined"
-										onClick={() => props.history.push('/carrito')}
-										startIcon={<ShoppingCartOutlinedIcon style={{ fontSize: 25 }} />}
-									>
-										Ir al Carrito
-									</Button>
-								) : (
-									<Button
-										fullWidth
-										color="primary"
-										variant="outlined"
-										onClick={() => agregarCarrito(curso)}
-										startIcon={<ShoppingCartOutlinedIcon style={{ fontSize: 25 }} />}
-									>
-										Agregar al carrito
-									</Button>
-								)}
+									{curso.priceCourse.free ? null : loading ? (
+										<CircularProgress color="secondary" size={30} />
+									) : cart ? (
+										<Button
+											fullWidth
+											color="primary"
+											variant="outlined"
+											onClick={() => props.history.push('/carrito')}
+											startIcon={<ShoppingCartOutlinedIcon style={{ fontSize: 25 }} />}
+										>
+											Ir al Carrito
+										</Button>
+									) : (
+										<Button
+											fullWidth
+											color="primary"
+											variant="outlined"
+											onClick={() => agregarCarrito(curso)}
+											startIcon={<ShoppingCartOutlinedIcon style={{ fontSize: 25 }} />}
+										>
+											Agregar al carrito
+										</Button>
+									)}
 								</Hidden>
 								<Hidden smUp>
-								{curso.priceCourse.free ? null : loading ? (
-									<CircularProgress color="secondary" size={30} />
-								) : cart ? (
-									<Button
-										fullWidth
-										color="primary"
-										variant="outlined"
-										onClick={() => props.history.push('/carrito')}
-									>
-										Ir al Carrito
-									</Button>
-								) : (
-									<Button
-										fullWidth
-										color="primary"
-										variant="outlined"
-										onClick={() => agregarCarrito(curso)}
-										startIcon={<ShoppingCartOutlinedIcon style={{ fontSize: 25 }} />}
-									>
-										Agregar
-									</Button>
-								)}
+									{curso.priceCourse.free ? null : loading ? (
+										<CircularProgress color="secondary" size={30} />
+									) : cart ? (
+										<Button
+											fullWidth
+											color="primary"
+											variant="outlined"
+											onClick={() => props.history.push('/carrito')}
+										>
+											Ir al Carrito
+										</Button>
+									) : (
+										<Button
+											fullWidth
+											color="primary"
+											variant="outlined"
+											onClick={() => agregarCarrito(curso)}
+											startIcon={<ShoppingCartOutlinedIcon style={{ fontSize: 25 }} />}
+										>
+											Agregar
+										</Button>
+									)}
 								</Hidden>
 							</Box>
 						)}
