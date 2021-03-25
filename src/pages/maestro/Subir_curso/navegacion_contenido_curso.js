@@ -210,7 +210,7 @@ export default function NavegacionContenidoCurso(props) {
 						to={`/instructor/contenido_curso/${idcurso}/general`}
 						onClick={() => {
 							setTitle('Información del curso');
-							handleDrawerToggle();
+							setMobileOpen(false);
 						}}
 					>
 						<ListItemIcon>
@@ -228,7 +228,7 @@ export default function NavegacionContenidoCurso(props) {
 						to={`/instructor/contenido_curso/${idcurso}/learn`}
 						onClick={() => {
 							setTitle('Que enseñarás');
-							handleDrawerToggle();
+							setMobileOpen(false);
 						}}
 					>
 						<ListItemIcon>
@@ -252,7 +252,7 @@ export default function NavegacionContenidoCurso(props) {
 						to={`/instructor/contenido_curso/${idcurso}/contenido`}
 						onClick={() => {
 							setTitle('Bloques y temas del curso');
-							handleDrawerToggle();
+							setMobileOpen(false);
 						}}
 					>
 						<ListItemIcon>
@@ -277,7 +277,7 @@ export default function NavegacionContenidoCurso(props) {
 							to={`/instructor/contenido_curso/${idcurso}/precio`}
 							onClick={() => {
 								setTitle('Precio del curso');
-								handleDrawerToggle();
+								setMobileOpen(false);
 							}}
 						>
 							<ListItemIcon>
@@ -302,7 +302,7 @@ export default function NavegacionContenidoCurso(props) {
 						to={`/instructor/contenido_curso/${idcurso}/tareas`}
 						onClick={() => {
 							setTitle('Tareas de tus estudiantes');
-							handleDrawerToggle();
+							setMobileOpen(false);
 						}}
 					>
 						<ListItemIcon>
@@ -316,7 +316,7 @@ export default function NavegacionContenidoCurso(props) {
 						to={`/instructor/contenido_curso/${idcurso}/estudiantes`}
 						onClick={() => {
 							setTitle('Tus alumnos');
-							handleDrawerToggle();
+							setMobileOpen(false);
 						}}
 					>
 						<ListItemIcon>
