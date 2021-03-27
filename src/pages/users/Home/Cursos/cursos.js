@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Box, Grid, Hidden, makeStyles, Typography } from '@material-ui/core';
+import { Box, Grid, makeStyles, Typography } from '@material-ui/core';
 import CardsCursos from '../../CardCurso/card_curso';
-import Carousel from 'react-multi-carousel';
+/* import Carousel from 'react-multi-carousel'; */
 import 'react-multi-carousel/lib/styles.css';
 import clienteAxios from '../../../../config/axios';
 import SpinNormal from '../../../../components/Spin/spinNormal';
@@ -22,7 +22,7 @@ export default function CursosDisponibles() {
 	const [ loading, setLoading ] = useState(false);
 	const [ error, setError ] = useState({ error: false, message: '' });
 
-	const responsive = {
+	/* const responsive = {
 		superLargeDesktop: {
 			// the naming can be any, depends on you.
 			breakpoint: { max: 3000, min: 1365 },
@@ -40,7 +40,7 @@ export default function CursosDisponibles() {
 			breakpoint: { max: 532, min: 0 },
 			items: 2
 		}
-	};
+	}; */
 
 	const obtenerCursosBD = useCallback(async () => {
 		setLoading(true);
@@ -60,9 +60,9 @@ export default function CursosDisponibles() {
 			});
 	}, []);
 
-	const render_cursos = cursos.map((curso, index) => <CardsCursos key={index} curso={curso} />);
+	/* const render_cursos = cursos.map((curso, index) => <CardsCursos key={index} curso={curso} />); */
 	const render_cursos_lg = cursos.map((curso, index) => (
-		<Grid key={index} item>
+		<Grid key={index} item xs={6}>
 			<CardsCursos curso={curso} />
 		</Grid>
 	));
@@ -84,7 +84,7 @@ export default function CursosDisponibles() {
 	return (
 		<Box className={classes.margin}>
 			<Typography variant="h4">¡Nuestros cursos!</Typography>
-			<Hidden smUp>
+			{/* <Hidden smUp>
 				<Box py={2} width="auto">
 					<Carousel swipeable responsive={responsive}>
 						{render_cursos}
@@ -97,7 +97,12 @@ export default function CursosDisponibles() {
 						{render_cursos_lg}
 					</Grid>
 				</Box>
-			</Hidden>
+			</Hidden> */}
+			<Box py={2} width="auto">
+					<Grid container spacing={3} >
+						{render_cursos_lg}
+					</Grid>
+				</Box>
 		</Box>
 	);
 }
