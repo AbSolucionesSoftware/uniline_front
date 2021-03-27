@@ -20,7 +20,7 @@ const BorderLinearProgress = withStyles((theme) => ({
 const useStyles = makeStyles((theme) => ({
 	root: {
 		cursor: 'pointer',
-		width: 300,
+		width: 280,
 		/* margin: '8px 16px!important' */
 		[theme.breakpoints.only('sm')]: {
 			width: 220

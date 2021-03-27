@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 		cursor: 'pointer',
 		/* minHeight: theme.spacing(83), */
 		/* margin: '8px 16px!important', */
-		width: 300,
+		width: 280,
 		[theme.breakpoints.only('sm')]: {
 			width: 240,
 			/* minHeight: theme.spacing(88) */
