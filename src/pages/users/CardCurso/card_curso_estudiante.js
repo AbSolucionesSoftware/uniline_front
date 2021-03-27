@@ -44,8 +44,13 @@ const useStyles = makeStyles((theme) => ({
 		position: 'relative',
 		textOverflow: 'ellipsis',
 		'-webkit-line-clamp': 2,
-		'-webkit-box-orient': 'vertical'
+		'-webkit-box-orient': 'vertical',
+		fontSize: 22,
+		fontWeight: 500,
 		/* whiteSpace: 'nowrap', */
+		[theme.breakpoints.down('xs')]: {
+			fontSize: 16
+		}
 	},
 	cardContent: {
 		padding: theme.spacing(1)
@@ -60,7 +65,7 @@ function CardsCursosEstudiantes(props) {
 		<Card className={classes.root} onClick={() => props.history.push(`/dashboard/${curso.idCourse.slug}`)}>
 			<CardMedia className={classes.media} image={curso.idCourse.urlPromotionalImage} />
 			<CardContent className={classes.cardContent}>
-				<Typography variant="h6" color="textPrimary" className={classes.title}>
+				<Typography color="textPrimary" className={classes.title}>
 					{curso.idCourse.title}
 				</Typography>
 			</CardContent>

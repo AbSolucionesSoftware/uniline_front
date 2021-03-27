@@ -53,8 +53,14 @@ const useStyles = makeStyles((theme) => ({
 		overflow: 'hidden',
 		position: 'relative',
 		textOverflow: 'ellipsis',
-		'-webkit-line-clamp': 2,
-		'-webkit-box-orient': 'vertical'
+		'-webkit-line-clamp': 3,
+		'-webkit-box-orient': 'vertical',
+		fontSize: 22,
+		fontWeight: 500,
+		[theme.breakpoints.down('xs')]: {
+			fontSize: 16
+		}
+
 	},
 	descripcion: {
 		height: 200,
@@ -270,7 +276,7 @@ function CardsCursos(props) {
 				</Hidden>
 				<CardMedia className={classes.media} image={curso.urlPromotionalImage} />
 				<CardContent>
-					<Typography variant="h6" color="textPrimary" className={classes.title}>
+					<Typography color="textPrimary" className={classes.title}>
 						{curso.title}
 					</Typography>
 					<Rating name="read-only" value={curso.qualification} precision={0.5} readOnly />
