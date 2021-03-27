@@ -1,12 +1,12 @@
 import React from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { Card, CardMedia, CardContent, CardActions, LinearProgress } from '@material-ui/core';
-import { Button, Typography } from '@material-ui/core';
-import { Link, withRouter } from 'react-router-dom';
+import { Card, CardMedia, CardContent, LinearProgress, Box } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
+import { withRouter } from 'react-router-dom';
 
 const BorderLinearProgress = withStyles((theme) => ({
 	root: {
-		height: 6
+		height: 10
 	},
 	colorPrimary: {
 		backgroundColor: theme.palette.grey[theme.palette.type === 'light' ? 200 : 700]
@@ -20,7 +20,7 @@ const BorderLinearProgress = withStyles((theme) => ({
 const useStyles = makeStyles((theme) => ({
 	root: {
 		cursor: 'pointer',
-		width: 270,
+		width: 300,
 		/* margin: '8px 16px!important' */
 		[theme.breakpoints.only('sm')]: {
 			width: 220
@@ -30,8 +30,11 @@ const useStyles = makeStyles((theme) => ({
 		}
 	},
 	media: {
-		height: 170
-		/* paddingTop: '56.25%' // 16:9 */
+		height: 170,
+		/* paddingTop: '56.25%' // 16:9, */
+		[theme.breakpoints.down('xs')]: {
+			height: 100
+		}
 	},
 	title: {
 		display: '-webkit-box',
@@ -56,13 +59,16 @@ function CardsCursosEstudiantes(props) {
 	return (
 		<Card className={classes.root} onClick={() => props.history.push(`/dashboard/${curso.idCourse.slug}`)}>
 			<CardMedia className={classes.media} image={curso.idCourse.urlPromotionalImage} />
-			<BorderLinearProgress variant="determinate" value={parseInt(curso.studentAdvance)} />
 			<CardContent className={classes.cardContent}>
 				<Typography variant="h6" color="textPrimary" className={classes.title}>
 					{curso.idCourse.title}
 				</Typography>
 			</CardContent>
-			<CardActions className={classes.cardContent}>
+			<Box px={2} pb={3}>
+				<BorderLinearProgress variant="determinate" value={parseInt(curso.studentAdvance)} />
+				<Typography>Avance del curso: {curso.studentAdvance}%</Typography>
+			</Box>
+			{/* <CardActions className={classes.cardContent}>
 				<Button
 					variant="text"
 					color="primary"
@@ -72,7 +78,7 @@ function CardsCursosEstudiantes(props) {
 				>
 					¡Continuar con tus clases!
 				</Button>
-			</CardActions>
+			</CardActions> */}
 		</Card>
 	);
 }
