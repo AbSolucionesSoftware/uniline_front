@@ -4,8 +4,9 @@ import { makeStyles, Grid, Box, Typography } from '@material-ui/core';
 import Carousel from 'react-material-ui-carousel';
 
 import Celular from '../../../../images/Celular.gif';
-import imagenBanner from '../../../../images/banner3.jpg';
-import logoUniline from '../../../../images/uniline3.png';
+/* import imagenBanner from '../../../../images/banner3.jpg'; */
+import imagenBanner from '../../../../images/PORTADA.jpg';
+/* import logoUniline from '../../../../images/uniline3.png'; */
 
 const useStyles = makeStyles((theme) => ({
 	altura: {
@@ -64,14 +65,14 @@ export default function Banner() {
 						<Box display="flex" justifyContent="center" alignItems="center" height="100%">
 							<Box p={5}>
 								<QueueAnim delay={700} className="queue-simple">
-									<Box key="a">
+									{/* <Box key="a">
 										<img alt="logo uniline" src={logoUniline} className={classes.imagenLogo} />
 										<Box my={2} style={{ color: '#F9F9F9' }}>
 											<Typography variant="h4" >
 												<b>APRENDE DESDE CASA EN EL MOMENTO QUE TÚ QUIERAS.</b>
 											</Typography>
 										</Box>
-									</Box>
+									</Box> */}
 									{/* {!token ? (
 										<Box key="b">
 											<Box display="flex" justifyContent="center" my={2}>
