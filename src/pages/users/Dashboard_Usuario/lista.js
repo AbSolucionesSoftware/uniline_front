@@ -227,6 +227,7 @@ const ListaBloques = ({ bloque, curso }) => {
 							setOpen(true);
 						}
 					}
+					/* codigo para verificar el ultimo video *coming soon* */
 				});
 			}
 		},
