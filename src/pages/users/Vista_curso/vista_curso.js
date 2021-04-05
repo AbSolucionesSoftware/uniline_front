@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Box, Card, Container, Grid, Hidden, Typography } from '@material-ui/core';
+import { Box, Card, Container, Dialog, Grid, Hidden, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import clienteAxios from '../../../config/axios';
 import SpinNormal from '../../../components/Spin/spinNormal';
@@ -7,8 +7,9 @@ import Spin from '../../../components/Spin/spin';
 import Error500 from '../../error500';
 import VistaCursoPanelPrincipal from './panel_principal';
 import VistaCursoContenidoInfo from './contenido_info';
-import ModalVideo from 'react-modal-video';
+/* import ModalVideo from 'react-modal-video'; */
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
+import Vimeo from '@u-wave/react-vimeo';
 
 const useStyles = makeStyles((theme) => ({
 	background: {
@@ -48,6 +49,21 @@ const useStyles = makeStyles((theme) => ({
 	titleResponsive: {
 		backgroundColor: 'rgba(0,0,0, 0.4)!important',
 		color: '#FFFFFF'
+	},
+	vimeoPlayer: {
+		height: '65vh',
+		width: '100%',
+		'& iframe': {
+			height: '100%',
+			width: '100%',
+			backgroundColor: 'rgba(0,0,0, 0.9)!important'
+		},
+		[theme.breakpoints.down('sm')]: {
+			height: '50vh'
+		},
+		[theme.breakpoints.down('xs')]: {
+			height: '30vh'
+		}
 	}
 }));
 
@@ -74,7 +90,6 @@ export default function VistaCurso(props) {
 				.then((res) => {
 					setLoading(false);
 					setCursos(res.data);
-					
 				})
 				.catch((err) => {
 					setLoading(false);
@@ -126,7 +141,11 @@ export default function VistaCurso(props) {
 								{loading ? (
 									<SpinNormal />
 								) : (
-									<VistaCursoPanelPrincipal curso={cursos} handleVideoModal={handleVideoModal} setSnackbar={setSnackbar} />
+									<VistaCursoPanelPrincipal
+										curso={cursos}
+										handleVideoModal={handleVideoModal}
+										setSnackbar={setSnackbar}
+									/>
 								)}
 							</Card>
 						</Box>
@@ -136,7 +155,7 @@ export default function VistaCurso(props) {
 					</Grid>
 				</Grid>
 			</Container>
-			<ModalVideo
+			{/* <ModalVideo
 				channel="vimeo"
 				autoplay
 				isOpen={open}
@@ -144,13 +163,22 @@ export default function VistaCurso(props) {
 				onClose={handleVideoModal}
 				callback={(e) => console.log(e)}
 				
-			/>
+			/> */}
 			<MessageSnackbar
 				open={snackbar.open}
 				mensaje={snackbar.mensaje}
 				status={snackbar.status}
 				setSnackbar={setSnackbar}
 			/>
+			<Dialog onClose={handleVideoModal} open={open} fullWidth maxWidth="md">
+				<Vimeo
+					video={cursos.course.urlCourseVideo}
+					autoplay={true}
+					onEnd={() => handleVideoModal()}
+					id="vimeo-player-description"
+					className={classes.vimeoPlayer}
+				/>
+			</Dialog>
 		</Box>
 	);
 }
