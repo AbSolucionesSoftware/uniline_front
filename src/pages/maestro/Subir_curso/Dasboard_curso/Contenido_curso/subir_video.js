@@ -10,7 +10,7 @@ import {
 import VideoCallIcon from '@material-ui/icons/VideoCall';
 import ImagenVideo from '../../../../../images/Video-tutorial-bro.png';
 import VimeoReproductor from '../../../../../components/Vimeo_Reproductor/Vimeo';
-import { client, configVimeo /*  ClientRequestVimeo */ } from '../../../../../config/config_vimeo';
+import { client, configVimeo, ClientRequestVimeo } from '../../../../../config/config_vimeo';
 import clienteAxios from '../../../../../config/axios';
 import { CursoContext } from '../../../../../context/curso_context';
 import MessageSnackbar from '../../../../../components/Snackbar/snackbar';
@@ -66,7 +66,7 @@ export default function SubirVideoTema({ tema }) {
 			configVimeo(tema.topicTitle),
 			function(uri) {
 				const spleter = uri.split('/');
-				/* ClientRequestVimeo(client, uri) */
+				ClientRequestVimeo(client, uri)
 				clienteAxios
 					.put(
 						`/course/topic/video/${tema._id}`,

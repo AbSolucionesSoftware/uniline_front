@@ -15,7 +15,7 @@ export const configVimeo = (title) => {
 				fullscreen: true,
 				embed: false,
 				hd: true,
-				like: true,
+				like: false,
 				scaling: true,
 				share: false,
 				watchlater: false
@@ -23,7 +23,7 @@ export const configVimeo = (title) => {
 			volume: true,
 			logos: {
 				custom: {
-					active: true,
+					active: false,
 					sticky: false
 				},
 				vimeo: false
@@ -31,15 +31,16 @@ export const configVimeo = (title) => {
 			playbar: true,
 			title: {
 				name: 'show',
-				owner: 'show',
-				portrait: 'show'
+				owner: 'hide',
+				portrait: 'hide'
 			},
 			color: 'black'
 		},
 		privacy: {
-			view: 'anybody',
+			view: 'disable',
 			download: false,
-			comments: 'nobody'
+			comments: 'nobody',
+			embed: "whitelist"
 		},
 		review_page: {
 			vimeo_logo: true,
@@ -54,7 +55,7 @@ export const ClientRequestVimeo = (client, uri) => {
         client.request(
             {
                 method: 'PUT',
-                path: uri + '/privacy/domains/https://uniline.online'
+                path: uri + '/privacy/domains/uniline.online'
             },
             function(error, body, status_code, headers) {
                 console.log(uri + ' will only be embeddable on "https://uniline.online".');
@@ -69,10 +70,27 @@ export const ClientRequestVimeo = (client, uri) => {
                         }
                     },
                     function(error, body, status_code, headers) {
-                        console.log(uri + ' will only be embeddable on "http://localhost:3000".');
+                        console.log(uri + ' will only be embeddable on "https://uniline.online.');
                     }
                 );
             }
         )
     )
 }
+
+/* export const ClientRequestVimeo = (client, uri) => {
+    return (
+        client.request({
+			method: 'PATCH',
+			path: uri,
+			query: {
+			  'privacy': {
+				'view': 'password'
+			  },
+			  'password': 'helloworld'
+			}
+		  }, function (error, body, status_code, headers) {
+			console.log(uri + ' will now require a password to be viewed on Vimeo.')
+		  })
+    )
+} */
