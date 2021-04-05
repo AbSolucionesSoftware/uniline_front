@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, Box, Divider, Grid, Typography, CircularProgress } from '@material-ui/core';
 import { List, ListItem, ListItemAvatar, ListItemIcon, ListItemText } from '@material-ui/core';
@@ -47,6 +47,7 @@ export default function ContenidoDashboard({ user }) {
 	const { curso, temaActual, topics, update, setUpdate, setProgreso, setAction, calificado } = useContext(
 		DashboardContext
 	);
+	const [ cursoFinalizado, setCursoFinalizado ] = useState(false);
 
 	const checkTema = async (topic) => {
 		setAction(0);
@@ -55,7 +56,7 @@ export default function ContenidoDashboard({ user }) {
 				`/course/complete/topic/`,
 				{
 					idCourse: curso.course._id,
-					idTopic: topic._id,
+					idTopic: topic,
 					idUser: user._id
 				},
 				{
@@ -74,11 +75,12 @@ export default function ContenidoDashboard({ user }) {
 	};
 
 	const checkVideo = () => {
-		topics.forEach((topic, i) => {
-			if (temaActual.id === topic._id) {
-				checkTema(topic);
+		topics.forEach((topic, index) => {
+			if (topics.length === index + 1 && temaActual.id === topic._id) {
+				setCursoFinalizado(true);
 			}
 		});
+		checkTema(temaActual.id);
 	};
 
 	useEffect(() => {
@@ -94,8 +96,19 @@ export default function ContenidoDashboard({ user }) {
 				justifyContent="center"
 				alignItems="center"
 			>
-				{!curso.endTopicView || temaActual.video === undefined ? (
-					<Typography variant="h4" style={{color: '#FFFF'}}>No hay video</Typography>
+				{cursoFinalizado ? (
+					<Box textAlign="center">
+						<Typography variant="h4" style={{ color: '#FFFF' }}>
+						¡En hora buena!
+					</Typography>
+					<Typography variant="h4" style={{ color: '#FFFF' }}>
+						Haz finalizado este curso
+					</Typography>
+					</Box>
+				) : !curso.endTopicView || temaActual.video === undefined ? (
+					<Typography variant="h4" style={{ color: '#FFFF' }}>
+						No hay video
+					</Typography>
 				) : temaActual.video === '' ? (
 					<CircularProgress style={{ color: '#FFFF' }} />
 				) : (
@@ -112,7 +125,9 @@ export default function ContenidoDashboard({ user }) {
 				<Box m={2}>
 					<Grid container justify="space-between">
 						<Grid item>
-							<Typography variant="h6">{temaActual ? temaActual.tema.topicTitle : curso.course.title ? curso.course.title : ''}</Typography>
+							<Typography variant="h6">
+								{temaActual ? temaActual.tema.topicTitle : curso.course.title ? curso.course.title : ''}
+							</Typography>
 						</Grid>
 						<Grid item classes={classes.stars}>
 							<Box display="flex" justifyContent="center">

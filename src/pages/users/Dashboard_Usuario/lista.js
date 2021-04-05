@@ -227,11 +227,10 @@ const ListaBloques = ({ bloque, curso }) => {
 							setOpen(true);
 						}
 					}
-					/* codigo para verificar el ultimo video *coming soon* */
 				});
 			}
 		},
-		[ setTemaActual, topics, endTopic, setEndTopic, action, setAction ]
+		[ setTemaActual, endTopic, setEndTopic, action, setAction, topics ]
 	);
 
 	useEffect(
