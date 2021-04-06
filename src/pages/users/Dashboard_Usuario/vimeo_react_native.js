@@ -31,6 +31,10 @@ export default function VimeoReactNative(props) {
 
 	if (info_url !== info_local) return null;
 
+	const jalaPorfa = () => {
+		document.getElementById('jalaPorfa').click();
+	}
+
 	return (
 		<Fragment>
 			{/* <Helmet>
@@ -40,12 +44,12 @@ export default function VimeoReactNative(props) {
 				<Vimeo
 					video={url}
 					autoplay={true}
-					onEnd={() => props.history.push('/vimeo_mobil_change/true')}
+					onEnd={jalaPorfa}
 					id="vimeo-player-mobile"
 					className={classes.vimeoPlayer}
 				/>
-				<Box my={2}>
-					<Button color="primary" variant="contained" fullWidth onClick={() => props.history.push('/vimeo_mobil_change/true')}>
+				<Box my={2} display="none">
+					<Button id="jalaPorfa" color="primary" variant="contained" fullWidth onClick={() => props.history.push('/vimeo_mobil_change/true')}>
 						Jala porfa
 					</Button>
 				</Box>
