@@ -40,7 +40,7 @@ export default function VimeoReactNative(props) {
 				<Vimeo
 					video={url}
 					autoplay={true}
-					onEnd={() => window.location.replace('/vimeo_mobil/525098500/true')}
+					onEnd={() => props.history.push('/vimeo_mobil_change/true')}
 					id="vimeo-player-mobile"
 					className={classes.vimeoPlayer}
 				/>

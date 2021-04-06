@@ -36,6 +36,7 @@ import VistaCurso from '../pages/users/Vista_curso/vista_curso';
 import PagoSuccess from '../pages/users/Compra_curso/success_page';
 import PagoFailed from '../pages/users/Compra_curso/failed_page';
 import VimeoReactNative from '../pages/users/Dashboard_Usuario/vimeo_react_native';
+import OnChangeVista from '../pages/users/Dashboard_Usuario/vista_change';
 
 //other
 import Error404 from '../pages/error404';
@@ -64,6 +65,11 @@ const routes = [
 	{
 		path: '/vimeo_mobil/:url/:info',
 		component: VimeoReactNative,
+		exact: true
+	},
+	{
+		path: '/vimeo_mobil_change/:action',
+		component: OnChangeVista, 
 		exact: true
 	},
 /* 	{
