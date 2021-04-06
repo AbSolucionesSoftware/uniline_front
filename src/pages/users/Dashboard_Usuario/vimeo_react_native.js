@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React/* , { useState } */ from 'react';
 import Vimeo from '@u-wave/react-vimeo';
-import { makeStyles } from '@material-ui/core';
-import { Helmet } from 'react-helmet';
+import { Box, Button, makeStyles } from '@material-ui/core';
+/* import { Helmet } from 'react-helmet'; */
 import { Fragment } from 'react';
 
 const useStyles = makeStyles((theme) => ({
@@ -24,29 +24,31 @@ const useStyles = makeStyles((theme) => ({
 
 export default function VimeoReactNative(props) {
 	const classes = useStyles();
-	const [ update, setUpdate ] = useState("start");
+/* 	const [ update, setUpdate ] = useState(""); */
 	const url = props.match.params.url;
 	const info_url = props.match.params.info;
 	const info_local = process.env.REACT_APP_VIMEO_RN;
-
-	useEffect(() => {
-	}, [update])
 
 	if (info_url !== info_local) return null;
 
 	return (
 		<Fragment>
-			<Helmet>
+			{/* <Helmet>
 				<title>{update}</title>
-			</Helmet>
+			</Helmet> */}
 			<div className={classes.video}>
 				<Vimeo
 					video={url}
 					autoplay={true}
-					onEnd={() => setUpdate("finish")}
+					onEnd={() => props.history.push('/vimeo_mobil_change/true')}
 					id="vimeo-player-mobile"
 					className={classes.vimeoPlayer}
 				/>
+				<Box my={2}>
+					<Button color="primary" variant="contained" fullWidth onClick={() => props.history.push('/vimeo_mobil_change/true')}>
+						Jala porfa
+					</Button>
+				</Box>
 			</div>
 		</Fragment>
 	);
