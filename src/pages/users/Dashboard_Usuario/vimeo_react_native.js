@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Vimeo from '@u-wave/react-vimeo';
 import { makeStyles } from '@material-ui/core';
+import { Helmet } from 'react-helmet';
+import { Fragment } from 'react';
 
 const useStyles = makeStyles((theme) => ({
 	video: {
@@ -21,24 +23,28 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function VimeoReactNative(props) {
-    const classes = useStyles();
-    const [ update, setUpdate ] = useState(false);
-    const url = props.match.params.url;
-    const info_url = props.match.params.info;
-    const info_local = process.env.REACT_APP_VIMEO_RN;
+	const classes = useStyles();
+	const [ update, setUpdate ] = useState("");
+	const url = props.match.params.url;
+	const info_url = props.match.params.info;
+	const info_local = process.env.REACT_APP_VIMEO_RN;
 
-    if(info_url !== info_local) return null    
+	if (info_url !== info_local) return null;
 
 	return (
-		<div className={classes.video}>
-            <div id="on-change-var">{update}</div>
-			<Vimeo
-				video={url}
-				autoplay={true}
-				onEnd={() => setUpdate(!update)}
-				id="vimeo-player-mobile"
-				className={classes.vimeoPlayer}
-			/>
-		</div>
+		<Fragment>
+			<Helmet>
+				<title>{update}</title>
+			</Helmet>
+			<div className={classes.video}>
+				<Vimeo
+					video={url}
+					autoplay={true}
+					onEnd={() => setUpdate('update')}
+					id="vimeo-player-mobile"
+					className={classes.vimeoPlayer}
+				/>
+			</div>
+		</Fragment>
 	);
 }
