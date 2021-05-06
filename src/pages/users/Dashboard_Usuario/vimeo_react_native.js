@@ -7,18 +7,15 @@ import { Fragment } from 'react';
 const useStyles = makeStyles((theme) => ({
 	video: {
 		backgroundColor: '#1A1A1A',
-		/* width: '100vh', */
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center'
 		/* [theme.breakpoints.down('sm')]: {
 			height: '40vh'
 		} */
 	},
 	vimeoPlayer: {
-		height: '100%',
-		width: '100%',
-		'& iframe': {
-			height: '100%',
-			width: '100%'
-		}
+		width: '82%',
 	}
 }));
 
@@ -46,8 +43,9 @@ export default function VimeoReactNative(props) {
 					autoplay={true}
 					onEnd={jalaPorfa}
 					id="vimeo-player-mobile"
-					/* className={classes.vimeoPlayer} */
+					className={classes.vimeoPlayer}
 					responsive={true}
+					height={100}
 				/>
 				<Box my={2} display="none">
 					<Button id="jalaPorfa" color="primary" variant="contained" fullWidth onClick={() => props.history.push('/vimeo_mobil_change/true')}>
