@@ -1,5 +1,6 @@
 import React, { Fragment, useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import Firebase from '../../../components/Firebase/firebase';
 import {
 	Box,
 	TextField,
@@ -14,7 +15,7 @@ import {
 import clienteAxios from '../../../config/axios';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
 import Spin from '../../../components/Spin/spin';
-import { Link, withRouter } from 'react-router-dom';
+import { /* Link, */ withRouter } from 'react-router-dom';
 import LinkMaterial from '@material-ui/core/Link';
 import jwt_decode from 'jwt-decode';
 import { NavContext } from '../../../context/context_nav';
@@ -308,7 +309,7 @@ function FormRegistroUsuario(props) {
 								</FormHelperText>
 							</FormControl>
 						</Box>
-						<Box display="flex" justifyContent="center" my={5}>
+						<Box display="flex" justifyContent="center" mt={5} mb={2}>
 							<Button
 								type="submit"
 								variant="contained"
@@ -319,7 +320,7 @@ function FormRegistroUsuario(props) {
 						</Box>
 					</form>
 
-					{url[1] === 'registro' ? (
+					{/* {url[1] === 'registro' ? (
 						<Fragment>
 							<Divider />
 							<Box display="flex" justifyContent="center" mt={2}>
@@ -328,6 +329,16 @@ function FormRegistroUsuario(props) {
 								</Button>
 							</Box>
 						</Fragment>
+					) : null} */}
+					{url[1] === 'registro' ? (
+						<Fragment>
+							<Divider />
+							<Box my={2} textAlign="center">
+								<Typography variant="h6">Crear una cuenta con Google o Facebook</Typography>
+								<Firebase />
+							</Box>
+						</Fragment>
+						
 					) : null}
 				</Box>
 			</div>
