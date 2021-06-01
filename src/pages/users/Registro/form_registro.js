@@ -1,6 +1,6 @@
 import React, { Fragment, useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Firebase from '../../../components/Firebase/firebase';
+/* import Firebase from '../../../components/Firebase/firebase'; */
 import {
 	Box,
 	TextField,
@@ -10,7 +10,6 @@ import {
 	FormControlLabel,
 	Button,
 	Typography,
-	Divider
 } from '@material-ui/core';
 import clienteAxios from '../../../config/axios';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
@@ -42,7 +41,7 @@ function FormRegistroUsuario(props) {
 		mensaje: '',
 		status: ''
 	});
-	const url = props.match.path.split('/');
+	/* const url = props.match.path.split('/'); */
 
 	const obtenerCampos = (e) => {
 		if (e.target.name === 'acceptPolicies') {
@@ -330,7 +329,7 @@ function FormRegistroUsuario(props) {
 							</Box>
 						</Fragment>
 					) : null} */}
-					{url[1] === 'registro' ? (
+					{/* {url[1] === 'registro' ? (
 						<Fragment>
 							<Divider />
 							<Box my={2} textAlign="center">
@@ -339,7 +338,7 @@ function FormRegistroUsuario(props) {
 							</Box>
 						</Fragment>
 						
-					) : null}
+					) : null} */}
 				</Box>
 			</div>
 		</Fragment>
