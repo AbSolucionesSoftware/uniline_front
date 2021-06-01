@@ -256,7 +256,7 @@ function FormLoginUsuario(props) {
 				setSnackbar={setSnackbar}
 			/>
 			<Box my={3}>
-				<Typography variant="h6">¡Inicia sesión en tu cuenta de Uniline!</Typography>
+				<Typography variant="h6">¡Inicia sesión en Uniline!</Typography>
 			</Box>
 			<Divider />
 			<Box mt={3} textAlign="center">
