@@ -10,6 +10,7 @@ import VistaCursoContenidoInfo from './contenido_info';
 /* import ModalVideo from 'react-modal-video'; */
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
 import Vimeo from '@u-wave/react-vimeo';
+import MetaTags from 'react-meta-tags';
 
 const useStyles = makeStyles((theme) => ({
 	background: {
@@ -121,6 +122,13 @@ export default function VistaCurso(props) {
 
 	return (
 		<Box>
+			<MetaTags>
+				<title>UNILINE</title>
+				<meta id="meta-description" name="description" content={cursos.course.description} />
+				<meta id="og-title" property="og:title" content={cursos.course.title} />
+				<meta id="og-image" property="og:image" content={cursos.course.urlPromotionalImage} />
+				<meta id="og-url" property="og:url" content={"https://uniline.online/curso/" + cursos.course.slug} />
+			</MetaTags>
 			<Box
 				className={classes.background}
 				style={{ backgroundImage: `url(${cursos.course.urlPromotionalImage})` }}
