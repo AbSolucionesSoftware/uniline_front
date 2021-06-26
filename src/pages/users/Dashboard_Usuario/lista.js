@@ -116,28 +116,6 @@ export default function ListaContenido({ curso }) {
 	);
 }
 
-const StyledMenu = withStyles({
-	paper: {
-		border: '1px solid #d3d4d5'
-		/* 	width: 210,
-		maxWidth: 300 */
-	}
-})((props) => (
-	<Menu
-		elevation={0}
-		getContentAnchorEl={null}
-		anchorOrigin={{
-			vertical: 'bottom',
-			horizontal: 'center'
-		}}
-		transformOrigin={{
-			vertical: 'top',
-			horizontal: 'center'
-		}}
-		{...props}
-	/>
-));
-
 const ListaBloques = ({ bloque, curso }) => {
 	const block = bloque.block;
 	const temas = bloque.topics;
@@ -253,6 +231,28 @@ const ListaBloques = ({ bloque, curso }) => {
 		</Fragment>
 	);
 };
+
+const StyledMenu = withStyles({
+	paper: {
+		border: '1px solid #d3d4d5'
+		/* 	width: 210,
+		maxWidth: 300 */
+	}
+})((props) => (
+	<Menu
+		elevation={0}
+		getContentAnchorEl={null}
+		anchorOrigin={{
+			vertical: 'bottom',
+			horizontal: 'center'
+		}}
+		transformOrigin={{
+			vertical: 'top',
+			horizontal: 'center'
+		}}
+		{...props}
+	/>
+));
 
 const TopicRender = ({topic, handleToggle, ponerTemaActual}) => {
 	const theme = useTheme();
