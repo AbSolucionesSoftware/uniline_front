@@ -139,15 +139,12 @@ const StyledMenu = withStyles({
 ));
 
 const ListaBloques = ({ bloque, curso }) => {
-	const theme = useTheme();
 	const block = bloque.block;
 	const temas = bloque.topics;
 	let user = { _id: '' };
 	const token = localStorage.getItem('token');
 	const [ open, setOpen ] = useState(false);
-	const [ anchorEl, setAnchorEl ] = useState(null);
 	const {
-		temaActual,
 		setTemaActual,
 		topics,
 		endTopic,
@@ -160,9 +157,6 @@ const ListaBloques = ({ bloque, curso }) => {
 	} = useContext(DashboardContext);
 
 	if (token !== null) user = JSON.parse(localStorage.getItem('student'));
-
-	const handleClickMenu = (event) => setAnchorEl(event.currentTarget);
-	const handleCloseMenu = () => setAnchorEl(null);
 
 	const handleClick = () => setOpen(!open);
 	const handleToggle = async (value, topic) => {
@@ -233,6 +227,8 @@ const ListaBloques = ({ bloque, curso }) => {
 		[ setTemaActual, endTopic, setEndTopic, action, setAction, topics ]
 	);
 
+	const render_topics = temas.map((topic) => (<TopicRender topic={topic} key={topic._id} handleToggle={handleToggle} ponerTemaActual={ponerTemaActual} />))
+
 	useEffect(
 		() => {
 			ponerTemaActual();
@@ -249,96 +245,105 @@ const ListaBloques = ({ bloque, curso }) => {
 				</ListItem>
 				<Collapse in={open} timeout="auto" unmountOnExit>
 					<List component="div" disablePadding>
-						{temas.map((topic, index) => {
-							const labelId = `checkbox-list-secondary-label-${topic._id}`;
-							return (
-								<Grid container alignItems="center" key={topic._id}>
-									<Grid item lg={1} xs={1}>
-										<Checkbox
-											edge="end"
-											onClick={() =>
-												topic.topicCompleted.length === 0
-													? handleToggle(true, topic)
-													: handleToggle(false, topic)}
-											checked={topic.topicCompleted.length > 0}
-											inputProps={{ 'aria-labelledby': labelId }}
-										/>
-									</Grid>
-									<Grid item lg={11} xs={11}>
-										<ListItem
-											button
-											style={{
-												backgroundColor:
-													topic._id === temaActual.id
-														? theme.palette.background.selected
-														: null
-											}}
-											onClick={() => {
-												ponerTemaActual(topic);
-											}}
-										>
-											<ListItemText id={labelId} primary={topic.topicTitle} />
-											{topic.resources.length > 0 ? (
-												<Fragment>
-													<ListItemSecondaryAction>
-														<IconButton edge="end" onClick={(e) => handleClickMenu(e)}>
-															<FolderOpenIcon />
-														</IconButton>
-													</ListItemSecondaryAction>
-													<StyledMenu
-														disableScrollLock={true}
-														id={`customized-menu-${index}`}
-														anchorEl={anchorEl}
-														keepMounted
-														open={Boolean(anchorEl)}
-														onClose={handleCloseMenu}
-													>
-														{topic.resources.length > 0 ? (
-															topic.resources.map((recurso, index) => {
-																return recurso.urlExtern ? (
-																	<Link
-																		/* component="button" */
-																		key={index}
-																		target="_blank"
-																		rel="noopener"
-																		href={recurso.urlExtern}
-																	>
-																		<MenuItem dense /* component="a" */>
-																			<ListItemIcon>
-																				<LinkIcon fontSize="small" />
-																			</ListItemIcon>
-																			<ListItemText primary={recurso.title} />
-																		</MenuItem>
-																	</Link>
-																) : (
-																	<Link
-																		/* component="button" */
-																		key={index}
-																		href={recurso.urlDownloadResource}
-																		download={recurso.title}
-																	>
-																		<MenuItem dense>
-																			<ListItemIcon>
-																				<InsertDriveFileOutlinedIcon fontSize="small" />
-																			</ListItemIcon>
-																			<ListItemText primary={recurso.title} />
-																		</MenuItem>
-																	</Link>
-																);
-															})
-														) : null}
-													</StyledMenu>
-												</Fragment>
-											) : null}
-										</ListItem>
-									</Grid>
-								</Grid>
-							);
-						})}
+						{render_topics}
 					</List>
 				</Collapse>
 			</List>
 			<Divider />
+		</Fragment>
+	);
+};
+
+const TopicRender = ({topic, handleToggle, ponerTemaActual}) => {
+	const theme = useTheme();
+	const labelId = `checkbox-list-secondary-label-${topic._id}`;
+	const [ anchorEl, setAnchorEl ] = useState(null);
+	const { temaActual } = useContext(DashboardContext);
+
+	const handleClickMenu = (event) => setAnchorEl(event.currentTarget);
+	const handleCloseMenu = () => setAnchorEl(null);
+
+	return (
+		<Fragment>
+			<Grid container alignItems="center" key={topic._id}>
+				<Grid item lg={1} xs={1}>
+					<Checkbox
+						edge="end"
+						onClick={() =>
+							topic.topicCompleted.length === 0 ? handleToggle(true, topic) : handleToggle(false, topic)}
+						checked={topic.topicCompleted.length > 0}
+						inputProps={{ 'aria-labelledby': labelId }}
+					/>
+				</Grid>
+				<Grid item lg={11} xs={11}>
+					<ListItem
+						button
+						style={{
+							backgroundColor: topic._id === temaActual.id ? theme.palette.background.selected : null
+						}}
+						onClick={() => {
+							ponerTemaActual(topic);
+						}}
+					>
+						<ListItemText id={labelId} primary={topic.topicTitle} />
+						{topic.resources.length > 0 ? (
+							<Fragment>
+								<ListItemSecondaryAction>
+									<IconButton edge="end" onClick={(e) => handleClickMenu(e)}>
+										<FolderOpenIcon />
+									</IconButton>
+								</ListItemSecondaryAction>
+								<StyledMenu
+									disableScrollLock={true}
+									id={`customized-menu-${topic._id}`}
+									anchorEl={anchorEl}
+									keepMounted
+									open={Boolean(anchorEl)}
+									onClose={handleCloseMenu}
+								>
+									{topic.resources.length > 0 ? (
+										topic.resources.map((recurso, index) => {
+											console.log(topic.resources);
+											return recurso.urlExtern ? (
+												<Link
+													key={recurso._id}
+													target="_blank"
+													rel="noopener"
+													href={recurso.urlExtern}
+												>
+													<MenuItem dense>
+														<ListItemIcon>
+															<LinkIcon fontSize="small" />
+														</ListItemIcon>
+														<ListItemText primary={recurso.title} />
+													</MenuItem>
+												</Link>
+											) : (
+												<Link
+													key={recurso._id}
+													href={recurso.urlDownloadResource}
+													download={recurso.title}
+												>
+													<MenuItem dense>
+														<ListItemIcon>
+															<InsertDriveFileOutlinedIcon fontSize="small" />
+														</ListItemIcon>
+														<ListItemText primary={recurso.title} />
+													</MenuItem>
+												</Link>
+											);
+										})
+									) : (
+										<div />
+									)}
+								</StyledMenu>
+							</Fragment>
+						) : (
+							<div />
+						)}
+					</ListItem>
+				</Grid>
+			</Grid>
 		</Fragment>
 	);
 };
