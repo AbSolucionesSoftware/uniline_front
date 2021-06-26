@@ -10,6 +10,8 @@ import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import DragIndicatorOutlinedIcon from '@material-ui/icons/DragIndicatorOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import LinkIcon from '@material-ui/icons/Link';
+import PlayCircleFilledOutlinedIcon from '@material-ui/icons/PlayCircleFilledOutlined';
 
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
 import SubirVideoTema from './subir_video';
@@ -184,7 +186,7 @@ export default function Temas({ openNewTheme, setOpenNewTheme, bloque, bloques, 
 					setLoading(false);
 					messages('error', err);
 				});
-				return;
+			return;
 		}
 		setLoading(true);
 		client.request(
@@ -338,6 +340,97 @@ const RenderTemas = ({ index, tema, handleClickOpen, eliminarTemaBD }) => {
 							<Grid container spacing={2}>
 								<Hidden lgUp>
 									<Grid item xs={12}>
+										<Box display="flex" justifyContent="space-between">
+											<Box display="flex" justifyContent="space-between" alignItems="center">
+												{tema.keyTopicVideo ? (
+													<Box>
+														<PlayCircleFilledOutlinedIcon color="primary" />
+													</Box>
+												) : (
+													<div />
+												)}
+												{tema.resources.length > 0 ? (
+													tema.resources.map((recurso) => {
+														return recurso.urlExtern ? (
+															<Box>
+																<LinkIcon color="primary" />
+															</Box>
+														) : (
+															<Box>
+																<InsertDriveFileOutlinedIcon color="primary" />
+															</Box>
+														);
+													})
+												) : (
+													<div />
+												)}
+											</Box>
+											<Box display="flex">
+												<IconButton onClick={() => handleClickOpen('edit', tema)} size="small">
+													<EditOutlinedIcon />
+												</IconButton>
+												<Box mr={1} />
+												<IconButton
+													size="small"
+													onClick={() =>
+														handleDeleteConfimation(tema._id, tema.keyTopicVideo)}
+												>
+													<DeleteOutlinedIcon />
+												</IconButton>
+												<Box mr={1} />
+												<IconButton {...provided.dragHandleProps} size="small">
+													<DragIndicatorOutlinedIcon />
+												</IconButton>
+												<Box mr={1} />
+												<IconButton
+													size="small"
+													className={clsx(classes.expand, {
+														[classes.expandOpen]: expanded
+													})}
+													onClick={handleExpandClick}
+													aria-expanded={expanded}
+													aria-label="show more"
+												>
+													<ExpandMoreIcon />
+												</IconButton>
+											</Box>
+										</Box>
+									</Grid>
+								</Hidden>
+								<Grid item md={12} lg={8}>
+									<Box display="flex" alignItems="center">
+										<Box mr={1}>
+											<Typography variant="h6">{`Tema ${index +
+												1}: ${tema.topicTitle}`}</Typography>
+										</Box>
+										<Hidden mdDown>
+											{tema.keyTopicVideo ? (
+												<Box>
+													<PlayCircleFilledOutlinedIcon color="primary" />
+												</Box>
+											) : (
+												<div />
+											)}
+											{tema.resources.length > 0 ? (
+												tema.resources.map((recurso) => {
+													return recurso.urlExtern ? (
+														<Box>
+															<LinkIcon color="primary" />
+														</Box>
+													) : (
+														<Box>
+															<InsertDriveFileOutlinedIcon color="primary" />
+														</Box>
+													);
+												})
+											) : (
+												<div />
+											)}
+										</Hidden>
+									</Box>
+								</Grid>
+								<Hidden mdDown>
+									<Grid item xs={2} sm={4}>
 										<Box display="flex" justifyContent="flex-end">
 											<IconButton onClick={() => handleClickOpen('edit', tema)}>
 												<EditOutlinedIcon />
@@ -363,36 +456,6 @@ const RenderTemas = ({ index, tema, handleClickOpen, eliminarTemaBD }) => {
 										</Box>
 									</Grid>
 								</Hidden>
-								<Grid item xs={10} sm={8}>
-									<Typography variant="h6">{`Tema ${index + 1}: ${tema.topicTitle}`}</Typography>
-								</Grid>
-								<Grid item xs={2} sm={4}>
-									<Hidden mdDown>
-										<Box display="flex" justifyContent="flex-end">
-											<IconButton onClick={() => handleClickOpen('edit', tema)}>
-												<EditOutlinedIcon />
-											</IconButton>
-											<IconButton
-												onClick={() => handleDeleteConfimation(tema._id, tema.keyTopicVideo)}
-											>
-												<DeleteOutlinedIcon />
-											</IconButton>
-											<IconButton {...provided.dragHandleProps}>
-												<DragIndicatorOutlinedIcon />
-											</IconButton>
-											<IconButton
-												className={clsx(classes.expand, {
-													[classes.expandOpen]: expanded
-												})}
-												onClick={handleExpandClick}
-												aria-expanded={expanded}
-												aria-label="show more"
-											>
-												<ExpandMoreIcon />
-											</IconButton>
-										</Box>
-									</Hidden>
-								</Grid>
 							</Grid>
 						</CardActions>
 						<Collapse in={expanded} timeout="auto" unmountOnExit>
