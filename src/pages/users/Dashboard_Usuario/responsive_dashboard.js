@@ -4,11 +4,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 import ListaContenido from './lista';
 import ContenidoDashboard from './contenido_dashboard';
+import ComentariosCurso from './Comentarios/comentarios';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -22,8 +22,8 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
+        <Box p={1}>
+         {children}
         </Box>
       )}
     </div>
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Responsive_dashboard({user, curso}) {
+export default function ResponsiveDashboard({user, curso}) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -59,11 +59,12 @@ export default function Responsive_dashboard({user, curso}) {
   };
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} style={{padding: '0%'}}>
       <AppBar position="static">
-        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example"  style={{padding: '0%'}}>
           <Tab label="Contenido Curso" {...a11yProps(0)} />
           <Tab label="Información Curso" {...a11yProps(1)} />
+          <Tab label="Comentarios" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -72,7 +73,11 @@ export default function Responsive_dashboard({user, curso}) {
       <TabPanel value={value} index={1}>
         <ContenidoDashboard user={user} />
       </TabPanel>
-      
+      <TabPanel value={value} index={2}>
+        {/* <Box minHeight={200} style={{padding: '0%'}}> */}
+					<ComentariosCurso curso={curso} />
+				{/* </Box> */}
+      </TabPanel>
     </div>
   );
 }

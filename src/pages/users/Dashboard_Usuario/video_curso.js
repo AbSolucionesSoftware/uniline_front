@@ -29,11 +29,12 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-export default function Video_curso({user}) {
+export default function VideoCurso({user}) {
 
     const classes = useStyles();
 	const token = localStorage.getItem('token');
-	const { curso, temaActual, topics, update, setUpdate, setProgreso, setAction, calificado } = useContext(
+	// calificado
+	const { curso, temaActual, topics, update, setUpdate, setProgreso, setAction, } = useContext(
 		DashboardContext
 	);
 	const [ cursoFinalizado, setCursoFinalizado ] = useState(false);

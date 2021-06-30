@@ -1,13 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Avatar, Box, Divider,Hidden, Grid, Typography, CircularProgress, Tab } from '@material-ui/core';
+import { Avatar, Box, Divider,Hidden, Grid, Typography} from '@material-ui/core';
 import { List, ListItem, ListItemAvatar, ListItemIcon, ListItemText } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
 import DOMPurify from 'dompurify';
-import Vimeo from '@u-wave/react-vimeo';
-import PropTypes from 'prop-types';
+// import Vimeo from '@u-wave/react-vimeo';
+// import PropTypes from 'prop-types';
 
-import AppBar from '@material-ui/core/AppBar';
 import InsertChartOutlinedIcon from '@material-ui/icons/InsertChartOutlined';
 import LanguageOutlinedIcon from '@material-ui/icons/LanguageOutlined';
 import SchoolOutlinedIcon from '@material-ui/icons/SchoolOutlined';
@@ -17,10 +16,9 @@ import FolderOutlinedIcon from '@material-ui/icons/FolderOutlined';
 import ComentariosCurso from './Comentarios/comentarios';
 import { Fragment } from 'react';
 import { DashboardContext } from '../../../context/dashboar_context';
-import clienteAxios from '../../../config/axios';
+// import clienteAxios from '../../../config/axios';
 import Calificacion from './calificacion';
 import ProyectoFinal from './proyecto_final';
-import { Tabs } from 'react-bootstrap';
 
 const useStyles = makeStyles((theme) => ({
 	itemIcon: {
@@ -47,52 +45,53 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ContenidoDashboard({ user }) {
 	const classes = useStyles();
-	const token = localStorage.getItem('token');
-	const { curso, temaActual, topics, update, setUpdate, setProgreso, setAction, calificado } = useContext(
+	// const token = localStorage.getItem('token');
+	// setProgreso, setAction, topics, 
+	const { curso, temaActual, update, setUpdate, calificado } = useContext(
 		DashboardContext
 	);
-	const [ cursoFinalizado, setCursoFinalizado ] = useState(false);
+	// const [ cursoFinalizado, setCursoFinalizado ] = useState(false);
 	
-	const checkTema = async (topic) => {
-		setAction(0);
-		await clienteAxios
-			.post(
-				`/course/complete/topic/`,
-				{
-					idCourse: curso.course._id,
-					idTopic: topic,
-					idUser: user._id
-				},
-				{
-					headers: {
-						Authorization: `bearer ${token}`
-					}
-				}
-			)
-			.then((res) => {
-				setUpdate(!update);
-				setProgreso(res.data.message);
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	};
+	// const checkTema = async (topic) => {
+	// 	setAction(0);
+	// 	await clienteAxios
+	// 		.post(
+	// 			`/course/complete/topic/`,
+	// 			{
+	// 				idCourse: curso.course._id,
+	// 				idTopic: topic,
+	// 				idUser: user._id
+	// 			},
+	// 			{
+	// 				headers: {
+	// 					Authorization: `bearer ${token}`
+	// 				}
+	// 			}
+	// 		)
+	// 		.then((res) => {
+	// 			setUpdate(!update);
+	// 			setProgreso(res.data.message);
+	// 		})
+	// 		.catch((err) => {
+	// 			console.log(err);
+	// 		});
+	// };
 
-	const checkVideo = () => {
-		topics.forEach((topic, index) => {
-			if (topics.length === index + 1 && temaActual.id === topic._id) {
-				setCursoFinalizado(true);
-			}
-		});
-		checkTema(temaActual.id);
-	};
+	// const checkVideo = () => {
+	// 	topics.forEach((topic, index) => {
+	// 		if (topics.length === index + 1 && temaActual.id === topic._id) {
+	// 			setCursoFinalizado(true);
+	// 		}
+	// 	});
+	// 	checkTema(temaActual.id);
+	// };
 
 	useEffect(() => {
 		/* window.scrollTo(0, 0); */
 	}, []);
 
 	return (
-		<div>
+		<div style={{padding: '0%'}}>
 			{/* <Box
 				id="dashboard-reproductor"
 				className={classes.video}
@@ -327,9 +326,11 @@ export default function ContenidoDashboard({ user }) {
 					</Box>
 				</Box>
 				<Divider />
-				<Box minHeight={200}>
-					<ComentariosCurso curso={curso} />
-				</Box>
+				<Hidden smDown>
+					<Box minHeight={200} style={{padding: '0%'}}>
+						<ComentariosCurso curso={curso} />
+					</Box>
+				</Hidden>
 		</div>
 	);
 }

@@ -70,7 +70,7 @@ export default function Comentar({ curso, update, setUpdate }) {
 	};
 
 	return (
-		<Box mb={2}>
+		<Box mb={2} style={{padding: '0%'}}>
 			<MessageSnackbar
 				open={snackbar.open}
 				mensaje={snackbar.mensaje}

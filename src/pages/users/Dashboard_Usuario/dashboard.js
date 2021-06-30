@@ -29,8 +29,8 @@ import clienteAxios from '../../../config/axios';
 import Error500 from '../../error500';
 import SpinNormal from '../../../components/Spin/spinNormal';
 import { DashboardContext } from '../../../context/dashboar_context';
-import Video_curso from './video_curso';
-import Responsive_dashboard from './responsive_dashboard';
+import VideoCurso from './video_curso';
+import ResponsiveDashboard from './responsive_dashboard';
 
 function DashboarUsuario(props) {
 	const classes = useStyles();
@@ -373,11 +373,9 @@ function DashboarUsuario(props) {
 
 			<main className={classes.content}>
 				<Toolbar />
-				
-							
-				<Video_curso user={user} />
+				<VideoCurso user={user} />
 				<Hidden mdUp>
-					<Responsive_dashboard user={user} curso={curso}/>
+					<ResponsiveDashboard user={user} curso={curso}/>
 				</Hidden>
 				<Hidden smDown>
 					<ContenidoDashboard user={user} />
