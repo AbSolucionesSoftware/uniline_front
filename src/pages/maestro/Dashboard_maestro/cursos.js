@@ -1,15 +1,13 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { makeStyles, Button, Grid, Box, Chip, useTheme, Hidden } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
+import { Card, CardContent, Typography, Dialog, DialogTitle, DialogActions } from '@material-ui/core';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import ImageSearchOutlinedIcon from '@material-ui/icons/ImageSearchOutlined';
 import PublicIcon from '@material-ui/icons/Public';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import DoneIcon from '@material-ui/icons/Done';
-/* import DeleteIcon from '@material-ui/icons/Delete'; */
+import DeleteIcon from '@material-ui/icons/Delete';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
 import { Link } from 'react-router-dom';
@@ -37,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
-		[theme.breakpoints.down('md')]: {
+		[theme.breakpoints.down('sm')]: {
 			height: 'auto',
 			display: 'flex',
 			justifyContent: 'center',
@@ -79,6 +77,7 @@ export default function CursosProfesor({ datos, update, setUpdate }) {
 		mensaje: '',
 		status: ''
 	});
+	const [ open, setOpen ] = useState(false);
 	const [ blocks, setBlocks ] = useState([]);
 
 	const obtenerBloquesBD = useCallback(
@@ -154,12 +153,50 @@ export default function CursosProfesor({ datos, update, setUpdate }) {
 		}
 	};
 
+	const eliminarCurso = async () => {
+		await clienteAxios
+			.delete(`/course/${curso._id}`, {
+				headers: {
+					Authorization: `bearer ${token}`
+				}
+			})
+			.then((res) => {
+				setSnackbar({
+					open: true,
+					mensaje: res.data.message,
+					status: 'success'
+				});
+				setLoading(false);
+				setUpdate(!update);
+			})
+			.catch((err) => {
+				setLoading(false);
+				if (err.response) {
+					setSnackbar({
+						open: true,
+						mensaje: err.response.data.message,
+						status: 'error'
+					});
+				} else {
+					setSnackbar({
+						open: true,
+						mensaje: 'Al parecer no se a podido conectar al servidor.',
+						status: 'error'
+					});
+				}
+			});
+	};
+
 	useEffect(
 		() => {
 			obtenerBloquesBD();
 		},
 		[ obtenerBloquesBD ]
 	);
+
+	const toggleModal = () => {
+		setOpen(!open);
+	};
 
 	return (
 		<Fragment>
@@ -174,34 +211,35 @@ export default function CursosProfesor({ datos, update, setUpdate }) {
 				<Box mt={2} boxShadow={3} borderRadius={10}>
 					<Card className={classes.cardContent} variant="outlined">
 						<Grid container>
-							<Grid
-								item
-								sm={12}
-								md={3}
-								component={Link}
-								to={`/instructor/contenido_curso/${curso._id}/general`}
-							>
-								<Box
-									className={classes.imgContainer}
-									display="flex"
-									justifyContent="center"
-									alignItems="center"
+							<Grid item sm={12} md={3}>
+								<LinkMaterial
+									component={Link}
+									to={`/instructor/contenido_curso/${curso._id}/general`}
+									underline="none"
+									color="inherit"
 								>
-									{!curso.urlPromotionalImage ? (
-										<Box textAlign="center">
-											<Box display="flex" justifyContent="center" alignItems="center">
-												<ImageSearchOutlinedIcon style={{ fontSize: 40 }} />
+									<Box
+										className={classes.imgContainer}
+										display="flex"
+										justifyContent="center"
+										alignItems="center"
+									>
+										{!curso.urlPromotionalImage ? (
+											<Box textAlign="center">
+												<Box display="flex" justifyContent="center" alignItems="center">
+													<ImageSearchOutlinedIcon style={{ fontSize: 40 }} />
+												</Box>
+												<Typography>Este curso aun no tiene imagen</Typography>
 											</Box>
-											<Typography>Este curso aun no tiene imagen</Typography>
-										</Box>
-									) : (
-										<img
-											className={classes.cover}
-											src={curso.urlPromotionalImage}
-											alt="imagen promocional del curso"
-										/>
-									)}
-								</Box>
+										) : (
+											<img
+												className={classes.cover}
+												src={curso.urlPromotionalImage}
+												alt="imagen promocional del curso"
+											/>
+										)}
+									</Box>
+								</LinkMaterial>
 							</Grid>
 							<Grid item sm={12} md={7}>
 								<LinkMaterial
@@ -367,13 +405,11 @@ export default function CursosProfesor({ datos, update, setUpdate }) {
 												Ver curso
 											</Button>
 										</Grid>
-										{/* {!datos.blockCourse && datos.numInscription === 0 ? (
-											<Grid item xs={12} md={12} sm={4}>
-												<Button fullWidth color="secondary" variant="contained" startIcon={<DeleteIcon />}>
-													Eliminar
-												</Button>
+										{!datos.blockCourse && datos.numInscription === 0 ? (
+											<Grid item xs={12} md={12} sm={4} >
+												<ModalDelete open={open} toggleModal={toggleModal} eliminarCurso={eliminarCurso} />
 											</Grid>
-										) : null} */}
+										) : null}
 									</Grid>
 								</Box>
 							</Grid>
@@ -384,3 +420,24 @@ export default function CursosProfesor({ datos, update, setUpdate }) {
 		</Fragment>
 	);
 }
+
+const ModalDelete = ({ open, toggleModal, eliminarCurso }) => {
+	return (
+		<Fragment>
+			<Button fullWidth color="secondary" variant="contained" startIcon={<DeleteIcon />} onClick={toggleModal}>
+				Eliminar
+			</Button>
+			<Dialog open={open} onClose={toggleModal}>
+				<DialogTitle>{'Estás seguro de eliminar este curso?'}</DialogTitle>
+				<DialogActions>
+					<Button onClick={toggleModal} color="primary">
+						Cancelar
+					</Button>
+					<Button onClick={eliminarCurso} color="secondary" autoFocus>
+						Eliminar
+					</Button>
+				</DialogActions>
+			</Dialog>
+		</Fragment>
+	);
+};
