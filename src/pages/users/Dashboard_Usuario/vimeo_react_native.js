@@ -30,7 +30,9 @@ export default function VimeoReactNative(props) {
 
 	const jalaPorfa = () => {
 		/* document.getElementById('jalaPorfa').click(); */
-		document.addEventListener("hello world")
+		document.addEventListener("message", function (event) {
+			window.ReactNativeWebView.postMessage(event.data);
+		});
 	}
 
 	return (
