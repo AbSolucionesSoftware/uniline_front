@@ -29,7 +29,9 @@ export default function VimeoReactNative(props) {
 	if (info_url !== info_local) return null;
 
 	const jalaPorfa = () => {
+		document.getElementById('jalaPorfa').innerText("cagaduarte")
 		document.getElementById('jalaPorfa').click(); 
+		
 		/* console.log("si se ejecuta");
 		window.alert("video finalizado") */
 		/* window.postMessage("jalaPorfa", "*");
