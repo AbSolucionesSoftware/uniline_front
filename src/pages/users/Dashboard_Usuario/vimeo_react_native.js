@@ -52,7 +52,7 @@ export default function VimeoReactNative(props) {
 					height={100}
 				/>
 				<Box my={2} display="none">
-					<Button id="jalaPorfa" color="primary" variant="contained" fullWidth onClick={() => window.postMessage("jalaPorfa") /* props.history.push('/vimeo_mobil_change/true') */}>
+					<Button id="jalaPorfa" color="primary" variant="contained" fullWidth onClick={() => window.ReactNativeWebView.postMessage("jalaPorfa") /* props.history.push('/vimeo_mobil_change/true') */}>
 						Jala porfa
 					</Button>
 				</Box>
