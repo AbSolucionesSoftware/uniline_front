@@ -52,8 +52,8 @@ export default function VimeoReactNative(props) {
 					height={100}
 					loop={false}
 				/>
-				<Box my={2} /* id="jalaPorfa" */>
-					<Button id="jalaPorfa" color="primary" variant="contained" fullWidth onClick={() => props.history.push('/vimeo_mobil_change/true')}>
+				<Box my={2} id="jalaPorfa">
+					<Button /* id="jalaPorfa" */ color="primary" variant="contained" fullWidth onClick={() => props.history.push('/vimeo_mobil_change/true')}>
 						Jala porfa
 					</Button>
 				</Box>
