@@ -2,7 +2,7 @@
   "name": "uniline_front",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://priceless-roentgen-d8c7ba.netlify.app/",
+  "homepage": "https://uniline.online/",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
     "@fortawesome/free-brands-svg-icons": "^5.15.2",
