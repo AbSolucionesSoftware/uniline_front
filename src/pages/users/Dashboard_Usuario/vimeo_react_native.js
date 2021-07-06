@@ -29,7 +29,7 @@ export default function VimeoReactNative(props) {
 	if (info_url !== info_local) return null;
 
 	const jalaPorfa = () => {
-		document.getElementById('jalaPorfa').click(); 
+		document.getElementById('jalaPorfa').innerText("coco mmmmmmmmmmmm").click(); 
 		/* console.log("si se ejecuta");
 		window.alert("video finalizado") */
 		/* window.postMessage("jalaPorfa", "*");
