@@ -59,6 +59,7 @@ export default function DashboardMaestro(props) {
 	const [ datos, setDatos ] = useState([]);
 	const [ loading, setLoading ] = useState(false);
 	const [ update, setUpdate ] = useState(false);
+	const [ value, setValue ] = useState('');
 	const [ snackbar, setSnackbar ] = useState({
 		open: false,
 		mensaje: '',
@@ -73,6 +74,44 @@ export default function DashboardMaestro(props) {
 			if (!user._id) return;
 			setLoading(true);
 			await clienteAxios
+				.get(`/course/teacher/${user._id}`, {
+					headers: {
+						Authorization: `bearer ${token}`
+					}
+				})
+				.then((res) => {
+					setLoading(false);
+					setDatos(res.data);
+				})
+				.catch((err) => {
+					setLoading(false);
+					if (err.response) {
+						setSnackbar({
+							open: true,
+							mensaje: err.response.data.message,
+							status: 'error'
+						});
+					} else {
+						setSnackbar({
+							open: true,
+							mensaje: 'Al parecer no se a podido conectar al servidor.',
+							status: 'error'
+						});
+					}
+				});
+		},
+		[ token, user._id ]
+	);
+
+	const capturarBusqueda = (valor) => setValue(valor);
+	const obtenerBusquedas = async (e) => {
+		e.preventDefault();
+		if(value === '') {
+			obtenerCursosBD();
+			return;
+		}
+		setLoading(true);
+		await clienteAxios
 			.get(`/course/teacher/${user._id}`, {
 				headers: {
 					Authorization: `bearer ${token}`
@@ -98,15 +137,18 @@ export default function DashboardMaestro(props) {
 					});
 				}
 			});
+	};
+
+	useEffect(
+		() => {
+			obtenerCursosBD();
 		},
-		[ token, user._id ],
-	)
+		[ obtenerCursosBD, update ]
+	);
 
-	useEffect(() => {
-		obtenerCursosBD();
-	}, [ obtenerCursosBD, update ]);
-
-	const render_cursos = datos.map((curso, index) => (<CursosProfesor key={index} datos={curso} update={update} setUpdate={setUpdate} />))
+	const render_cursos = datos.map((curso, index) => (
+		<CursosProfesor key={index} datos={curso} update={update} setUpdate={setUpdate} />
+	));
 
 	if (!datos) {
 		return (
@@ -135,12 +177,16 @@ export default function DashboardMaestro(props) {
 			<Scroll showBelow={250} />
 			<Grid container>
 				<Grid item xs={12} md={5}>
-					<Paper component="form" className={classes.root}>
+					<Paper component="form" onSubmit={obtenerBusquedas} className={classes.root}>
 						<IconButton className={classes.iconButton} aria-label="search">
 							<SearchIcon />
 						</IconButton>
 						<Divider className={classes.divider} orientation="vertical" />
-						<InputBase className={classes.input} placeholder="Buscar tus cursos" />
+						<InputBase
+							className={classes.input}
+							placeholder="Buscar tus cursos"
+							onChange={(e) => capturarBusqueda(e.target.value)}
+						/>
 					</Paper>
 				</Grid>
 				<Grid item xs={12} md={7}>

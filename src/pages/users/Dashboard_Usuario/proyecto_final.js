@@ -169,6 +169,7 @@ export default function ProyectoFinal({ curso, user }) {
 						id="proyecto-final"
 						type="file"
 						onChange={getFile}
+						disabled={parseInt(progreso) < 100 || homework !== null}
 					/>
 					<label htmlFor="proyecto-final" className={classes.root}>
 						<Button
@@ -177,7 +178,7 @@ export default function ProyectoFinal({ curso, user }) {
 							variant="outlined"
 							component="span"
 							fullWidth
-							disabled={parseInt(progreso) !== 100 || homework !== null}
+							disabled={parseInt(progreso) < 100 || homework !== null}
 						>
 							{file ? file.name : homework !== null ? homework.homeworkFileKey : 'Cargar Archivo'}
 						</Button>

@@ -98,6 +98,7 @@ export default function GenerarCupones() {
 				.then((res) => {
 					setLoading(false);
 					setCuponesBD(res.data);
+					setPage(0);
 				})
 				.catch((err) => {
 					setLoading(false);
@@ -275,7 +276,7 @@ export default function GenerarCupones() {
 					page={page}
 					onChangePage={handleChangePage}
 					onChangeRowsPerPage={handleChangeRowsPerPage}
-					labelDisplayedRows={({ from, to, count }) => `${from} de ${count !== -1 ? count : to}`}
+					labelDisplayedRows={({ from, to, count }) => `${to} de ${count !== -1 ? count : to}`}
 				/>
 			</Box>
 		</Box>

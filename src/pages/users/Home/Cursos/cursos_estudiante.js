@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
 	margin: {
 		margin: theme.spacing(5),
 		[theme.breakpoints.down('xs')]: {
-			margin: '32px 8px'
+			margin: '32px 0px'
 		}
 	}
 }));
@@ -38,12 +38,12 @@ export default function CursosComprados() {
 			items: 3
 		},
 		tablet: {
-			breakpoint: { max: 998, min: 449 },
-			items: 2
+			breakpoint: { max: 998, min: 532 },
+			items: 3
 		},
 		mobile: {
-			breakpoint: { max: 480, min: 0 },
-			items: 1
+			breakpoint: { max: 532, min: 0 },
+			items: 2
 		}
 	};
 
@@ -75,7 +75,7 @@ export default function CursosComprados() {
 
 	const render_cursos = cursos.map((curso, index) => <CardsCursosEstudiantes key={index} curso={curso} />);
 	const render_cursos_lg = cursos.map((curso, index) => (
-		<Grid key={index} item xl={3} lg={3}>
+		<Grid key={index} item  >
 			<CardsCursosEstudiantes curso={curso} />
 		</Grid>
 	));
@@ -109,7 +109,7 @@ export default function CursosComprados() {
 			</Hidden>
 			<Hidden xsDown>
 				<Box py={2} width="auto">
-					<Grid container spacing={2}>
+					<Grid container spacing={3}>
 						{render_cursos_lg}
 					</Grid>
 				</Box>

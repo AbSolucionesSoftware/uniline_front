@@ -41,19 +41,19 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: red[500]
 	},
 	container: {
-		paddingTop: theme.spacing(2),
-		paddingLeft: theme.spacing(5),
-		paddingRight: theme.spacing(5),
-		paddingBottom: theme.spacing(6),
-		[theme.breakpoints.down('sm')]: {
-			paddingLeft: 0,
-			paddingRight: 0
-		}
+		// paddingTop: theme.spacing(2),
+		// paddingLeft: theme.spacing(5),
+		// paddingRight: theme.spacing(5),
+		// paddingBottom: theme.spacing(6),
+		// [theme.breakpoints.down('sm')]: {
+		// 	paddingLeft: 0,
+		// 	paddingRight: 0
+		// }
 	}
 }));
 
 export default function ComentariosCurso({ curso }) {
-	const classes = useStyles();
+	// const classes = useStyles();
 	const theme = useTheme();
 	const token = localStorage.getItem('token');
 	const [ filtro, setFiltro ] = useState('todos');
@@ -105,36 +105,38 @@ export default function ComentariosCurso({ curso }) {
 	);
 
 	return (
-		<Box className={classes.container}>
-			<Box mb={2}>
-				<Typography variant="h5">Comentarios</Typography>
-			</Box>
-			<Comentar curso={curso} update={update} setUpdate={setUpdate} />
-
-			<Box p={2} style={{ backgroundColor: theme.palette.background.paper }}>
+		<div style={{padding: '0%'}}>
+			<Box minHeight={200} style={{padding: '0%'}}>
 				<Box mb={2}>
-					<ToggleButtonGroup
-						value={filtro}
-						exclusive
-						onChange={handleFiltro}
-						aria-label="comentarios de curso"
-					>
-						<ToggleButton value="todos" aria-label="todos los comentarios">
-							<Typography>Todos los comentarios</Typography>
-						</ToggleButton>
-						<ToggleButton value="tema" aria-label="cometarios del tema actual">
-							<Typography>Comentarios del tema actual</Typography>
-						</ToggleButton>
-					</ToggleButtonGroup>
+					<Typography variant="h5">Comentarios</Typography>
 				</Box>
-				{/* {loading ? (
-					<Box height={100} display="flex" justifyContent="center" alignItems="center">
-						<CircularProgress />
+				<Comentar curso={curso} update={update} setUpdate={setUpdate} />
+
+				<Box  style={{ backgroundColor: theme.palette.background.paper,padding: '0%' }}>
+					<Box mb={2}>
+						<ToggleButtonGroup
+							value={filtro}
+							exclusive
+							onChange={handleFiltro}
+							aria-label="comentarios de curso"
+						>
+							<ToggleButton value="todos" aria-label="todos los comentarios">
+								<Typography>Todos los comentarios</Typography>
+							</ToggleButton>
+							<ToggleButton value="tema" aria-label="cometarios del tema actual">
+								<Typography>Comentarios del tema actual</Typography>
+							</ToggleButton>
+						</ToggleButtonGroup>
 					</Box>
-				) : null} */}
-				{render_comentarios}
+					{/* {loading ? (
+						<Box height={100} display="flex" justifyContent="center" alignItems="center">
+							<CircularProgress />
+						</Box>
+					) : null} */}
+					{render_comentarios}
+				</Box>
 			</Box>
-		</Box>
+		</div>
 	);
 }
 
@@ -160,7 +162,7 @@ const Comentarios = ({ comentario, update, setUpdate }) => {
 	const handleModal = () => setOpen(!open);
 
 	return (
-		<Box my={3}>
+		<Box my={3} style={{padding: '0%'}}>
 			<ResponderComentario
 				open={open}
 				handleModal={handleModal}
@@ -176,7 +178,7 @@ const Comentarios = ({ comentario, update, setUpdate }) => {
 				setUpdate={setUpdate}
 				commentOrAnswer="comment"
 			/>
-			<Card className={classes.root} variant="outlined">
+			<Card className={classes.root} variant="outlined" style={{padding: '0%'}}>
 				<CardHeader
 					avatar={
 						comentario.idUser.urlImage ? (

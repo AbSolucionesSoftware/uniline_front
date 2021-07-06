@@ -5,11 +5,13 @@ import LayoutUsers from '../components/Layout_User/layout_usuario';
 import LayoutDashboardUser from '../components/Layout_User/layout_dashboar';
 import RecuperarPassword from '../components/Layout_User/layout_recovery';
 import PagarCurso from '../components/Layout_User/layout_pago';
+/* import LayoutPagoMovil from '../components/Layout_User/layout_pago_movil'; */
 
 //Admin pages
 import DashboardMaestro from '../pages/maestro/Dashboard_maestro/dashboard';
 import SubirCursoMaestro from '../pages/maestro/Subir_curso/crear_curso';
 import EstadisticasMaestro from '../pages/maestro/Estadisticas/estadisticas';
+import VistaRegistroInstructores from '../pages/maestro/Registro_instructores/vista_registro';
 
 //dashboard registro curso pages
 import RegistroInformacionCurso from '../pages/maestro/Subir_curso/Dasboard_curso/Info_general/informacion_curso';
@@ -17,6 +19,7 @@ import QueAprenderaEstudiante from '../pages/maestro/Subir_curso/Dasboard_curso/
 import RegistroContenido from '../pages/maestro/Subir_curso/Dasboard_curso/Contenido_curso/contenido';
 import PrecioCurso from '../pages/maestro/Subir_curso/Dasboard_curso/Publicacion_curso/precio';
 import TareasEstudiantes from '../pages/maestro/Subir_curso/Tareas/tareas';
+import EstudiantesCurso from '../pages/maestro/Subir_curso/Estudiantes/estudiantes';
 
 //Users pages
 import Home from '../pages/users/Home/home';
@@ -32,6 +35,8 @@ import RegistroUsuario from '../pages/users/Registro/registro';
 import VistaCurso from '../pages/users/Vista_curso/vista_curso';
 import PagoSuccess from '../pages/users/Compra_curso/success_page';
 import PagoFailed from '../pages/users/Compra_curso/failed_page';
+import VimeoReactNative from '../pages/users/Dashboard_Usuario/vimeo_react_native';
+import OnChangeVista from '../pages/users/Dashboard_Usuario/vista_change';
 
 //other
 import Error404 from '../pages/error404';
@@ -53,10 +58,25 @@ const routes = [
 		exact: true
 	},
 	{
-		path: '/compra/:url',
+		path: '/compra',
 		component: PagarCurso,
 		exact: true
 	},
+	{
+		path: '/vimeo_mobil/:url/:info',
+		component: VimeoReactNative,
+		exact: true
+	},
+	{
+		path: '/vimeo_mobil_change/:action',
+		component: OnChangeVista, 
+		exact: true
+	},
+/* 	{
+		path: '/compra_movil/:amount',
+		component: LayoutPagoMovil,
+		exact: true
+	}, */
 	{
 		path: '/reset_password/:url',
 		component: RecuperarPassword,
@@ -93,6 +113,11 @@ const routes = [
 				exact: true,
 			},
 			{
+				path: '/instructor/contenido_curso/:curso/estudiantes',
+				component: EstudiantesCurso,
+				exact: true,
+			},
+			{
 				component: Error404
 			}
 		]
@@ -110,6 +135,11 @@ const routes = [
 			{
 				path: '/instructor/estadisticas',
 				component: EstadisticasMaestro,
+				exact: true,
+			},
+			{
+				path: '/instructor/registro_instructores',
+				component: VistaRegistroInstructores,
 				exact: true,
 			},
 			{

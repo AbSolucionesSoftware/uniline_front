@@ -159,7 +159,7 @@ const CardMisCursos = ({ curso }) => {
 						<Typography variant="h5">{curso.idCourse.title}</Typography>
 						<Grid container>
 							<Grid item md={3} xs={12}>
-								<Typography>Avance del curso:</Typography>
+								<Typography>Avance del curso: {curso.studentAdvance}%</Typography>
 							</Grid>
 							<Grid item md={9} xs={12}>
 								<Box mt={1}>

@@ -23,6 +23,7 @@ import {
 
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import AssignmentOutlinedIcon from '@material-ui/icons/AssignmentOutlined';
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import ErrorIcon from '@material-ui/icons/Error';
 import useStyles from './styleContenidoCurso';
 
@@ -52,7 +53,9 @@ export default function NavegacionContenidoCurso(props) {
 					? 'Bloques y temas del curso'
 					: ruta_actual[4] === 'precio'
 						? 'Precio del curso'
-						: ruta_actual[4] === 'tareas' ? 'Tareas de tus estuidantes' : ''
+						: ruta_actual[4] === 'tareas'
+							? 'Tareas de tus estuidantes'
+							: ruta_actual[4] === 'estudiantes' ? 'Tus alumnos' : ''
 	);
 
 	const darkModeAction = () => {
@@ -205,7 +208,10 @@ export default function NavegacionContenidoCurso(props) {
 						button
 						component={Link}
 						to={`/instructor/contenido_curso/${idcurso}/general`}
-						onClick={() => setTitle('Información del curso')}
+						onClick={() => {
+							setTitle('Información del curso');
+							setMobileOpen(false);
+						}}
 					>
 						<ListItemIcon>
 							{verificarInformacionCurso(datos) ? (
@@ -220,7 +226,10 @@ export default function NavegacionContenidoCurso(props) {
 						button
 						component={Link}
 						to={`/instructor/contenido_curso/${idcurso}/learn`}
-						onClick={() => setTitle('Que enseñarás')}
+						onClick={() => {
+							setTitle('Que enseñarás');
+							setMobileOpen(false);
+						}}
 					>
 						<ListItemIcon>
 							{verificarLearningsCurso(datos) ? (
@@ -241,7 +250,10 @@ export default function NavegacionContenidoCurso(props) {
 						button
 						component={Link}
 						to={`/instructor/contenido_curso/${idcurso}/contenido`}
-						onClick={() => setTitle('Bloques y temas del curso')}
+						onClick={() => {
+							setTitle('Bloques y temas del curso');
+							setMobileOpen(false);
+						}}
 					>
 						<ListItemIcon>
 							{verificarBloquesCurso(blocks) ? (
@@ -263,7 +275,10 @@ export default function NavegacionContenidoCurso(props) {
 							button
 							component={Link}
 							to={`/instructor/contenido_curso/${idcurso}/precio`}
-							onClick={() => setTitle('Precio del curso')}
+							onClick={() => {
+								setTitle('Precio del curso');
+								setMobileOpen(false);
+							}}
 						>
 							<ListItemIcon>
 								{verificarPrecioCurso(datos) ? (
@@ -278,22 +293,37 @@ export default function NavegacionContenidoCurso(props) {
 				</List>
 			</Box>
 			<Box mt={1} ml={3}>
-				<Typography variant="button">Tareas y Proyectos</Typography>
+				<Typography variant="button">Estudiantes</Typography>
 				<Divider />
 				<List className={classes.root}>
-					<List className={classes.root}>
-						<ListItem
-							button
-							component={Link}
-							to={`/instructor/contenido_curso/${idcurso}/tareas`}
-							onClick={() => setTitle('Tareas de tus estudiantes')}
-						>
-							<ListItemIcon>
-								<AssignmentOutlinedIcon />
-							</ListItemIcon>
-							<ListItemText primary="Tareas finales" />
-						</ListItem>
-					</List>
+					<ListItem
+						button
+						component={Link}
+						to={`/instructor/contenido_curso/${idcurso}/tareas`}
+						onClick={() => {
+							setTitle('Tareas de tus estudiantes');
+							setMobileOpen(false);
+						}}
+					>
+						<ListItemIcon>
+							<AssignmentOutlinedIcon />
+						</ListItemIcon>
+						<ListItemText primary="Tareas finales" />
+					</ListItem>
+					<ListItem
+						button
+						component={Link}
+						to={`/instructor/contenido_curso/${idcurso}/estudiantes`}
+						onClick={() => {
+							setTitle('Tus alumnos');
+							setMobileOpen(false);
+						}}
+					>
+						<ListItemIcon>
+							<AssignmentIndIcon />
+						</ListItemIcon>
+						<ListItemText primary="Alumnos inscritos" />
+					</ListItem>
 				</List>
 			</Box>
 			<Box display="flex" justifyContent="center" mt={2}>

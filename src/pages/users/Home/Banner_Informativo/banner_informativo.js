@@ -8,7 +8,7 @@ import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
 const useStyles = makeStyles((theme) => ({
 	color: {
-		backgroundColor: theme.palette.background.paper
+		backgroundColor: theme.palette.background.default
 	},
 	imagenes: {
 		maxWidth: '100%',
@@ -54,7 +54,7 @@ export default function BannerInformativo() {
 							<Box mt={4}>
 								<Typography variant="h5" className={classes.titulos}>
 									<FiberManualRecordIcon className={classes.vinetas} />
-									Consiso y claro
+									Conciso y claro
 								</Typography>
 							</Box>
 							<Box ml={4} mt={2}>

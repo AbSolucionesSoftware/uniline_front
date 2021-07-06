@@ -1,7 +1,18 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { Drawer, AppBar, Toolbar, List, Typography, Divider, IconButton, MenuItem, Popover } from '@material-ui/core';
+import {
+	Drawer,
+	AppBar,
+	Toolbar,
+	List,
+	Typography,
+	Divider,
+	IconButton,
+	MenuItem,
+	Popover,
+	Hidden
+} from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -17,7 +28,8 @@ import Brightness5Icon from '@material-ui/icons/Brightness5';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import HomeIcon from '@material-ui/icons/Home';
 import OndemandVideoIcon from '@material-ui/icons/OndemandVideo';
-import EqualizerIcon from '@material-ui/icons/Equalizer';
+/* import EqualizerIcon from '@material-ui/icons/Equalizer'; */
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { Link } from 'react-router-dom';
 import firebase from 'firebase/app';
@@ -93,6 +105,13 @@ const useStyles = makeStyles((theme) => ({
 	orange: {
 		color: theme.palette.getContrastText(deepOrange[500]),
 		backgroundColor: deepOrange[500]
+	},
+	divider: {
+		backgroundColor: theme.palette.background.paper,
+		height: 38,
+		width: 0.5,
+		marginLeft: theme.spacing(1),
+		marginRight: theme.spacing(1)
 	}
 }));
 
@@ -105,6 +124,12 @@ export default function NavbarMaestro(props) {
 	const [ open, setOpen ] = useState(false);
 	const isMenuOpen = Boolean(anchorEl);
 	let user = { _id: '', name: '', imagen: '' };
+	const ruta_actual = props.props.location.pathname.split('/');
+	const [ title, setTitle ] = useState(
+		ruta_actual[2] === 'registro_instructores'
+			? 'Instructores de UNILINE'
+			: ruta_actual[2] === 'cursos' ? 'Tus cursos' : ruta_actual[2] === 'estadisticas' ? 'Estadisticas' : ''
+	);
 
 	if (token !== null) user = JSON.parse(localStorage.getItem('student'));
 
@@ -189,8 +214,14 @@ export default function NavbarMaestro(props) {
 					>
 						<MenuIcon />
 					</IconButton>
+					<Hidden xsDown>
+						<Typography variant="h6" noWrap>
+							Dashboard instructor
+						</Typography>
+						<Divider orientation="vertical" className={classes.divider} />
+					</Hidden>
 					<Typography variant="h6" noWrap className={classes.title}>
-						Dashboard instructor
+						{title}
 					</Typography>
 					<IconButton
 						style={{ marginRight: theme.spacing(1) }}
@@ -234,18 +265,50 @@ export default function NavbarMaestro(props) {
 				</div>
 				<Divider />
 				<List>
-					<ListItem button component={Link} to="/instructor/cursos">
+					<ListItem
+						button
+						component={Link}
+						to="/instructor/cursos"
+						onClick={() => {
+							setTitle('Tus cursos');
+							handleDrawerClose();
+						}}
+					>
 						<ListItemIcon>
 							<OndemandVideoIcon />
 						</ListItemIcon>
 						<ListItemText primary="Cursos" />
 					</ListItem>
-					<ListItem button component={Link} to="/instructor/estadisticas">
+					{/* <ListItem
+						button
+						component={Link}
+						to="/instructor/estadisticas"
+						onClick={() => {
+							setTitle('Estadisticas');
+							handleDrawerClose();
+						}}
+					>
 						<ListItemIcon>
 							<EqualizerIcon />
 						</ListItemIcon>
-						<ListItemText primary="Estadsticas" />
-					</ListItem>
+						<ListItemText primary="Estadisticas" />
+					</ListItem> */}
+					{user && user.admin === true ? (
+						<ListItem
+							button
+							component={Link}
+							to="/instructor/registro_instructores"
+							onClick={() => {
+								setTitle('Instructores de UNILINE');
+								handleDrawerClose();
+							}}
+						>
+							<ListItemIcon>
+								<AssignmentIndIcon />
+							</ListItemIcon>
+							<ListItemText primary="Instructores" />
+						</ListItem>
+					) : null}
 					<ListItem button onClick={darkModeAction}>
 						<ListItemIcon>{darkTheme ? <Brightness5Icon /> : <BrightnessMediumIcon />}</ListItemIcon>
 						<ListItemText primary={`tema: ${darkTheme === true ? 'Oscuro' : 'Claro'}`} />

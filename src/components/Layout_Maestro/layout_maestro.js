@@ -51,7 +51,7 @@ export default function LayoutMaestro(props) {
 		<ThemeProvider theme={tema === true ? darkMode : theme}>
 			<CssBaseline />
 			<div className={classes.root}>
-				<NavbarMaestro tema={[ darkTheme ,setDarkTheme]} />
+				<NavbarMaestro tema={[ darkTheme ,setDarkTheme]} props={props} />
 				<main className={classes.content}>
 					<div className={classes.toolbar} />
 					<div className="site-layout-background bg-white" style={{ padding: 24, minHeight: 360 }}>

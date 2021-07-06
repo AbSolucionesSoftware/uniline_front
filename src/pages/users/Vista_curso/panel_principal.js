@@ -162,7 +162,8 @@ function VistaCursoPanelPrincipal(props) {
 				priceCourse: curso.priceCourse.price,
 				pricePromotionCourse: curso.priceCourse.promotionPrice,
 				persentagePromotion: curso.priceCourse.persentagePromotion,
-				idCourse: curso,
+				idCourse: curso._id,
+				course: curso,
 				promotion: true
 			});
 		} else {
@@ -170,7 +171,8 @@ function VistaCursoPanelPrincipal(props) {
 				priceCourse: curso.priceCourse.price,
 				pricePromotionCourse: 0,
 				persentagePromotion: '',
-				idCourse: curso,
+				idCourse: curso._id,
+				course: curso,
 				promotion: false
 			});
 		}
@@ -188,8 +190,11 @@ function VistaCursoPanelPrincipal(props) {
 				courses: cursos
 			})
 		);
-		setTimeout(() => {
+		/* setTimeout(() => {
 			props.history.push(`/compra/${curso.slug}`);
+		}, 500); */
+		setTimeout(() => {
+			props.history.push(`/compra`);
 		}, 500);
 	};
 
@@ -232,9 +237,9 @@ function VistaCursoPanelPrincipal(props) {
 				<Box>
 					{curso.course.priceCourse ? curso.course.priceCourse.free ? (
 						<Chip
-							className={classes.free}
+							color="secondary"
 							label={
-								<Typography variant="h6" color="textPrimary">
+								<Typography variant="h6">
 									¡Este curso es gratis!
 								</Typography>
 							}
@@ -291,7 +296,7 @@ function VistaCursoPanelPrincipal(props) {
 									}
 									onClick={() => adquirirCursoGratis(curso)}
 								>
-									¡Adquirir ahora!
+									¡Inscríbete ahora!
 								</Button>
 							) : (
 								<Button
@@ -338,28 +343,32 @@ function VistaCursoPanelPrincipal(props) {
 								</Button>
 							)}
 						</Box>
-						<Divider />
-						<Box my={2}>
-							<Typography variant="subtitle1" align="center" color="textSecondary">
-								<b>¡Aplicar cupón!</b>
-							</Typography>
-							<Box display="flex" justifyContent="space-around">
-								<TextField
-									variant="outlined"
-									label="código de cupon"
-									size="small"
-									onChange={obtenerCupon}
-								/>
-								<Button
-									variant="contained"
-									color="secondary"
-									endIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
-									onClick={() => canjearCupon()}
-								>
-									Canjear
-								</Button>
-							</Box>
-						</Box>
+						{curso.course.priceCourse && !curso.course.priceCourse.free ? (
+							<Fragment>
+								<Divider />
+								<Box my={2}>
+									<Typography variant="subtitle1" align="center" color="textSecondary">
+										<b>¡Aplicar cupón!</b>
+									</Typography>
+									<Box display="flex" justifyContent="space-around">
+										<TextField
+											variant="outlined"
+											label="código de cupon"
+											size="small"
+											onChange={obtenerCupon}
+										/>
+										<Button
+											variant="contained"
+											color="secondary"
+											endIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
+											onClick={() => canjearCupon()}
+										>
+											Canjear
+										</Button>
+									</Box>
+								</Box>
+							</Fragment>
+						) : null}
 					</Fragment>
 				)}
 				<Divider />

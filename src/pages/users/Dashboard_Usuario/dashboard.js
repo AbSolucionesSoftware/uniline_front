@@ -29,6 +29,8 @@ import clienteAxios from '../../../config/axios';
 import Error500 from '../../error500';
 import SpinNormal from '../../../components/Spin/spinNormal';
 import { DashboardContext } from '../../../context/dashboar_context';
+import VideoCurso from './video_curso';
+import ResponsiveDashboard from './responsive_dashboard';
 
 function DashboarUsuario(props) {
 	const classes = useStyles();
@@ -177,7 +179,7 @@ function DashboarUsuario(props) {
 
 	return (
 		<div className={classes.root}>
-			<Hidden mdUp>
+			{/* <Hidden mdUp>
 				<Button
 					size="large"
 					variant="contained"
@@ -187,7 +189,7 @@ function DashboarUsuario(props) {
 				>
 					Contenido
 				</Button>
-			</Hidden>
+			</Hidden> */}
 			<CssBaseline />
 			<AppBar position="fixed" className={classes.appBar}>
 				<Toolbar>
@@ -371,7 +373,18 @@ function DashboarUsuario(props) {
 
 			<main className={classes.content}>
 				<Toolbar />
-				<ContenidoDashboard user={user} />
+				<VideoCurso user={user} />
+				<Hidden mdUp>
+					<ResponsiveDashboard user={user} curso={curso}/>
+				</Hidden>
+				<Hidden smDown>
+					<ContenidoDashboard user={user} />
+				</Hidden>
+					
+				{/* </Hidden> */}
+
+				{/* HIDDEN */}
+							
 				<Spin loading={loading} />
 				<MessageSnackbar
 					open={snackbar.open}

@@ -58,6 +58,7 @@ export default function PagarCurso(props) {
 	let totalAnterior = 0;
 	let descuento = 0;
 	let promocion = false;
+	let items = [];
 	compra.courses.forEach((articulo) => {
 		if (articulo.course.priceCourse.free) {
 			total += 0;
@@ -65,26 +66,47 @@ export default function PagarCurso(props) {
 			if (articulo.course.priceCourse.promotionPrice) {
 				total += articulo.course.priceCourse.promotionPrice;
 				promocion = true;
+				items.push({	
+					sku: articulo.course._id,
+					name: articulo.course.title,
+					price: articulo.course.priceCourse.promotionPrice.toFixed(2),
+					quantity: 1,
+					currency: 'MXN'
+				})
+					
 			} else {
 				total += articulo.course.priceCourse.price;
+				items.push({	
+					sku: articulo.course._id,
+					name: articulo.course.title,
+					price: articulo.course.priceCourse.price.toFixed(2),
+					quantity: 1,
+					currency: 'MXN'
+				})
 			}
 		}
 		totalAnterior += articulo.course.priceCourse.price;
 		descuento = ((total * 100 / totalAnterior - 100) * -1).toFixed(2);
 	});
 
+	const order = {
+		customer: user.name,
+		total: total.toFixed(2),
+		items: items
+	}
+
 	return (
 		<Container maxWidth="lg" className={classes.container}>
 			<Box my={5}>
 				<Grid container spacing={2}>
-					<Grid item lg={8} md={6} xs={12}>
+					<Grid item md={8} xs={12}>
 						<Box >{render_lista}</Box>
 					</Grid>
-					<Grid item lg={4} md={6} xs={12}>
-						<Box boxShadow={3} minHeight="80vh" p={4} className={classes.grid}>
+					<Grid item md={4} xs={12}>
+						<Box boxShadow={3} minHeight={500} p={4} className={classes.grid}>
 							<Typography variant="h5">Total:</Typography>
 							<Typography variant="h4">
-								<b>{formatoMexico(total)} $MXN</b>
+								<b>{formatoMexico(total.toFixed(2))} $MXN</b>
 							</Typography>
 							{promocion ? (
 								<Grid container spacing={3}>
@@ -129,7 +151,7 @@ export default function PagarCurso(props) {
 									</RadioGroup>
 								</FormControl>
 							</Box>
-							{value === 'credit' ? <PagoCredito compra={compra} total={total} /> : <PagoPaypal />}
+							{value === 'credit' ? <PagoCredito compra={compra} total={total} /> : <PagoPaypal order={order} compra={compra} total={total} />}
 						</Box>
 					</Grid>
 				</Grid>

@@ -1,38 +1,45 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-	Card,
-	CardHeader,
-	CardMedia,
-	CardContent,
-	CardActions,
-	Chip,
-	CircularProgress,
-	Dialog
-} from '@material-ui/core';
-import { Avatar, Box, Button, Typography } from '@material-ui/core';
+import { Card, CardHeader, CardMedia, CardContent, Chip, Grid } from '@material-ui/core';
+import { Avatar, Box, Typography,  Dialog, Hidden } from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
 import { red } from '@material-ui/core/colors';
-import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
+/* import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined'; */
 import { formatoFechaCurso, formatoMexico } from '../../../config/reuserFunction';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import WarningIcon from '@material-ui/icons/Warning';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import SchoolIcon from '@material-ui/icons/School';
+import LanguageIcon from '@material-ui/icons/Language';
+import AssessmentOutlinedIcon from '@material-ui/icons/AssessmentOutlined';
 import MessageSnackbar from '../../../components/Snackbar/snackbar';
 import { NavContext } from '../../../context/context_nav';
-import { AdquirirCursoGratis, AgregarCarritoBD } from '../PeticionesCompras/peticiones_compras';
+/* import { AdquirirCursoGratis, AgregarCarritoBD } from '../PeticionesCompras/peticiones_compras'; */
 import RegistroAlterno from '../RegistroAlterno/registro_alterno';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+/* import ArrowForwardIcon from '@material-ui/icons/ArrowForward'; */
 import { Fragment } from 'react';
-import clienteAxios from '../../../config/axios';
+/* import clienteAxios from '../../../config/axios'; */
 
 const useStyles = makeStyles((theme) => ({
 	root: {
-		width: 300,
-		minHeight: 512,
-		margin: '8px 16px!important'
+		cursor: 'pointer',
+		/* minHeight: theme.spacing(83), */
+		/* margin: '8px 16px!important', */
+		width: 280,
+		[theme.breakpoints.only('sm')]: {
+			width: 240,
+			/* minHeight: theme.spacing(88) */
+		},
+		[theme.breakpoints.down('xs')]: {
+			width: 160,
+			/* minHeight: theme.spacing(58) */
+		}
 	},
 	media: {
-		height: 170
+		height: 170,
+		[theme.breakpoints.down('xs')]: {
+			height: 100,
+		}
 	},
 	avatar: {
 		backgroundColor: red[500]
@@ -46,8 +53,14 @@ const useStyles = makeStyles((theme) => ({
 		overflow: 'hidden',
 		position: 'relative',
 		textOverflow: 'ellipsis',
-		'-webkit-line-clamp': 2,
-		'-webkit-box-orient': 'vertical'
+		'-webkit-line-clamp': 3,
+		'-webkit-box-orient': 'vertical',
+		fontSize: 22,
+		fontWeight: 500,
+		[theme.breakpoints.down('xs')]: {
+			fontSize: 16
+		}
+
 	},
 	descripcion: {
 		height: 200,
@@ -55,57 +68,64 @@ const useStyles = makeStyles((theme) => ({
 		whiteSpace: 'normal',
 		overflow: 'hidden',
 		textOverflow: 'ellipsis'
+	},
+	masInfo: {
+		color: '#6F6F6F',
+		minHeight: theme.spacing(17)
 	}
 }));
 
 function CardsCursos(props) {
 	const classes = useStyles();
 	const { curso } = props;
-	let token = localStorage.getItem('token');
-	const [ loading, setLoading ] = useState(false);
+	/* let token = localStorage.getItem('token'); */
+	/* const [ loading, setLoading ] = useState(false); */
 	const [ open, setOpen ] = useState(false);
-	const [ course, setCourse ] = useState(false);
-	const { error, setError, update, setUpdate, carrito } = useContext(NavContext);
+	/* const [ course, setCourse ] = useState(false); */
+	const { error, setError, /* update, setUpdate, carrito */ } = useContext(NavContext);
 	const [ snackbar, setSnackbar ] = useState({
 		open: false,
 		mensaje: '',
 		status: ''
 	});
-	const urlActual = props.match.url;
-	let user = { _id: '' };
+	/* const urlActual = props.match.url; */
+	/* let user = { _id: '' }; */
 
-	if (token !== null) user = JSON.parse(localStorage.getItem('student'));
+	/* if (token !== null) user = JSON.parse(localStorage.getItem('student')); */
 
 	const handleModal = () => setOpen(!open);
 
-	const obtenerMisCursos = useCallback(
+	/* const obtenerMisCursos = useCallback(
 		async () => {
 			await clienteAxios
-			.get(`/course/user/${user._id}`, {
-				headers: {
-					Authorization: `bearer ${token}`
-				}
-			})
-			.then((res) => {
-				res.data.forEach((res) => {
-					if (res.idCourse._id === curso._id) {
-						setCourse(true)
+				.get(`/course/user/${user._id}`, {
+					headers: {
+						Authorization: `bearer ${token}`
 					}
-					return;
+				})
+				.then((res) => {
+					res.data.forEach((res) => {
+						if (res.idCourse._id === curso._id) {
+							setCourse(true);
+						}
+						return;
+					});
+				})
+				.catch((err) => {
+					console.log(err);
 				});
-			})
-			.catch((err) => {
-				console.log(err);
-			});
 		},
-		[ curso._id, token, user._id],
-	)
+		[ curso._id, token, user._id ]
+	); */
 
-	useEffect(() => {
-		obtenerMisCursos();
-	}, [ obtenerMisCursos ])
+	/* useEffect(
+		() => {
+			obtenerMisCursos();
+		},
+		[ obtenerMisCursos ]
+	); */
 
-	const agregarCarrito = async (curso) => {
+	/* const agregarCarrito = async (curso) => {
 		if (!token || !user._id) {
 			handleModal();
 			localStorage.setItem('cart', JSON.stringify({ curso, urlActual }));
@@ -138,9 +158,9 @@ function CardsCursos(props) {
 				});
 			}
 		}
-	};
+	}; */
 
-	const adquirirCursoGratis = async (curso) => {
+	/* const adquirirCursoGratis = async (curso) => {
 		if (!token || !user._id) {
 			handleModal();
 			localStorage.setItem('free', JSON.stringify({ curso: curso, urlActual }));
@@ -165,9 +185,9 @@ function CardsCursos(props) {
 				});
 			}
 		}
-	};
+	}; */
 
-	const pagarCurso = (curso) => {
+	/* const pagarCurso = (curso) => {
 		let cursos = [];
 
 		if (curso.priceCourse.promotionPrice) {
@@ -177,7 +197,7 @@ function CardsCursos(props) {
 				persentagePromotion: curso.priceCourse.persentagePromotion,
 				idCourse: curso._id,
 				course: curso,
-				promotion: true,
+				promotion: true
 			});
 		} else {
 			cursos.push({
@@ -204,17 +224,17 @@ function CardsCursos(props) {
 			})
 		);
 		setTimeout(() => {
-			props.history.push(`/compra/${curso.slug}`);
+			props.history.push(`/compra`);
 		}, 500);
-	};
+	}; */
 
 	/* verificar si esta en carrito */
-	let cart = false;
-	if (carrito && carrito.courses) {
+	/* let cart = false; */
+	/* if (carrito && carrito.courses) {
 		carrito.courses.forEach((res) => {
 			if (res.course._id === curso._id) cart = true;
 		});
-	}
+	} */
 	/* verificar si ya tiene el curso */
 	/* let course = false;
 	if (misCursos) {
@@ -234,61 +254,89 @@ function CardsCursos(props) {
 				status={snackbar.status}
 				setSnackbar={setSnackbar}
 			/>
-			<Card className={classes.root}>
-				<CardHeader
-					avatar={
-						curso.idProfessor.urlImage ? (
-							<Avatar aria-label="recipe" className={classes.avatar} src={curso.idProfessor.urlImage} />
-						) : (
-							<Avatar aria-label="recipe" className={classes.avatar}>
-								{curso.idProfessor.name.charAt(0)}
-							</Avatar>
-						)
-					}
-					title={curso.idProfessor.name}
-					subheader={`Creado el ${formatoFechaCurso(curso.createdAt)}`}
-				/>
+			<Card className={classes.root} onClick={() => props.history.push(`/curso/${curso.slug}`)}>
+				<Hidden xsDown>
+					<CardHeader
+						avatar={
+							curso.idProfessor.urlImage ? (
+								<Avatar
+									aria-label="recipe"
+									className={classes.avatar}
+									src={curso.idProfessor.urlImage}
+								/>
+							) : (
+								<Avatar aria-label="recipe" className={classes.avatar}>
+									{curso.idProfessor.name.charAt(0)}
+								</Avatar>
+							)
+						}
+						title={curso.idProfessor.name}
+						subheader={`Creado el ${formatoFechaCurso(curso.createdAt)}`}
+					/>
+				</Hidden>
 				<CardMedia className={classes.media} image={curso.urlPromotionalImage} />
 				<CardContent>
-					<Typography variant="h6" color="textPrimary" className={classes.title}>
+					<Typography color="textPrimary" className={classes.title}>
 						{curso.title}
 					</Typography>
 					<Rating name="read-only" value={curso.qualification} precision={0.5} readOnly />
-					<Box>
+					<Hidden xsDown>
+						<Box className={classes.masInfo}>
+							<Box display="flex" alignItems="center" style={{ marginBottom: 2 }}>
+								<AccessTimeIcon style={{ marginRight: 5 }} />
+								<Typography>{`${curso.hours} horas de curso`}</Typography>
+							</Box>
+							<Box display="flex" alignItems="center" style={{ marginBottom: 2 }}>
+								<LanguageIcon style={{ marginRight: 5 }} />
+								<Typography>{`Lenguaje en ${curso.language}`}</Typography>
+							</Box>
+							<Box display="flex" alignItems="center" style={{ marginBottom: 2 }}>
+								<AssessmentOutlinedIcon style={{ marginRight: 5 }} />
+								<Typography>{`Nivel ${curso.level}`}</Typography>
+							</Box>
+							<Box display="flex" alignItems="center" style={{ marginBottom: 2 }}>
+								<SchoolIcon style={{ marginRight: 5 }} />
+								<Typography>Certificado al finalizar</Typography>
+							</Box>
+						</Box>
+					</Hidden>
+					<Box height={50}>
 						{curso.priceCourse.free ? (
 							<Chip
 								className={classes.free}
 								label={
-									<Typography variant="h6" color="textPrimary">
+									<Typography variant="h6" color="textPrimary" align="center">
 										¡Gratis!
 									</Typography>
 								}
 							/>
 						) : curso.priceCourse.promotionPrice ? (
-							<Box display="flex">
-								<Box mr={2}>
-									<Typography variant="h6" color="textPrimary">
+							<Grid container>
+								<Grid item xs={12} md={6}>
+									<Typography variant="h6" color="textPrimary" align="center">
 										{formatoMexico(curso.priceCourse.promotionPrice)} MXN$
 									</Typography>
-								</Box>
-								<Typography variant="h6" color="textSecondary">
-									<s>{formatoMexico(curso.priceCourse.price)} MXN$</s>
-								</Typography>
-							</Box>
+								</Grid>
+								<Grid item xs={12} md={6}>
+									<Typography variant="h6" color="textSecondary"  align="center">
+										<s>{formatoMexico(curso.priceCourse.price)} MXN$</s>
+									</Typography>
+								</Grid>
+							</Grid>
 						) : (
-							<Typography variant="h6" color="textPrimary">
+							<Typography variant="h6" color="textPrimary" align="center">
 								<b>{formatoMexico(curso.priceCourse.price)} MXN$</b>
 							</Typography>
 						)}
 					</Box>
 				</CardContent>
-				<CardActions>
+				{/* <CardActions>
 					<Box width="100%">
 						<Button variant="text" color="primary" fullWidth component={Link} to={`/curso/${curso.slug}`}>
 							Ver descripción completa
 						</Button>
 						{course ? (
-							<Box display="flex" justifyContent="space-around" alignItems="center">
+							<Box display="flex" justifyContent="space-around" alignItems="center" textAlign="center">
 								<Button
 									fullWidth
 									variant="contained"
@@ -296,11 +344,11 @@ function CardsCursos(props) {
 									component={Link}
 									to={`/dashboard/${curso.slug}`}
 								>
-									Ver curso
+									ver tus clases
 								</Button>
 							</Box>
 						) : (
-							<Box display="flex" justifyContent="space-around" alignItems="center">
+							<Box display="flex" flexDirection="column" justifyContent="space-around" height={90}>
 								{curso.priceCourse.free ? (
 									<Button
 										variant="contained"
@@ -308,29 +356,80 @@ function CardsCursos(props) {
 										onClick={() => adquirirCursoGratis(curso)}
 										fullWidth
 									>
-										¡Adquirir ahora!
+										Adquirir
 									</Button>
 								) : (
-									<Button variant="contained" color="primary" onClick={() => pagarCurso(curso)}>
-										Comprar ahora
+									<Button
+										fullWidth
+										variant="contained"
+										color="primary"
+										onClick={() => pagarCurso(curso)}
+									>
+										Comprar
+									</Button>
+									<Button
+										fullWidth
+										variant="contained"
+										color="primary"
+										component={Link}
+										to={`/curso/${curso.slug}`}
+									>
+										Ver curso
 									</Button>
 								)}
-								{curso.priceCourse.free ? null : loading ? (
-									<CircularProgress color="secondary" size={30} />
-								) : cart ? (
-									<Button color="secondary" size="large">
-										<ShoppingCartOutlinedIcon />
-										<ArrowForwardIcon />
-									</Button>
-								) : (
-									<Button color="secondary" onClick={() => agregarCarrito(curso)} size="large">
-										<ShoppingCartOutlinedIcon style={{ fontSize: 25 }} />
-									</Button>
-								)}
+								<Hidden xsDown>
+									{curso.priceCourse.free ? null : loading ? (
+										<CircularProgress color="secondary" size={30} />
+									) : cart ? (
+										<Button
+											fullWidth
+											color="primary"
+											variant="outlined"
+											onClick={() => props.history.push('/carrito')}
+											startIcon={<ShoppingCartOutlinedIcon style={{ fontSize: 25 }} />}
+										>
+											Ir al Carrito
+										</Button>
+									) : (
+										<Button
+											fullWidth
+											color="primary"
+											variant="outlined"
+											onClick={() => agregarCarrito(curso)}
+											startIcon={<ShoppingCartOutlinedIcon style={{ fontSize: 25 }} />}
+										>
+											Agregar al carrito
+										</Button>
+									)}
+								</Hidden>
+								<Hidden smUp>
+									{curso.priceCourse.free ? null : loading ? (
+										<CircularProgress color="secondary" size={30} />
+									) : cart ? (
+										<Button
+											fullWidth
+											color="primary"
+											variant="outlined"
+											onClick={() => props.history.push('/carrito')}
+										>
+											Ir al Carrito
+										</Button>
+									) : (
+										<Button
+											fullWidth
+											color="primary"
+											variant="outlined"
+											onClick={() => agregarCarrito(curso)}
+											startIcon={<ShoppingCartOutlinedIcon style={{ fontSize: 25 }} />}
+										>
+											Agregar
+										</Button>
+									)}
+								</Hidden>
 							</Box>
 						)}
 					</Box>
-				</CardActions>
+				</CardActions> */}
 				<ModalRegistro handleModal={handleModal} open={open} error={error} setError={setError} />
 			</Card>
 		</Fragment>

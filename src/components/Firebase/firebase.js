@@ -171,8 +171,11 @@ function Firebase(props) {
 					courses: curso
 				})
 			);
-			setTimeout(() => {
+			/* setTimeout(() => {
 				props.history.push(`/compra/${curso[0].course.slug}`);
+			}, 500); */
+			setTimeout(() => {
+				props.history.push(`/compra`);
 			}, 500);
 		},
 		[ props.history ]

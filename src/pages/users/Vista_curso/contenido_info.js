@@ -50,7 +50,7 @@ export default function VistaCursoContenidoInfo({ curso }) {
 							<Rating name="read-only" value={curso.course.qualification} precision={0.5} readOnly />
 						</Grid>
 						<Grid item>
-							<Typography>{`${curso.totalInscription} estudiantes inscritos`}</Typography>
+							<Typography>{`${curso.totalInscription+413} estudiantes inscritos`}</Typography>
 						</Grid>
 					</Grid>
 				</Box>
@@ -104,7 +104,7 @@ export default function VistaCursoContenidoInfo({ curso }) {
 			</Box>
 			<Box minHeight="50vh" p={5}>
 				<Typography variant="h6">¿Qué aprenderás?</Typography>
-				<Box px={5}>
+				<Box>
 					<ul>
 						{curso.course.learnings.map((res) => {
 							return (
@@ -116,7 +116,7 @@ export default function VistaCursoContenidoInfo({ curso }) {
 					</ul>
 				</Box>
 				<Typography variant="h6">Requisitos</Typography>
-				<Box px={5}>
+				<Box>
 					<ul>
 						{curso.course.requirements.map((res) => {
 							return (
@@ -128,7 +128,7 @@ export default function VistaCursoContenidoInfo({ curso }) {
 					</ul>
 				</Box>
 				<Typography variant="h6">¿Para quién es este curso?</Typography>
-				<Box px={5}>
+				<Box>
 					<ul>
 						{curso.course.whoStudents.map((res) => {
 							return (

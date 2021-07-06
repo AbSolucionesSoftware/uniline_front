@@ -31,6 +31,12 @@ const useStyles = makeStyles((theme) => ({
 		position: 'fixed',
 		bottom: theme.spacing(2),
 		right: theme.spacing(10)
+	},
+	editor: {
+		width: '100%',
+		[theme.breakpoints.down('xs')]: {
+			width: 320
+		}
 	}
 }));
 
@@ -287,7 +293,7 @@ export default function RegistroInformacionCurso() {
 					<Typography variant="subtitle1">Descripción</Typography>
 					<FormControl
 						variant="outlined"
-						className={classes.select}
+						className={classes.editor}
 						error={validacion && !datos.description ? true : false}
 					>
 						<Editor
@@ -442,7 +448,7 @@ export default function RegistroInformacionCurso() {
 					<Typography variant="subtitle1">Mensaje inicial del curso</Typography>
 					<FormControl
 						variant="outlined"
-						className={classes.select}
+						className={classes.editor}
 						error={validacion && !datos.startMessage ? true : false}
 					>
 						<Editor
@@ -468,7 +474,7 @@ export default function RegistroInformacionCurso() {
 					<Typography variant="subtitle1">Mensaje final del curso</Typography>
 					<FormControl
 						variant="outlined"
-						className={classes.select}
+						className={classes.editor}
 						error={validacion && !datos.finalMessage ? true : false}
 					>
 						<Editor
