@@ -29,9 +29,9 @@ export default function VimeoReactNative(props) {
 	if (info_url !== info_local) return null;
 
 	const jalaPorfa = () => {
-		/* document.getElementById('jalaPorfa').click(); */
-		console.log("si se ejecuta");
-		window.alert("video finalizado")
+		document.getElementById('jalaPorfa').click();
+		/* console.log("si se ejecuta");
+		window.alert("video finalizado") */
 		/* window.postMessage("jalaPorfa", "*");
 		window.ReactDOM. */
 	}
@@ -45,14 +45,14 @@ export default function VimeoReactNative(props) {
 				<Vimeo
 					video={url}
 					autoplay={true}
-					onEnd={jalaPorfa}
+					onEnd={() => jalaPorfa()}
 					id="vimeo-player-mobile"
 					className={classes.vimeoPlayer}
 					responsive={true}
 					height={100}
 				/>
 				<Box my={2} display="none">
-					<Button id="jalaPorfa" color="primary" variant="contained" fullWidth onClick={() => props.history.push('/vimeo_mobil_change/true')}>
+					<Button id="jalaPorfa" color="primary" variant="contained" fullWidth onClick={() => window.postMessage("jalaPorfa") /* props.history.push('/vimeo_mobil_change/true') */}>
 						Jala porfa
 					</Button>
 				</Box>
