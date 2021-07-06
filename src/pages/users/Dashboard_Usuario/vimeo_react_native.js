@@ -30,7 +30,7 @@ export default function VimeoReactNative(props) {
 
 	const jalaPorfa = () => {
 		document.getElementById('jalaPorfa').innerText("cagaduarte")
-		document.getElementById('jalaPorfa').click(); 
+		// document.getElementById('jalaPorfa').click(); 
 		
 		/* console.log("si se ejecuta");
 		window.alert("video finalizado") */
