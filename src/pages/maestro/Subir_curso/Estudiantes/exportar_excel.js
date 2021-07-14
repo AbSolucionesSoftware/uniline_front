@@ -20,11 +20,11 @@ function ExportarExcel({ estudiantes }) {
             scholarship: '',
         };
 
-		estudiante.name = data.idUser.name;
-        estudiante.email = data.idUser.email;
-		estudiante.phone = data.idUser.phone;
+		estudiante.name = data.idUser?.name;
+        estudiante.email = data.idUser?.email;
+		estudiante.phone = data.idUser?.phone;
 		estudiante.type_access = data.code ? `Cupon - ${data.codeKey}` : data.freeCourse ? 'Gratis' : 'Comprado' ;
-        estudiante.scholarship = data.idUser.scholarship;
+        estudiante.scholarship = data.idUser?.scholarship;
 
 		return estudiante;
 	});
